@@ -51,7 +51,8 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.OPTIONS).permitAll() // CORS Preflight 방지
                 .antMatchers("/user/newToken", "/user/logOut", "/user/signOut").permitAll()
                 .antMatchers("/user/**").hasRole("USER")
-                .antMatchers("/kakao/**").permitAll()  // 특정 URL 경로에 대한 요청을 모두 허용
+                .antMatchers("/kakao/**").permitAll()
+                .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll()  // 특정 URL 경로에 대한 요청을 모두 허용
                 .anyRequest().authenticated() // 나머지 모든 요청은 인증이 필요
 
                 .and()
