@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.office.agijagi_back.Util.Jwt.IjwtMapper">
+    <insert id="setToken" parameterType="String">
+        INSERT INTO
+            token (email, refreshToken, date)
+        VALUES (
+                   #{email}, #{refreshToken}, NOW()
+               )
+    </insert>
+
+    <select id="getEmailByRefreshToken">
+        SELECT
+            email
+        FROM
+            token
+        WHERE
+            refreshToken = #{refreshToken}
+    </select>
+
+    <update id="logOut">
+        DELETE
+        FROM
+            token
+        WHERE
+            refreshToken = #{refreshToken}
+    </update>
+
+</mapper>
