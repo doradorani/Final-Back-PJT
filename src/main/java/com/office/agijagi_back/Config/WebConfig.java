@@ -13,6 +13,8 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/swagger-ui/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/")
                 .resourceChain(false);
+        registry.addResourceHandler("/agijagiUploadImg/**")
+                .addResourceLocations("file:///c://agijagi/upload/");
     }
 
     @Override
