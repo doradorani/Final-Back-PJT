@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.office.agijagi_back.Mapper.IAdminMapper">
+    <insert id="insertAdmin" parameterType="AdminDto">
+        INSERT INTO
+        admin
+        (id, pw, name, address, address_detail1, address_detail2, zip_code, email, phone,  reg_date, mod_date)
+        VALUES (
+                #{id}, #{pw}, #{name}, #{address}, #{address_detail1}, #{address_detail2}, #{zip_code}, #{email}, #{phone}, now(), now()
+               )
+    </insert>
+<!--    <insert id="setToken" parameterType="String">-->
+<!--        INSERT INTO-->
+<!--            token (email, refreshToken, date)-->
+<!--        VALUES (-->
+<!--                   #{email}, #{refreshToken}, NOW()-->
+<!--               )-->
+<!--    </insert>-->
+
+    <select id="selectAdminIDByRefreshToken">
+        SELECT
+            a.id
+        FROM
+            admin a
+        JOIN
+            admin_token at
+        ON
+            a.id=at.id
+        WHERE
+            at.refreshToken = #{refreshToken}
+    </select>
+
+    <delete id="deleteAdminRefreshToken">
+        DELETE
+        FROM
+            admin_token
+        WHERE
+            refreshToken = #{refreshToken}
+    </delete>
+
+    <update id="updateAdminToWithdraw">
+        UPDATE
+            admin
+        SET
+            status = 0
+        WHERE
+            id = #{id}
+    </update>
+
+</mapper>

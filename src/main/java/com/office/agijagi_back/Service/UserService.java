@@ -1,33 +1,34 @@
 package com.office.agijagi_back.Service;
 
 import com.office.agijagi_back.Mapper.IUserMapper;
+import com.office.agijagi_back.Service.Interface.IUserService;
 import com.office.agijagi_back.Util.Jwt.IjwtMapper;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService {
+public class UserService implements IUserService {
 
-    private final IUserMapper iUserMapper;
-    private final IjwtMapper ijwtMapper;
+    private final IUserMapper userMapper;
+    private final IjwtMapper jwtMapper;
 
-    public UserService(IUserMapper iUserMapper, IjwtMapper ijwtMapper) {
-        this.iUserMapper = iUserMapper;
-        this.ijwtMapper = ijwtMapper;
+    public UserService(IUserMapper userMapper, IjwtMapper jwtMapper) {
+        this.userMapper = userMapper;
+        this.jwtMapper = jwtMapper;
     }
 
 
     public String getEmailByRefreshToken(String refreshToken) {
 
-        return ijwtMapper.getEmailByRefreshToken(refreshToken);
+        return jwtMapper.getEmailByRefreshToken(refreshToken);
     }
 
     public int deleteRefreshTokenByToken(String refreshToken) {
 
-        return ijwtMapper.deleteRefreshTokenByToken(refreshToken);
+        return jwtMapper.deleteRefreshTokenByToken(refreshToken);
     }
 
     public int deleteUser(String email) {
 
-        return iUserMapper.deleteUser(email);
+        return userMapper.deleteUser(email);
     }
 }

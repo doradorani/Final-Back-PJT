@@ -1,9 +1,9 @@
 package com.office.agijagi_back.Service;
 
-import com.office.agijagi_back.Dto.Response.CommonResponse;
-import com.office.agijagi_back.Dto.Response.CommonResult;
-import com.office.agijagi_back.Dto.Response.ListResult;
-import com.office.agijagi_back.Dto.Response.SingleResult;
+import com.office.agijagi_back.Util.Response.CommonResponse;
+import com.office.agijagi_back.Util.Response.CommonResult;
+import com.office.agijagi_back.Util.Response.ListResult;
+import com.office.agijagi_back.Util.Response.SingleResult;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
