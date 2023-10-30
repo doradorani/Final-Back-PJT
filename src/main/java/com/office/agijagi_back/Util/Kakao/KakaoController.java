@@ -15,6 +15,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+
 @Log4j2
 @Controller
 @RequestMapping("/kakao")
@@ -81,8 +82,6 @@ public class KakaoController {
         //엑세스 토큰 이용해서 사용자 정보 가져오기
         kakaoTokenDto = getUserInfo(access_Token);
 
-
-        //int result = kakaoService.login(kakaoTokenDto);
         return kakaoService.login(kakaoTokenDto);
     }
 

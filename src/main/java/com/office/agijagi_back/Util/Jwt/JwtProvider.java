@@ -47,7 +47,11 @@ public class JwtProvider {
         String accessToken = generateAccessToken(email, role);
         String refreshToken = generateRefreshToken();
 
-        ijwtMapper.setToken(email, refreshToken);
+        //기존에 있던 refreshToken이 있다면 삭제
+        //다른 클라이언트에서 접속 시
+        ijwtMapper.deleteRefreshTokenByEmail(email);
+
+        ijwtMapper.insertRefreshToken(email, refreshToken);
 
         return TokenDto.builder()
                 .grantType(BEARER_TYPE)

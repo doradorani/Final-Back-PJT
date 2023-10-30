@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface IKakaoMapper {
 
     int isUser(String email);
-    int newUser(KakaoTokenDto kakaoTokenDto);
+    int insertUser(KakaoTokenDto kakaoTokenDto);
 
 
 }
