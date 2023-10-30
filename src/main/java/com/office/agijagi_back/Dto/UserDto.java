@@ -1,5 +1,6 @@
 package com.office.agijagi_back.Dto;
 
+import com.github.rkpunjal.sqlsafe.SQLInjectionSafe;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,9 +17,9 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class UserDto implements UserDetails {
 
-    private String id;
-    private String email;
-    private List<String> roles;
+    private @SQLInjectionSafe String id;
+    private @SQLInjectionSafe String email;
+    private @SQLInjectionSafe List<String> roles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
