@@ -42,7 +42,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.csrf().disable()                       //CSRF(Cross-Site Request Forgery) 보안을 비활성화
-                //.httpBasic().disable()              //HTTP Basic 인증을 비활성화
+//                .httpBasic().disable()              //HTTP Basic 인증을 비활성화
 
                 //하위 부분부터는 설정에 정의한 내용을 순서대로 실행
                 // 접근 권한 설정부
@@ -51,7 +51,9 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.OPTIONS).permitAll() // CORS Preflight 방지
                 .antMatchers("/user/newToken", "/user/logOut", "/user/signOut").permitAll()
                 .antMatchers("/user/**").hasRole("USER")
-                .antMatchers("/kakao/**").permitAll()  // 특정 URL 경로에 대한 요청을 모두 허용
+                .antMatchers("/kakao/**").permitAll()
+                .antMatchers("/swagger-ui.html", "/api/v2/**", "/health", "/swagger/**", "/swagger-resources/**", "/webjars/**", "/v2/api-docs").permitAll()
+                // 특정 URL 경로에 대한 요청을 모두 허용
                 .anyRequest().authenticated() // 나머지 모든 요청은 인증이 필요
 
                 .and()

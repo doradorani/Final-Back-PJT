@@ -10,18 +10,20 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/swagger-ui/**")
-                .addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/")
-                .resourceChain(false);
+        registry.addResourceHandler("swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
+
         registry.addResourceHandler("/agijagiUploadImg/**")
                 .addResourceLocations("file:///c://agijagi/upload/");
     }
-
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/swagger-ui/")
-                .setViewName("forward:/swagger-ui/index.html");
-    }
+//
+//    @Override
+//    public void addViewControllers(ViewControllerRegistry registry) {
+//        registry.addViewController("/swagger-ui/")
+//                .setViewName("forward:/swagger-ui/index.html");
+//    }
 }
 
 

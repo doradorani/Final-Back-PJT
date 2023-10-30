@@ -1,12 +1,13 @@
 package com.office.agijagi_back.Dto.Response;
 
+import com.github.rkpunjal.sqlsafe.SQLInjectionSafe;
 import lombok.Data;
 
 @Data
 public class ErrorResponse {
-    private int status;
-    private String message;
-    private String code;
+    private @SQLInjectionSafe int status;
+    private @SQLInjectionSafe String message;
+    private @SQLInjectionSafe String code;
 
     public ErrorResponse(ErrorCode errorCode){
         this.status = errorCode.getStatus();

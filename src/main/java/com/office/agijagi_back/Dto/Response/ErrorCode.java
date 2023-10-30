@@ -1,5 +1,6 @@
 package com.office.agijagi_back.Dto.Response;
 
+import com.github.rkpunjal.sqlsafe.SQLInjectionSafe;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -12,8 +13,8 @@ public enum ErrorCode {
     EMAIL_DUPLICATION(400,"MEMBER-ERR-400","EMAIL DUPLICATED"),
     ;
 
-    private int status;
-    private String errorCode;
-    private String message;
+    private @SQLInjectionSafe int status;
+    private @SQLInjectionSafe String errorCode;
+    private @SQLInjectionSafe String message;
 
 }

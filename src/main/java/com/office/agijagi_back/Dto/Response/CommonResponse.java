@@ -1,5 +1,6 @@
 package com.office.agijagi_back.Dto.Response;
 
+import com.github.rkpunjal.sqlsafe.SQLInjectionSafe;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,6 +10,6 @@ public enum CommonResponse {
     SUCCESS(0, "성공하였습니다."),
     FAIL(-1, "실패하였습니다.");
 
-    private int code;
-    private String msg;
+    private @SQLInjectionSafe int code;
+    private @SQLInjectionSafe String msg;
 }
