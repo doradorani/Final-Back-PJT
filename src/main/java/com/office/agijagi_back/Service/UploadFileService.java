@@ -1,7 +1,7 @@
 package com.office.agijagi_back.Service;
 
 
-import com.office.agijagi_back.Dto.UploadFileDto;
+import com.office.agijagi_back.Util.UploadFile.UploadFileDto;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

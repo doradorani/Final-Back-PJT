@@ -1,4 +1,4 @@
-package com.office.agijagi_back.Dto.Response;
+package com.office.agijagi_back.Util.Response;
 
 import com.github.rkpunjal.sqlsafe.SQLInjectionSafe;
 import lombok.AllArgsConstructor;
@@ -9,8 +9,8 @@ import lombok.Getter;
 @Getter
 public enum ErrorCode {
     NOT_FOUND(404,"COMMON-ERR-404","PAGE NOT FOUND"),
-    INTER_SERVER_ERROR(500,"COMMON-ERR-500","INTER SERVER ERROR"),
-    EMAIL_DUPLICATION(400,"MEMBER-ERR-400","EMAIL DUPLICATED"),
+    INTERNET_SERVER_ERROR(500,"COMMON-ERR-500","INTERNET SERVER ERROR"),
+    NICKNAME_DUPLICATION(400,"MEMBER-ERR-400","NICKNAME DUPLICATED"),
     ;
 
     private @SQLInjectionSafe int status;

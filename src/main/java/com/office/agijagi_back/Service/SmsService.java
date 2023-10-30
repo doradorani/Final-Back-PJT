@@ -3,9 +3,9 @@ package com.office.agijagi_back.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.office.agijagi_back.Dto.SmsDto;
-import com.office.agijagi_back.Dto.SmsRequestDto;
-import com.office.agijagi_back.Dto.SmsResponseDto;
+import com.office.agijagi_back.Util.SMS.SmsDto;
+import com.office.agijagi_back.Util.SMS.SmsRequestDto;
+import com.office.agijagi_back.Util.SMS.SmsResponseDto;
 import lombok.extern.log4j.Log4j2;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;

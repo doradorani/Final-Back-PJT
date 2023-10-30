@@ -1,4 +1,4 @@
-package com.office.agijagi_back.Dto.Response;
+package com.office.agijagi_back.Util.Response;
 
 import io.swagger.annotations.ApiModelProperty;
 import com.github.rkpunjal.sqlsafe.SQLInjectionSafe;

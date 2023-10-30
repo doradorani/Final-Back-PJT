@@ -1,4 +1,4 @@
-package com.office.agijagi_back.Dto;
+package com.office.agijagi_back.Util.UploadFile;
 
 import com.github.rkpunjal.sqlsafe.SQLInjectionSafe;
 import lombok.Data;
