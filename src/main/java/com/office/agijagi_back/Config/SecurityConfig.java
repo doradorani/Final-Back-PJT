@@ -1,4 +1,4 @@
-package com.office.agijagi_back.Security;
+package com.office.agijagi_back.Config;
 
 import com.office.agijagi_back.Util.Jwt.CustomAccessDeniedHandler;
 import com.office.agijagi_back.Util.Jwt.CustomAuthenticationEntryPoint;
