@@ -21,13 +21,13 @@ public class UserService {
         return ijwtMapper.getEmailByRefreshToken(refreshToken);
     }
 
-    public int logOut(String refreshToken) {
+    public int deleteRefreshTokenByToken(String refreshToken) {
 
-        return ijwtMapper.logOut(refreshToken);
+        return ijwtMapper.deleteRefreshTokenByToken(refreshToken);
     }
 
-    public int signOut(String email) {
+    public int deleteUser(String email) {
 
-        return iUserMapper.signOut(email);
+        return iUserMapper.deleteUser(email);
     }
 }

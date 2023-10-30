@@ -26,7 +26,7 @@ public class KakaoService {
         int createUser = 0;
 
         if(isUser <= 0){        //회원가입
-            createUser = kakaoMapper.newUser(kakaoTokenDto);
+            createUser = kakaoMapper.insertUser(kakaoTokenDto);
         }
 
         TokenDto tokenDto = jwtProvider.generateTokenDto(kakaoTokenDto.getEmail(), "ROLE_USER");

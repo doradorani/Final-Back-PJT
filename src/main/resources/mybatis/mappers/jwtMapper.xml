@@ -3,9 +3,9 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.office.agijagi_back.Util.Jwt.IjwtMapper">
-    <insert id="setToken" parameterType="String">
+    <insert id="insertRefreshToken" parameterType="String">
         INSERT INTO
-            token (email, refreshToken, date)
+            user_token (email, refresh_token, reg_date)
         VALUES (
                    #{email}, #{refreshToken}, NOW()
                )
@@ -15,17 +15,25 @@
         SELECT
             email
         FROM
-            token
+            user_token
         WHERE
-            refreshToken = #{refreshToken}
+            refresh_token = #{refreshToken}
     </select>
 
-    <update id="logOut">
+    <update id="deleteRefreshTokenByToken">
         DELETE
         FROM
-            token
+            user_token
         WHERE
-            refreshToken = #{refreshToken}
+            refresh_token = #{refreshToken}
+    </update>
+
+    <update id="deleteRefreshTokenByEmail">
+        DELETE
+        FROM
+            user_token
+        WHERE
+            email = #{email}
     </update>
 
 </mapper>

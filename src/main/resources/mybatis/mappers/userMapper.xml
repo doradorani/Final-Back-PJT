@@ -4,10 +4,11 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.office.agijagi_back.Mapper.IUserMapper">
 
-    <update id="signOut">
-        DELETE
-        FROM
-            userInfo
+    <update id="deleteUser">
+        UPDATE
+            user
+        SET
+            status = 0
         WHERE
             email = #{email}
     </update>

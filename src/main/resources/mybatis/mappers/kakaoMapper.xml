@@ -3,20 +3,21 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.office.agijagi_back.Util.Kakao.IKakaoMapper">
+
     <select id="isUser" parameterType="String" resultType="int">
         SELECT
             count(*)
         FROM
-            userInfo
+            user
         WHERE
             email = #{email}
     </select>
 
-    <insert id="newUser" parameterType="com.office.agijagi_back.Util.Kakao.KakaoTokenDto">
+    <insert id="insertUser" parameterType="com.office.agijagi_back.Util.Kakao.KakaoTokenDto">
         INSERT INTO
-            userInfo (userName, email, date)
+            user (name, email, reg_date, mod_date)
         VALUES (
-                   #{userName}, #{email}, NOW()
+                   #{userName}, #{email}, NOW(), NOW()
                )
     </insert>
 

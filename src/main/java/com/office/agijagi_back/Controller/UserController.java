@@ -3,7 +3,6 @@ package com.office.agijagi_back.Controller;
 import com.office.agijagi_back.Service.UserService;
 import com.office.agijagi_back.Util.Jwt.JwtProvider;
 import com.office.agijagi_back.Util.Jwt.TokenService;
-import io.swagger.annotations.Api;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +14,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Api(tags = {"1. User"})
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -77,7 +75,7 @@ public class UserController {
                 }
             }
         }
-        int deleteToken = userService.logOut(refreshToken);
+        int deleteToken = userService.deleteRefreshTokenByToken(refreshToken);
 
         Cookie cookie = new Cookie("refreshToken", null);
         cookie.setMaxAge(0);
@@ -102,8 +100,8 @@ public class UserController {
         }
 
         email = userService.getEmailByRefreshToken(refreshToken);
-        int delete = userService.logOut(refreshToken);
-        int deleteUser = userService.signOut(email);
+        int deleteToken = userService.deleteRefreshTokenByToken(refreshToken);
+        int deleteUser = userService.deleteUser(email);
 
         Cookie cookie = new Cookie("refreshToken", null);
         cookie.setMaxAge(0);

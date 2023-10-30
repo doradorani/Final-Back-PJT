@@ -5,8 +5,8 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface IjwtMapper {
 
-    void setToken(String email, String refreshToken);
+    void insertRefreshToken(String email, String refreshToken);
     String getEmailByRefreshToken(String refreshToken);
-    int logOut(String refreshToken);
-
+    int deleteRefreshTokenByToken(String refreshToken);
+    int deleteRefreshTokenByEmail(String email);
 }
