@@ -1,8 +1,11 @@
 package com.office.agijagi_back.Controller;
 
+import com.office.agijagi_back.Dto.AuthDto;
+import com.office.agijagi_back.Dto.UserDto;
 import com.office.agijagi_back.Service.UserService;
 import com.office.agijagi_back.Util.Jwt.JwtProvider;
 import com.office.agijagi_back.Util.Jwt.TokenService;
+import com.office.agijagi_back.Util.Kakao.KakaoTokenDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,8 +32,8 @@ public class UserController {
     }
 
 
-    @PostMapping("/myPage")
-    public String myPage(HttpServletRequest request) {
+    @PostMapping("/validate")
+    public UserDto validate(HttpServletRequest request) {
 
         //SecurityContextHolder에서 정보 가져옴
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -39,7 +42,10 @@ public class UserController {
 
         System.out.println("현재 사용자의 userName: " + userName);
 
-        return "됐다";
+        //
+        UserDto dto = new UserDto("test", "test@naver.com");
+
+        return dto;
     }
 
     @PostMapping("/newToken")
