@@ -1,5 +1,8 @@
 package com.office.agijagi_back.Config;
 
+import com.fasterxml.jackson.databind.deser.BeanDeserializerBase;
+import com.office.agijagi_back.Util.Response.ErrorResponse;
+import com.office.agijagi_back.Util.Response.ListResult;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -30,11 +33,11 @@ public class SwaggerConfig extends WebMvcConfigurationSupport  {
         return new Docket(DocumentationType.SWAGGER_2)
                 .securityContexts(Arrays.asList(securityContext())) // 추가
                 .securitySchemes(Arrays.asList(apiKey())) // 추가
-//                .additionalModels(typeResolver.resolve(MemberResponseDto.class))
+//                .additionalModels(typeResolver.resolve(ListResult.class))
 //                .additionalModels(typeResolver.resolve(ErrorResponse.class))
                 .useDefaultResponseMessages(false)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.office.agijagi_back.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.office.agijagi_back.Controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo());
@@ -56,7 +59,7 @@ public class SwaggerConfig extends WebMvcConfigurationSupport  {
 
     // 추가
     private ApiKey apiKey() {
-        return new ApiKey("Authorization", "Authorization", "header");
+        return new ApiKey("jwt", "Authorization", "header");
     }
 
     private ApiInfo apiInfo() {
