@@ -16,8 +16,8 @@ public class DiaryService {
     }
 
 
-    public int storeChildInfo(ChildDto childDto) {
-        log.info("DiarySerivce (childInfo)");
+    public int registerChild(ChildDto childDto) {
+        log.info("[DiarySerivce] storeChildInfo");
 
         return diaryMapper.insertChildInfo(childDto);
     }
