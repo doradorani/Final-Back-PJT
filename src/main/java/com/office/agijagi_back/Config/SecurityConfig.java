@@ -10,6 +10,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -37,6 +39,10 @@ public class SecurityConfig {
         this.jwtProvider = jwtProvider;
     }
 
+    @Bean
+    public PasswordEncoder getPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -51,6 +57,8 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.OPTIONS).permitAll() // CORS Preflight 방지
                 .antMatchers("/user/newToken", "/user/logOut", "/user/signOut").permitAll()
                 .antMatchers("/user/**").hasRole("USER")
+                .antMatchers("/admin/newToken", "/admin/signUp", "/admin/signIn", "/admin/logOut", "/admin/signOut").permitAll()
+                .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/kakao/**").permitAll()
                 .antMatchers("/swagger-ui.html", "/api/v2/**", "/health", "/swagger/**", "/swagger-resources/**", "/webjars/**", "/v2/api-docs").permitAll()
                 .antMatchers("/diary/childInfo").permitAll()
