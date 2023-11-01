@@ -32,7 +32,7 @@ public class KakaoService {
         TokenDto tokenDto = jwtProvider.generateTokenDto(kakaoTokenDto.getEmail(), "ROLE_USER");
         tokenDto.setNewUser(createUser);
 
-        return tokenService.setTokenForFront(tokenDto);
+        return tokenService.setTokenForFront("refreshToken", tokenDto);
 
     }
 }

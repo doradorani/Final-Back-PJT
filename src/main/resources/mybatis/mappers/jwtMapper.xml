@@ -36,4 +36,20 @@
             email = #{email}
     </update>
 
+    <insert id="insertAdminRefreshToken" parameterType="String">
+        INSERT INTO
+            admin_token (id, refresh_token, reg_date)
+        VALUES (
+                   #{email}, #{refreshToken}, NOW()
+               )
+    </insert>
+
+    <update id="deleteAdminRefreshTokenByEmail">
+        DELETE
+        FROM
+            admin_token
+        WHERE
+            id = #{email}
+    </update>
+
 </mapper>

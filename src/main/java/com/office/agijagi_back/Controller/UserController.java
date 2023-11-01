@@ -1,23 +1,24 @@
 package com.office.agijagi_back.Controller;
 
-import com.office.agijagi_back.Dto.AuthDto;
+import com.office.agijagi_back.Dto.AdminDto;
 import com.office.agijagi_back.Dto.UserDto;
 import com.office.agijagi_back.Service.UserService;
 import com.office.agijagi_back.Util.Jwt.JwtProvider;
 import com.office.agijagi_back.Util.Jwt.TokenService;
-import com.office.agijagi_back.Util.Kakao.KakaoTokenDto;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 @RestController
+@Log4j2
 @RequestMapping("/user")
 public class UserController {
 
@@ -33,11 +34,10 @@ public class UserController {
 
 
     @PostMapping("/validate")
-    public UserDto validate(HttpServletRequest request) {
+    public UserDto validate() {
 
         //SecurityContextHolder에서 정보 가져옴
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
         String userName = userDetails.getUsername();
 
         System.out.println("현재 사용자의 userName: " + userName);

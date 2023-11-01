@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class TokenService {
 
-    public ResponseEntity<TokenDto> setTokenForFront(TokenDto tokenDto){
+    public ResponseEntity<TokenDto> setTokenForFront(String tokenName, TokenDto tokenDto){
 
-        ResponseCookie cookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
+        ResponseCookie cookie = ResponseCookie.from(tokenName, tokenDto.getRefreshToken())
                 .maxAge(7 * 24 * 60 * 60)
                 .path("/")
 //                .secure(true) // HTTP에서도 사용 가능

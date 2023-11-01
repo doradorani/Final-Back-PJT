@@ -6,10 +6,10 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface IAdminMapper {
 
-    AdminDto insertAdmin(AdminDto adminDto);
+    int insertAdmin(AdminDto adminDto);
     int selectAdmin(AdminDto adminDto);
     int deleteAdminRefreshToken(String refreshToken);
     int updateAdminToWithdraw(String id);
-
     String selectAdminIDByRefreshToken(String refreshToken);
+    AdminDto signInAdminById(String id);
 }

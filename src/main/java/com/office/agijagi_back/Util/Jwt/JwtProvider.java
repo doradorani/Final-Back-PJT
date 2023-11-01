@@ -28,7 +28,7 @@ public class JwtProvider {
     private static final String AUTHORITIES_KEY = "auth";
     private static final String BEARER_TYPE = "bearer";
 
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 2;  //20초
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 20;  //20초
                                                                      //서버 지연 고려 (10초)
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;
 
@@ -49,9 +49,14 @@ public class JwtProvider {
 
         //기존에 있던 refreshToken이 있다면 삭제
         //다른 클라이언트에서 접속 시
-        ijwtMapper.deleteRefreshTokenByEmail(email);
-
-        ijwtMapper.insertRefreshToken(email, refreshToken);
+        if(role == "ROLE_USER"){
+            ijwtMapper.deleteRefreshTokenByEmail(email);
+            ijwtMapper.insertRefreshToken(email, refreshToken);
+        }
+        else if(role == "ROLE_ADMIN"){
+            ijwtMapper.deleteAdminRefreshTokenByEmail(email);
+            ijwtMapper.insertAdminRefreshToken(email, refreshToken);
+        }
 
         return TokenDto.builder()
                 .grantType(BEARER_TYPE)
