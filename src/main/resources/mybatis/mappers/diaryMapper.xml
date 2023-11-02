@@ -11,5 +11,61 @@
         )
         VALUES (#{u_email}, #{name}, #{birth_date}, #{img}, now(), now());
     </insert>
+    <update id="updateChild" parameterType="ChildDto" >
+        UPDATE
+            child
+        SET
+            name = #{name},birth_date = #{birth_date}, mod_date= now()
+        WHERE
+            no = #{no}
+    </update>
+    <update id="deleteChildInfoByNo" parameterType="Integer">
+        UPDATE
+            child
+        SET
+            status = 0
+        WHERE
+            no = #{childNo}
+    </update>
+    <select id="selectChildrenByEmail" parameterType="String" resultType="ChildDto">
+        SELECT
+            *
+        FROM
+            child
+        WHERE
+            u_email = #{u_email} and status = 1
+    </select>
+    <insert id="insertDailyDiary" parameterType="ChildDto">
+        INSERT INTO
+            diary (
+            u_email, cd_no, title, content, img, reg_date, mod_date
+        )
+        VALUES (#{u_email}, #{cd_no}, #{title}, #{content},img, now(), now());
+    </insert>
+    <select id="selectDailyDiaries" parameterType="Integer">
+        SELECT
+            *
+        FROM
+            diary
+        WHERE
+            cd_no = #{childNo} and status = 1
+    </select>
+    <update id="updateDailyDiary" parameterType="DiaryDto">
+        UPDATE
+            diary
+        SET
+            title = #{title}, content = #{content}, mod_date = now()
+        WHERE
+            no = #{no}
+    </update>
+    <update id="deleteDailyDiary" parameterType="Integer">
+        UPDATE
+            diary
+        SET
+            status = 0
+        WHERE
+            cd_no = #{childNo} and no = #{diaryNo}
+    </update>
+
 
 </mapper>
