@@ -1,40 +1,46 @@
 package com.office.agijagi_back.Config;
 
-import com.fasterxml.jackson.databind.deser.BeanDeserializerBase;
-import com.office.agijagi_back.Util.Response.ErrorResponse;
-import com.office.agijagi_back.Util.Response.ListResult;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
-
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.ApiKey;
-import springfox.documentation.service.AuthorizationScope;
-import springfox.documentation.service.SecurityReference;
+import springfox.documentation.builders.ParameterBuilder;
+import springfox.documentation.schema.ModelRef;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @EnableWebMvc
 @EnableSwagger2
 @Configuration
-public class SwaggerConfig extends WebMvcConfigurationSupport  {
+public class SwaggerConfig extends WebMvcConfigurationSupport {
 
     @Bean
     public Docket api() {
+        ParameterBuilder aParameterBuilder = new ParameterBuilder();
+        aParameterBuilder.name("Content-Type") //헤더 이름
+                .description("Content Type") //설명
+                .modelRef(new ModelRef("string"))
+                .parameterType("header")
+                .required(false)
+                .build();
+        List<Parameter> aParameters = new ArrayList<>();
+        aParameters.add(aParameterBuilder.build());
+
         return new Docket(DocumentationType.SWAGGER_2)
-                .securityContexts(Arrays.asList(securityContext())) // 추가
-                .securitySchemes(Arrays.asList(apiKey())) // 추가
-//                .additionalModels(typeResolver.resolve(ListResult.class))
-//                .additionalModels(typeResolver.resolve(ErrorResponse.class))
+                .globalOperationParameters(aParameters)
+                .securityContexts(Arrays.asList(securityContext()))
+                .consumes(getConsumeContentTypes())
+                .produces(getProduceContentTypes())
+                .securitySchemes(Arrays.asList(accessToken(), refreshToken()))
+//                .globalOperationParameters(globalParameters()) // 추가
                 .useDefaultResponseMessages(false)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.office.agijagi_back.Controller"))
@@ -42,24 +48,40 @@ public class SwaggerConfig extends WebMvcConfigurationSupport  {
                 .build()
                 .apiInfo(apiInfo());
     }
-    // 추가
+    private Set<String> getConsumeContentTypes() {
+        Set<String> consumes = new HashSet<>();
+        consumes.add("application/json;charset=UTF-8");
+        consumes.add("multipart/form-data");
+        consumes.add("application/x-www-form-urlencoded");
+        return consumes;
+    }
+
+    private Set<String> getProduceContentTypes() {
+        Set<String> produces = new HashSet<>();
+        produces.add("application/json;charset=UTF-8");
+        produces.add("multipart/form-data");
+        return produces;
+    }
+
     private SecurityContext securityContext() {
         return SecurityContext.builder()
                 .securityReferences(defaultAuth())
                 .build();
     }
 
-    // 추가
     private List<SecurityReference> defaultAuth() {
         AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
-        return List.of(new SecurityReference("Authorization", authorizationScopes));
+        return List.of(new SecurityReference("Authorization", authorizationScopes),
+                new SecurityReference("refreshToken", authorizationScopes));
     }
 
-    // 추가
-    private ApiKey apiKey() {
-        return new ApiKey("jwt", "Authorization", "header");
+    private ApiKey accessToken() {
+        return new ApiKey("Authorization", "Authorization", "header");
+    }
+    private ApiKey refreshToken() {
+        return new ApiKey("refreshToken", "refreshToken", "cookie");
     }
 
     private ApiInfo apiInfo() {
@@ -69,4 +91,25 @@ public class SwaggerConfig extends WebMvcConfigurationSupport  {
                 .version("1.0")
                 .build();
     }
+
+    // 추가: 헤더 및 쿠키 파라미터 정의
+//    private List<Parameter> globalParameters() {
+//        Parameter refreshTokenParameter = new ParameterBuilder()
+//                .name("refreshToken")
+//                .description("Refresh Token")
+//                .modelRef(new springfox.documentation.schema.ModelRef("string"))
+//                .parameterType("cookie")
+//                .required(true)
+//                .build();
+//
+////        Parameter authenticationParameter = new ParameterBuilder()
+////                .name("Authorization")
+////                .description("Access Token")
+////                .modelRef(new springfox.documentation.schema.ModelRef("string"))
+////                .parameterType("header")
+////                .required(true)
+////                .build();
+//
+//        return Arrays.asList(refreshTokenParameter);
+//    }
 }

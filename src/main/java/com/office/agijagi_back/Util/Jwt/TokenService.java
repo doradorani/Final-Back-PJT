@@ -1,11 +1,13 @@
 package com.office.agijagi_back.Util.Jwt;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
+@Log4j2
 public class TokenService {
 
     public ResponseEntity<TokenDto> setTokenForFront(String tokenName, TokenDto tokenDto){
@@ -31,6 +33,8 @@ public class TokenService {
 
     public ResponseEntity<TokenDto> setNewAccessToken(TokenDto tokenDto){
         System.out.println("새로운 엑세스 토큰 발급");
+        log.info(tokenDto.getAccessToken());
+        log.info(tokenDto.getRefreshToken());
         return ResponseEntity.ok()
                 .body(tokenDto);
     }
