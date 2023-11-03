@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.office.agijagi_back.Mapper.INoticeMapper">
+
+    <select id="selectNoticeTableList" parameterType="Integer" resultType="NoticeDto">
+            SELECT n.*, a.name AS admin_name
+            FROM notice n
+            INNER JOIN admin a
+            ON n.admin_no = a.no
+            ORDER BY n.no DESC
+                LIMIT #{perPage}
+            OFFSET #{offset}
+    </select>
+
+    <select id="selectNoticeTotalPage" parameterType="Integer" resultType="Integer">
+        SELECT
+            (COUNT(*) / #{perPage}) + 1
+        AS
+            totalPages
+        FROM
+            notice
+    </select>
+
+</mapper>
