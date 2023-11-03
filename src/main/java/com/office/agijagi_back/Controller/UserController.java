@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 @RestController
 @Log4j2
@@ -35,19 +36,17 @@ public class UserController {
 
 
     @PostMapping("/validate")
-    public SingleResult<UserDto> validate() {
-        log.info("[UserController] validate");
+    public UserDto validate() {
 
         //SecurityContextHolder에서 정보 가져옴
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String userName = userDetails.getUsername();
 
-        log.info("현재 사용자의 userName:{} ",userName);
+        System.out.println("현재 사용자의 userName: " + userName);
 
-        //
-        UserDto dto = new UserDto("test", userName);
+        UserDto dto = new UserDto(1, "test@naver.com");
 
-        return responseService.getSingleResult(dto);
+        return dto;
     }
 
     @PostMapping("/newToken")
@@ -66,7 +65,6 @@ public class UserController {
 
         if(jwtProvider.validateToken(refreshToken)){
             email = userService.getEmailByRefreshToken(refreshToken);
-            log.info("사용자 이메일 {}", email);
         }
 
         return tokenService.setNewAccessToken(jwtProvider.newAccessToken(email, "ROLE_USER"));
@@ -118,5 +116,34 @@ public class UserController {
         response.addCookie(cookie);
     }
 
+    @GetMapping("/info")
+    public UserDto info(){
+        log.info("info()");
+
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetails.getUsername();
+
+        UserDto userDto = userService.info(email);
+        return userDto;
+    }
+
+    @GetMapping("/dupNickname/{userNickname}")
+    public SingleResult<Integer> dupNickname(@PathVariable String userNickname) {
+        log.info("dupNickname()");
+
+        int result = userService.dupNickname(userNickname);
+        log.info("result{}", result);
+
+
+        return responseService.getSingleResult(result);
+    }
+
+    @PostMapping("/modifyInfo")
+    public SingleResult<Integer> modifyInfo(@RequestPart("info") Map<String, Object> test) {
+
+        System.out.println(test);
+
+        return null;
+    }
 
 }
