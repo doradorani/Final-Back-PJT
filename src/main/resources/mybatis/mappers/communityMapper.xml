@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.office.agijagi_back.Mapper.IDiaryMapper">
+
+    <insert id="insertNewPost" parameterType="com.office.agijagi_back.Dto.PostDto">
+        INSERT INTO posts (user_email, text_content, img_content, like_cnt, great_cnt, sad_cnt, reply_cnt, reg_date, mod_date)
+        VALUES (
+                   #{user_email},
+                   #{text_content},
+                   #{img_content},
+                   #{like_cnt},
+                   #{great_cnt},
+                   #{sad_cnt},
+                   #{reply_cnt},
+                   NOW(),
+                   NOW()
+               )
+    </insert>
+
+</mapper>
