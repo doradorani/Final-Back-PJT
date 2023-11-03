@@ -1,5 +1,6 @@
 package com.office.agijagi_back.Service;
 
+import com.office.agijagi_back.Dto.UserDto;
 import com.office.agijagi_back.Mapper.IUserMapper;
 import com.office.agijagi_back.Service.Interface.IUserService;
 import com.office.agijagi_back.Util.Jwt.IjwtMapper;
@@ -31,4 +32,17 @@ public class UserService implements IUserService {
 
         return userMapper.deleteUser(email);
     }
+
+    @Override
+    public UserDto info(String email) {
+
+        return userMapper.info(email);
+    }
+
+    @Override
+    public int dupNickname(String userNickname) {
+
+        return userMapper.dupNickname(userNickname);
+    }
+
 }

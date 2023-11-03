@@ -13,4 +13,21 @@
             email = #{email}
     </update>
 
+    <select id="info">
+        SELECT
+            *
+        FROM
+            user
+        WHERE
+            email = #{email}
+    </select>
+
+    <select id="dupNickname">
+        SELECT
+            COUNT(*)
+        FROM
+            user
+        WHERE nickname = #{userNickname}
+    </select>
+
 </mapper>
