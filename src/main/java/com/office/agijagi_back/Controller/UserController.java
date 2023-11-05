@@ -11,10 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Enumeration;
 import java.util.Map;
 
 @RestController
@@ -138,10 +140,25 @@ public class UserController {
         return responseService.getSingleResult(result);
     }
 
-    @PostMapping("/modifyInfo")
-    public SingleResult<Integer> modifyInfo(@RequestPart("info") Map<String, Object> test) {
+//    @PostMapping(value ="/modifyInfo")
+//    public SingleResult<Integer> modifyInfo(HttpServletRequest request, @RequestPart("info") Map<String, Object> item, String fileName) {
+//
+//        System.out.println(file);
+//        System.out.println(item);
+//        System.out.println(fileName);
+//
+//        return null;
+//    }
 
-        System.out.println(test);
+
+    @PostMapping(value = "/modifyInfo", consumes = {"multipart/form-data"})
+    public SingleResult<Integer> modifyInfo(@RequestPart("file") MultipartFile file,
+                                            @RequestPart("info") Map<String, Object> item) {
+        // 파일 및 정보를 처리하는 로직 작성
+        // file 변수에는 업로드된 파일이, item 변수에는 JSON 데이터가, fileName 변수에는 파일 이름이 전달됩니다.
+
+        System.out.println("file : " + file.getOriginalFilename());
+        System.out.println("item : " + item);
 
         return null;
     }
