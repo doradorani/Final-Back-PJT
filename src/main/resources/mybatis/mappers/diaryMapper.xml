@@ -19,6 +19,14 @@
         WHERE
             no = #{no}
     </update>
+    <select id="selectChildByNo" parameterType="Integer">
+        SELECT
+            *
+        FROM
+            child
+        WHERE
+            no = #{childNo}
+    </select>
     <update id="deleteChildInfoByNo" parameterType="Integer">
         UPDATE
             child

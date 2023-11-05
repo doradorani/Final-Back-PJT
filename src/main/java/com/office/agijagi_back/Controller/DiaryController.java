@@ -11,7 +11,6 @@ import com.office.agijagi_back.Util.S3.S3Service;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -44,22 +43,22 @@ public class DiaryController {
             , notes = "insert child information"
             , response = Integer.class
             , responseContainer = "SingleResult")
-    @PostMapping(value = "/childInfo",
-            consumes = {"multipart/form-data"})
-    public SingleResult<Integer> registerChild(@RequestPart(value = "data") @ApiParam(value = "data", required = true) Map<String, String> data,
+    @PostMapping(value = "/childInfo")
+    public ListResult<ChildDto> registerChild(@RequestPart(value = "data") @ApiParam(value = "data", required = true) Map<String, String> data,
                                                @RequestPart(value = "file") @ApiParam(value = "file", required = true) MultipartFile file,
                                                HttpServletRequest request) throws IOException {
         log.info("[DiaryController] registerChild");
 
-        String email = refreshTokenValidateService.refreshTokenValidate(request);
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetails.getUsername();
 
         if (data != null) {
             String imgUrl = s3Service.uploadFile(file);
             ChildDto childDto = new ChildDto(0, data.get("name"), email, imgUrl, data.get("birth_date"), null, null);
 
-            return responseService.getSingleResult(diaryService.registerChild(childDto));
+            return responseService.getListResult(diaryService.registerChild(childDto));
         }
-        return responseService.getSingleResult(0);
+        return responseService.getListResult(null);
     }
     @ApiOperation(httpMethod = "POST"
             , value = "자녀 정보 및 사진 수정"
@@ -94,7 +93,6 @@ public class DiaryController {
         log.info("[DiaryController] searchChildren");
 
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
         String email = userDetails.getUsername();
 
         return responseService.getListResult(diaryService.searchChildren(email));
@@ -119,10 +117,12 @@ public class DiaryController {
             , response = Integer.class
             , responseContainer = "SingleResult")
     @DeleteMapping("/childBook/{childNo}")
-    public SingleResult<Integer> deleteChild(@ApiParam(value = "childNo") @PathVariable int childNo) {
+    public ListResult<ChildDto> deleteChild(@ApiParam(value = "childNo") @PathVariable int childNo) {
         log.info("[DiaryController] deleteChild");
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetails.getUsername();
 
-        return responseService.getSingleResult(diaryService.deleteChildInfo(childNo));
+        return responseService.getListResult(diaryService.deleteChildInfo(childNo, email));
     }
 
     @ApiOperation(httpMethod = "POST"

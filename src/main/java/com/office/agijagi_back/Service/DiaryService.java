@@ -19,16 +19,18 @@ public class DiaryService {
     }
 
 
-    public int registerChild(ChildDto childDto) {
+    public List<ChildDto> registerChild(ChildDto childDto) {
         log.info("[DiarySerivce] storeChildInfo");
 
-        return diaryMapper.insertChildInfo(childDto);
+        int result = diaryMapper.insertChildInfo(childDto);
+        return diaryMapper.selectChildrenByEmail(childDto.getU_email());
     }
 
-    public int deleteChildInfo(int no) {
+    public List<ChildDto> deleteChildInfo(int no, String email) {
         log.info("[DiaryService] deleteChildInfo");
 
-        return diaryMapper.deleteChildInfoByNo(no);
+         diaryMapper.deleteChildInfoByNo(no);
+        return diaryMapper.selectChildrenByEmail(email);
     }
 
     public List<ChildDto> searchChildren(String email) {
@@ -37,10 +39,10 @@ public class DiaryService {
         return diaryMapper.selectChildrenByEmail(email);
     }
 
-    public ChildDto searchChildDetail(int no) {
+    public ChildDto searchChildDetail(int childNo) {
         log.info("[DiaryService] searchChildren");
 
-        return diaryMapper.selectChildByNo(no);
+        return diaryMapper.selectChildByNo(childNo);
     }
 
     public int modifyChild(ChildDto childDto) {

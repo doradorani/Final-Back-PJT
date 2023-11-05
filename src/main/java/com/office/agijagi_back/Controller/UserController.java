@@ -44,7 +44,7 @@ public class UserController {
 
         System.out.println("현재 사용자의 userName: " + userName);
 
-        UserDto dto = new UserDto(1, "test@naver.com");
+        UserDto dto = new UserDto(1, userName);
 
         return dto;
     }
