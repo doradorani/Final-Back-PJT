@@ -9,4 +9,6 @@ public interface IUserMapper {
     int deleteUser(String email);
     UserDto info(String email);
     int dupNickname(String userNickname);
+    int modifyInfo(UserDto modifyUserDto);
+    String getImgByEmail(String email);
 }
