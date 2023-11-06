@@ -13,4 +13,8 @@ public interface IUserService {
     public UserDto info(String email);
 
     public int dupNickname(String userNickname);
+
+    public int  modifyInfo(UserDto modifyUserDto);
+
+    public String getImgByEmail(String email);
 }

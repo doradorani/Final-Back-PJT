@@ -27,7 +27,33 @@
             COUNT(*)
         FROM
             user
-        WHERE nickname = #{userNickname}
+        WHERE
+            nickname = #{userNickname}
+    </select>
+
+    <update id="modifyInfo">
+        UPDATE
+            user
+        SET
+            name=#{name},
+            nickname=#{nickname},
+            email=#{email},
+            phone=#{phone},
+            zip_code=#{zip_code},
+            address_detail1=#{address_detail1},
+            address_detail2=#{address_detail2},
+            img=#{img}
+        WHERE
+            email = #{email}
+    </update>
+
+    <select id="getImgByEmail">
+        SELECT
+            img
+        FROM
+            user
+        WHERE
+            email = #{email}
     </select>
 
 </mapper>
