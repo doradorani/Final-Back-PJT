@@ -31,10 +31,43 @@ public class NoticeService {
         List<NoticeDto> noticeDtos = noticeMapper.selectNoticeTableList(perPage, offset);
         int totalPages = noticeMapper.selectNoticeTotalPage(perPage);
 
+        if (offset >= 10) {
+            totalPages = noticeMapper.selectNoticeTotalPage(perPage);
+        }
+
         Map<String, Object> NoticeMap = new HashMap<>();
         NoticeMap.put("noticeDtos", noticeDtos);
         NoticeMap.put("totalPages", totalPages);
 
         return NoticeMap;
+    }
+
+    public NoticeDto getNoticeDetail(int noticeIndex, int modifyRequest) {
+        log.info("[NoticeService] getNoticeDetail");
+
+        if (modifyRequest == 0) {
+            int result = noticeMapper.updateNoticeDetailHit(noticeIndex);
+            if (result != 0) {
+                NoticeDto noticeDto = noticeMapper.selectNoticeDetailContent(noticeIndex);
+                return noticeDto;
+            }
+        } else if (modifyRequest == 1) {
+            NoticeDto noticeDto = noticeMapper.selectNoticeDetailContent(noticeIndex);
+            return noticeDto;
+        }
+        return null;
+    }
+
+    public int deleteNotice(int noticeIndex) {
+        log.info("[NoticeService] deleteNotice");
+
+        NoticeDto noticeDto = noticeMapper.selectNoticeDetailContent(noticeIndex);
+        int noticeStatus = noticeDto.getStatus();
+        int result = 0;
+        if (noticeStatus == 1) {
+            result = noticeMapper.updateNoticeStatus(noticeIndex);
+            return result;
+        }
+        return result;
     }
 }
