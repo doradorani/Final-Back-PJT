@@ -45,4 +45,16 @@ public class UserService implements IUserService {
         return userMapper.dupNickname(userNickname);
     }
 
+    @Override
+    public int modifyInfo(UserDto modifyUserDto) {
+
+        return userMapper.modifyInfo(modifyUserDto);
+    }
+
+    @Override
+    public String getImgByEmail(String email) {
+
+        return userMapper.getImgByEmail(email);
+    }
+
 }

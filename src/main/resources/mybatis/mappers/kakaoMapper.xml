@@ -15,10 +15,28 @@
 
     <insert id="insertUser" parameterType="com.office.agijagi_back.Util.Kakao.KakaoTokenDto">
         INSERT INTO
-            user (name, email, reg_date, mod_date)
+            user (name,nickname, email, reg_date, mod_date)
         VALUES (
-                   #{userName}, #{email}, NOW(), NOW()
+                   #{userName}, #{userNickname}, #{email}, NOW(), NOW()
                )
     </insert>
+
+    <select id="getLoginNicknameByEmail">
+        SELECT
+            nickname
+        FROM
+            user
+        WHERE
+            email = #{email}
+    </select>
+
+    <select id="getLoginProfileByEmail">
+        SELECT
+            img
+        FROM
+            user
+        WHERE
+            email = #{email}
+    </select>
 
 </mapper>

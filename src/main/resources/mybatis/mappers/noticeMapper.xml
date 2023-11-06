@@ -5,22 +5,40 @@
 <mapper namespace="com.office.agijagi_back.Mapper.INoticeMapper">
 
     <select id="selectNoticeTableList" parameterType="Integer" resultType="NoticeDto">
-            SELECT n.*, a.name AS admin_name
-            FROM notice n
-            INNER JOIN admin a
-            ON n.admin_no = a.no
-            ORDER BY n.no DESC
-                LIMIT #{perPage}
-            OFFSET #{offset}
+        SELECT n.*, a.name AS admin_name
+        FROM notice n
+        INNER JOIN admin a
+        ON n.admin_no = a.no
+        ORDER BY n.no DESC
+            LIMIT #{perPage}
+        OFFSET #{offset}
     </select>
 
     <select id="selectNoticeTotalPage" parameterType="Integer" resultType="Integer">
-        SELECT
-            (COUNT(*) / #{perPage}) + 1
-        AS
-            totalPages
-        FROM
-            notice
+        SELECT (COUNT(*) / #{perPage}) + 1
+        AS totalPages
+        FROM notice
     </select>
+
+    <update id="updateNoticeDetailHit" parameterType="Integer">
+        UPDATE notice
+        SET hit = hit + 1
+        WHERE no = #{noticeIndex}
+    </update>
+
+    <select id="selectNoticeDetailContent" parameterType="Integer" resultType="NoticeDto">
+        SELECT n.*, a.name AS admin_name
+        FROM notice n
+        INNER JOIN admin a
+        ON n.admin_no = a.no
+        WHERE n.no = #{noticeIndex}
+    </select>
+
+    <update id="updateNoticeStatus" parameterType="Integer">
+        UPDATE notice
+        SET status = status - 1,
+            mod_date = NOW()
+        WHERE no = #{noticeIndex}
+    </update>
 
 </mapper>

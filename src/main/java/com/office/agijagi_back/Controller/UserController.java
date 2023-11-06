@@ -6,6 +6,7 @@ import com.office.agijagi_back.Service.UserService;
 import com.office.agijagi_back.Util.Jwt.JwtProvider;
 import com.office.agijagi_back.Util.Jwt.TokenService;
 import com.office.agijagi_back.Util.Response.SingleResult;
+import com.office.agijagi_back.Util.S3.S3Service;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Enumeration;
+import java.io.IOException;
 import java.util.Map;
 
 @RestController
@@ -28,12 +29,14 @@ public class UserController {
     private final JwtProvider jwtProvider;
     private final TokenService tokenService;
     private final ResponseService responseService;
+    private final S3Service s3Service;
 
-    public UserController(UserService userService, JwtProvider jwtProvider, TokenService tokenService, ResponseService responseService) {
+    public UserController(UserService userService, JwtProvider jwtProvider, TokenService tokenService, ResponseService responseService, S3Service s3Service) {
         this.userService = userService;
         this.jwtProvider = jwtProvider;
         this.tokenService = tokenService;
         this.responseService = responseService;
+        this.s3Service = s3Service;
     }
 
 
@@ -126,6 +129,7 @@ public class UserController {
         String email = userDetails.getUsername();
 
         UserDto userDto = userService.info(email);
+
         return userDto;
     }
 
@@ -140,27 +144,30 @@ public class UserController {
         return responseService.getSingleResult(result);
     }
 
-//    @PostMapping(value ="/modifyInfo")
-//    public SingleResult<Integer> modifyInfo(HttpServletRequest request, @RequestPart("info") Map<String, Object> item, String fileName) {
-//
-//        System.out.println(file);
-//        System.out.println(item);
-//        System.out.println(fileName);
-//
-//        return null;
-//    }
-
 
     @PostMapping(value = "/modifyInfo", consumes = {"multipart/form-data"})
-    public SingleResult<Integer> modifyInfo(@RequestPart("file") MultipartFile file,
-                                            @RequestPart("info") Map<String, Object> item) {
-        // 파일 및 정보를 처리하는 로직 작성
-        // file 변수에는 업로드된 파일이, item 변수에는 JSON 데이터가, fileName 변수에는 파일 이름이 전달됩니다.
+    public SingleResult<Integer> modifyInfo(@RequestPart(value = "file", required = false) MultipartFile file,
+                                            @RequestPart("info") Map<String, Object> item) throws IOException {
 
-        System.out.println("file : " + file.getOriginalFilename());
-        System.out.println("item : " + item);
+        String imgUrl = null;
 
-        return null;
+        if(file != null){
+            imgUrl = s3Service.uploadFile(file);
+        }
+        else{
+            imgUrl = userService.getImgByEmail((String) item.get("email"));
+        }
+
+        UserDto modifyUserDto = new UserDto(item.get("name"),
+                                            item.get("nickname"),
+                                            item.get("email"),
+                                            item.get("phone"),
+                                            item.get("zip_code"),
+                                            item.get("address_detail1"),
+                                            item.get("address_detail2"),
+                                            imgUrl);
+
+        return responseService.getSingleResult(userService.modifyInfo(modifyUserDto));
     }
 
 }
