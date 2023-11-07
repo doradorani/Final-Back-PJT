@@ -20,12 +20,12 @@ public class DiaryService {
 
 
     public int registerChild(ChildDto childDto) {
-        log.info("[DiarySerivce] storeChildInfo");
+        log.info("[DiarySerivce] registerChild");
 
         return diaryMapper.insertChildInfo(childDto);
     }
 
-    public int deleteChildInfo(int no) {
+    public int deleteChildInfo(int no, String email) {
         log.info("[DiaryService] deleteChildInfo");
 
         return diaryMapper.deleteChildInfoByNo(no);
@@ -37,10 +37,10 @@ public class DiaryService {
         return diaryMapper.selectChildrenByEmail(email);
     }
 
-    public ChildDto searchChildDetail(int no) {
+    public ChildDto searchChildDetail(int childNo) {
         log.info("[DiaryService] searchChildren");
 
-        return diaryMapper.selectChildByNo(no);
+        return diaryMapper.selectChildByNo(childNo);
     }
 
     public int modifyChild(ChildDto childDto) {
@@ -56,9 +56,14 @@ public class DiaryService {
     }
 
     public List<DiaryDto> searchDailyDiary(int childNo) {
+        log.info("[DiaryService] searchDailyDiaries");
+
+        return diaryMapper.selectDailyDiary(childNo);
+    }
+    public DiaryDto searchDiaryDetail(int childNo, int diaryNo) {
         log.info("[DiaryService] searchDailyDiary");
 
-        return diaryMapper.selectDailyDiaries(childNo);
+        return diaryMapper.selectDailyDetail(childNo, diaryNo);
     }
 
     public int modifyDailyDiary(DiaryDto diaryDto) {
@@ -71,5 +76,11 @@ public class DiaryService {
         log.info("[DiaryService] modifyDailyDiary");
 
         return diaryMapper.deleteDailyDiary(childNo, diaryNo);
+    }
+
+    public List<DiaryDto> searchDailyDiaries(String email) {
+        log.info("[DiaryService] searchDailyDiaries");
+
+        return diaryMapper.searchDailyDiaries(email);
     }
 }

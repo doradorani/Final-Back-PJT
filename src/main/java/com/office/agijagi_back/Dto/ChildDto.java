@@ -13,6 +13,7 @@ public class ChildDto {
     private @SQLInjectionSafe String name;
     private @SQLInjectionSafe String u_email;
     private @SQLInjectionSafe String img;
+    private @SQLInjectionSafe String content;
     private @SQLInjectionSafe String birth_date;
     private @SQLInjectionSafe String reg_date;
     private @SQLInjectionSafe String mod_date;

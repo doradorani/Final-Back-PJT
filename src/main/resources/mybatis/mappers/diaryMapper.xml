@@ -7,18 +7,29 @@
     <insert id="insertChildInfo" parameterType="ChildDto">
         INSERT INTO
             child (
-                   u_email, name, birth_date, img, reg_date, mod_date
+                   u_email, name, birth_date, img, content, reg_date, mod_date
         )
-        VALUES (#{u_email}, #{name}, #{birth_date}, #{img}, now(), now());
+        VALUES (#{u_email}, #{name}, #{birth_date}, #{img}, #{content}, now(), now());
     </insert>
     <update id="updateChild" parameterType="ChildDto" >
         UPDATE
             child
         SET
-            name = #{name},birth_date = #{birth_date}, mod_date= now()
+            name = #{name},birth_date = #{birth_date}, mod_date= now(), content = #{content}
+        <if test='img != ""'>
+            ,img = #{img}
+        </if>
         WHERE
             no = #{no}
     </update>
+    <select id="selectChildByNo" parameterType="Integer">
+        SELECT
+            *
+        FROM
+            child
+        WHERE
+            no = #{childNo}
+    </select>
     <update id="deleteChildInfoByNo" parameterType="Integer">
         UPDATE
             child
@@ -40,21 +51,52 @@
             diary (
             u_email, cd_no, title, content, img, reg_date, mod_date
         )
-        VALUES (#{u_email}, #{cd_no}, #{title}, #{content},img, now(), now());
+        VALUES (#{u_email}, #{cd_no}, #{title}, #{content},#{img}, now(), now());
     </insert>
-    <select id="selectDailyDiaries" parameterType="Integer">
+    <select id="selectDailyDetail" parameterType="Integer">
         SELECT
-            *
+            d.*, c.name as cd_name
         FROM
-            diary
+            diary d
+        JOIN
+            child c
+            on
+                d.cd_no = c.no
         WHERE
-            cd_no = #{childNo} and status = 1
+            cd_no = #{childNo} and no =#{diaryNo}
+    </select>
+    <select id="selectDailyDiary" parameterType="Integer">
+        SELECT
+            d.*, c.name as cd_name
+        FROM
+            diary d
+        JOIN
+            child c
+        on
+            d.cd_no = c.no
+        WHERE
+            cd_no = #{childNo} and d.status = 1
+    </select>
+    <select id="searchDailyDiaries" parameterType="String">
+        SELECT
+            d.*, c.name as cd_name
+        FROM
+            diary d
+        JOIN
+            child c
+            on
+                d.cd_no = c.no
+        WHERE
+            d.u_email = #{email} and d.status = 1
     </select>
     <update id="updateDailyDiary" parameterType="DiaryDto">
         UPDATE
             diary
         SET
             title = #{title}, content = #{content}, mod_date = now()
+        <if test='img != ""'>
+            ,img = #{img}
+        </if>
         WHERE
             no = #{no}
     </update>
