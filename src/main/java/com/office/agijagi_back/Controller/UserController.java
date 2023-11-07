@@ -47,7 +47,7 @@ public class UserController {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String userName = userDetails.getUsername();
 
-        System.out.println("현재 사용자의 userName: " + userName);
+        log.info("현재 사용자의 userName: " + userName);
 
         UserDto dto = new UserDto(1, userName);
 

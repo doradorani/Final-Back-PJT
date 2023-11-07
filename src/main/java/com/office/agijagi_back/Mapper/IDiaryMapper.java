@@ -25,4 +25,10 @@ public interface IDiaryMapper {
     int updateDailyDiary(DiaryDto diaryDto);
 
     int deleteDailyDiary(int childNo, int diaryNo);
+
+    DiaryDto selectDailyDetail(int childNo, int diaryNo);
+
+    List<DiaryDto> selectDailyDiary(int childNo);
+
+    List<DiaryDto> searchDailyDiaries(String email);
 }

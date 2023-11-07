@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Map;
 
@@ -44,7 +43,7 @@ public class DiaryController {
             , response = Integer.class
             , responseContainer = "SingleResult")
     @PostMapping(value = "/childInfo")
-    public ListResult<ChildDto> registerChild(@RequestPart(value = "data") @ApiParam(value = "data", required = true) Map<String, String> data,
+    public SingleResult<Integer> registerChild(@RequestPart(value = "data") @ApiParam(value = "data", required = true) Map<String, String> data,
                                                @RequestPart(value = "file") @ApiParam(value = "file", required = true) MultipartFile file,
                                                HttpServletRequest request) throws IOException {
         log.info("[DiaryController] registerChild");
@@ -54,31 +53,33 @@ public class DiaryController {
 
         if (data != null) {
             String imgUrl = s3Service.uploadFile(file);
-            ChildDto childDto = new ChildDto(0, data.get("name"), email, imgUrl, data.get("birth_date"), null, null);
+            ChildDto childDto = new ChildDto(0, data.get("name"), email, imgUrl, data.get("content"), data.get("birth_date"), null, null);
 
-            return responseService.getListResult(diaryService.registerChild(childDto));
+            return responseService.getSingleResult(diaryService.registerChild(childDto));
         }
-        return responseService.getListResult(null);
+        return responseService.getSingleResult(null);
     }
+
     @ApiOperation(httpMethod = "POST"
             , value = "자녀 정보 및 사진 수정"
             , notes = "update child information"
             , response = Integer.class
             , responseContainer = "SingleResult")
     @PostMapping("/childInfo/{childNo}")
-    public SingleResult<Integer> modifyChild(@RequestPart(value = "data", required = false) @ApiParam(value = "data", required = false) Map<String, String> data,
+    public SingleResult<Integer> modifyChild(@RequestPart(value = "data") @ApiParam(value = "data", required = false) Map<String, String> data,
                                              @RequestPart(value = "file", required = false) @ApiParam(value = "file", required = false) MultipartFile file,
-                                             HttpServletRequest request,
                                              @PathVariable int childNo) throws IOException {
         log.info("[DiaryController] updateChild");
 
-        String email = refreshTokenValidateService.refreshTokenValidate(request);
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetails.getUsername();
+
         String imgUrl = "";
-        if(file != null){
+        if (file != null) {
             imgUrl = s3Service.uploadFile(file);
         }
 
-        ChildDto childDto = new ChildDto(childNo, data.get("name"), email, imgUrl, data.get("birth_date"), null, null);
+        ChildDto childDto = new ChildDto(childNo, data.get("name"), email, imgUrl, data.get("content"), data.get("birth_date"), null, null);
 
         return responseService.getSingleResult(diaryService.modifyChild(childDto));
     }
@@ -111,18 +112,19 @@ public class DiaryController {
 
         return responseService.getSingleResult(diaryService.searchChildDetail(childNo));
     }
+
     @ApiOperation(httpMethod = "DELETE"
             , value = "선택한 자녀의 정보 삭제"
             , notes = "insert child information"
             , response = Integer.class
             , responseContainer = "SingleResult")
     @DeleteMapping("/childBook/{childNo}")
-    public ListResult<ChildDto> deleteChild(@ApiParam(value = "childNo") @PathVariable int childNo) {
+    public SingleResult<Integer> deleteChild(@ApiParam(value = "childNo") @PathVariable int childNo) {
         log.info("[DiaryController] deleteChild");
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = userDetails.getUsername();
 
-        return responseService.getListResult(diaryService.deleteChildInfo(childNo, email));
+        return responseService.getSingleResult(diaryService.deleteChildInfo(childNo, email));
     }
 
     @ApiOperation(httpMethod = "POST"
@@ -132,16 +134,34 @@ public class DiaryController {
             , responseContainer = "SingleResult")
     @PostMapping("/dailyDiary/{childNo}")
     public SingleResult<Integer> registerDailyDiary(@RequestPart(value = "data") @ApiParam(value = "data", required = true) Map<String, String> data,
-                                                    @RequestPart(value = "file") @ApiParam(value = "file", required = true) @Valid MultipartFile file,
-                                                    HttpServletRequest request,
+                                                    @RequestPart(value = "file") @ApiParam(value = "file", required = true) MultipartFile file,
                                                     @PathVariable int childNo) throws IOException {
         log.info("[DiaryController] registerDailyDiary");
-        String email = refreshTokenValidateService.refreshTokenValidate(request);
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetails.getUsername();
+        String imgUrl = "";
+        if (file != null) {
+            imgUrl = s3Service.uploadFile(file);
+        }
 
-        DiaryDto diaryDto = new DiaryDto(0, email, childNo, data.get("title"), data.get("content"), s3Service.uploadFile(file), null, null);
+        DiaryDto diaryDto = new DiaryDto(0, email, childNo, null, data.get("title"), data.get("content"), imgUrl, null, null);
 
 
         return responseService.getSingleResult(diaryService.registerDailyDiary(diaryDto));
+    }
+
+    @ApiOperation(httpMethod = "GET"
+            , value = "모든 자녀의 일기 조회"
+            , notes = "select all children daily diaries"
+            , response = DiaryDto.class
+            , responseContainer = "ListResult")
+    @GetMapping("/dailyDiaries")
+    public ListResult<DiaryDto> searchDailyDiaries() {
+        log.info("[DiaryController] searchDailyDiaries");
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetails.getUsername();
+
+        return responseService.getListResult(diaryService.searchDailyDiaries(email));
     }
 
     @ApiOperation(httpMethod = "GET"
@@ -150,29 +170,48 @@ public class DiaryController {
             , response = DiaryDto.class
             , responseContainer = "ListResult")
     @GetMapping("/dailyDiary/{childNo}")
-    public ListResult<DiaryDto> searchDailyDiary(@PathVariable int childNo){
+    public ListResult<DiaryDto> searchDailyDiary(@PathVariable @ApiParam int childNo) {
         log.info("[DiaryController] searchDailyDiary");
 
         return responseService.getListResult(diaryService.searchDailyDiary(childNo));
     }
+
+
+    @ApiOperation(httpMethod = "GET"
+            , value = "해당 자녀의 선택한 일기 상세 조회"
+            , notes = "select child daily diary"
+            , response = DiaryDto.class
+            , responseContainer = "SingleResult")
+    @GetMapping("/dailyDiaryDetail/{childNo}/{diaryNo}")
+    public SingleResult<DiaryDto> searchDiaryDetail(@PathVariable @ApiParam int childNo, @PathVariable @ApiParam int diaryNo) {
+        log.info("[DiaryController] searchDiaryDetail");
+
+        return responseService.getSingleResult(diaryService.searchDiaryDetail(childNo, diaryNo));
+    }
+
     @ApiOperation(httpMethod = "POST"
             , value = "해당 자녀의 일기 수정"
             , notes = "modify child daily diary"
             , response = DiaryDto.class
             , responseContainer = "SingleResult")
-    @PostMapping("/dailyDiary/{childNo}/{diaryNo}")
+    @PostMapping("/dailyDiaryDetail/{childNo}/{diaryNo}")
     public SingleResult<Integer> modifyDailyDiary(@RequestPart(value = "data") @ApiParam(value = "data", required = true) Map<String, String> data,
-                                                @RequestPart(value = "file") @ApiParam(value = "file", required = true) MultipartFile file,
-                                                HttpServletRequest request,
-                                                @PathVariable int childNo,
-                                                @PathVariable int diaryNo) throws IOException {
+                                                  @RequestPart(value = "file", required = false) @ApiParam(value = "file", required = true) MultipartFile file,
+                                                  @PathVariable int childNo,
+                                                  @PathVariable int diaryNo) throws IOException {
         log.info("[DiaryController] updateDailyDiary");
-        String email = refreshTokenValidateService.refreshTokenValidate(request);
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetails.getUsername();
+        String imgUrl = "";
+        if (file != null) {
+            imgUrl = s3Service.uploadFile(file);
+        }
 
-        DiaryDto diaryDto = new DiaryDto(diaryNo, email, childNo, data.get("title"), data.get("content"), s3Service.uploadFile(file),null, null);
+        DiaryDto diaryDto = new DiaryDto(diaryNo, email, childNo, null, data.get("title"), data.get("content"), imgUrl, null, null);
 
         return responseService.getSingleResult(diaryService.modifyDailyDiary(diaryDto));
     }
+
     @ApiOperation(httpMethod = "DELETE"
             , value = "해당 자녀의 일기 삭제"
             , notes = "delete child daily diary"
@@ -180,12 +219,11 @@ public class DiaryController {
             , responseContainer = "SingleResult")
     @DeleteMapping("/dailyDiary/{childNo}/{diaryNo}")
     public SingleResult<Integer> deleteDailyDiary(@PathVariable int childNo,
-                                                @PathVariable int diaryNo) throws IOException {
+                                                  @PathVariable int diaryNo) throws IOException {
         log.info("[DiaryController] deleteDailyDiary");
 
         return responseService.getSingleResult(diaryService.deleteDailyDiary(childNo, diaryNo));
     }
-
 
 
 }
