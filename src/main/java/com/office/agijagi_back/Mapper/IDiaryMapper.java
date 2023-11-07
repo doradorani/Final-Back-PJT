@@ -31,4 +31,6 @@ public interface IDiaryMapper {
     List<DiaryDto> selectDailyDiary(int childNo);
 
     List<DiaryDto> searchDailyDiaries(String email);
+
+    int selectChildCount(String uEmail);
 }

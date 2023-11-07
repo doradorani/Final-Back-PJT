@@ -21,6 +21,8 @@ public class DiaryService {
 
     public int registerChild(ChildDto childDto) {
         log.info("[DiarySerivce] registerChild");
+        int count = diaryMapper.selectChildCount(childDto.getU_email());
+        childDto.setSequence(count + 1);
 
         return diaryMapper.insertChildInfo(childDto);
     }

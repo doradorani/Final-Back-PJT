@@ -4,12 +4,20 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.office.agijagi_back.Mapper.IDiaryMapper">
 
+    <select id="selectChildCount" parameterType="String">
+        SELECT
+            count(*)
+        FROM
+            child
+        WHERE
+            u_email = #{u_email}
+    </select>
     <insert id="insertChildInfo" parameterType="ChildDto">
         INSERT INTO
             child (
-                   u_email, name, birth_date, img, content, reg_date, mod_date
+                   u_email, name, birth_date, img, content, sequence, reg_date, mod_date
         )
-        VALUES (#{u_email}, #{name}, #{birth_date}, #{img}, #{content}, now(), now());
+        VALUES (#{u_email}, #{name}, #{birth_date}, #{img}, #{content},  #{sequence}, now(), now());
     </insert>
     <update id="updateChild" parameterType="ChildDto" >
         UPDATE
@@ -55,7 +63,7 @@
     </insert>
     <select id="selectDailyDetail" parameterType="Integer">
         SELECT
-            d.*, c.name as cd_name
+            d.*, c.name as cd_name, c.sequence as sequence
         FROM
             diary d
         JOIN
@@ -63,11 +71,11 @@
             on
                 d.cd_no = c.no
         WHERE
-            cd_no = #{childNo} and no =#{diaryNo}
+            d.cd_no = #{childNo} and d.no =#{diaryNo}
     </select>
     <select id="selectDailyDiary" parameterType="Integer">
         SELECT
-            d.*, c.name as cd_name
+            d.*, c.name as cd_name, c.sequence as sequence
         FROM
             diary d
         JOIN
@@ -75,11 +83,11 @@
         on
             d.cd_no = c.no
         WHERE
-            cd_no = #{childNo} and d.status = 1
+            d.cd_no = #{childNo} and d.status = 1
     </select>
     <select id="searchDailyDiaries" parameterType="String">
         SELECT
-            d.*, c.name as cd_name
+            d.*, c.name as cd_name, c.sequence as sequence
         FROM
             diary d
         JOIN
