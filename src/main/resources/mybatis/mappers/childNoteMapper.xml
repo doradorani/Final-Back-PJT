@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.office.agijagi_back.Mapper.IChildNoteMapper">
+
+    <select id="selectChildNotesByEmail" parameterType="String">
+        SELECT
+            ch.*, c.name as cd_name
+        FROM
+            child_health ch
+        JOIN
+            child c
+        ON ch.cd_no = c.no
+        WHERE
+            ch.u_email = #{email} and ch.status = 1
+    </select>
+    <select id="selectChildNotesByNoAndEmail" parameterType="String" resultType="ChildNoteDto">
+        SELECT
+            ch.*, c.name as cd_name
+        FROM
+            child_health ch
+        JOIN
+            child c
+        ON
+            ch.cd_no = c.no
+        WHERE
+           ch.u_email = #{email} and ch.cd_no = #{childNo} and ch.status = 1
+    </select>
+</mapper>

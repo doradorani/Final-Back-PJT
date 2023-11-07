@@ -53,7 +53,7 @@ public class DiaryController {
 
         if (data != null) {
             String imgUrl = s3Service.uploadFile(file);
-            ChildDto childDto = new ChildDto(0, data.get("name"), email, imgUrl, data.get("content"), data.get("birth_date"), null, null);
+            ChildDto childDto = new ChildDto(0, data.get("name"), 0, email, imgUrl, data.get("content"), data.get("birth_date"), null, null);
 
             return responseService.getSingleResult(diaryService.registerChild(childDto));
         }
@@ -79,7 +79,7 @@ public class DiaryController {
             imgUrl = s3Service.uploadFile(file);
         }
 
-        ChildDto childDto = new ChildDto(childNo, data.get("name"), email, imgUrl, data.get("content"), data.get("birth_date"), null, null);
+        ChildDto childDto = new ChildDto(childNo, data.get("name"), 0, email, imgUrl, data.get("content"), data.get("birth_date"), null, null);
 
         return responseService.getSingleResult(diaryService.modifyChild(childDto));
     }
@@ -92,7 +92,6 @@ public class DiaryController {
     @GetMapping("/childrenInfo")
     public ListResult<ChildDto> searchChildren() {
         log.info("[DiaryController] searchChildren");
-
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = userDetails.getUsername();
 
@@ -144,7 +143,7 @@ public class DiaryController {
             imgUrl = s3Service.uploadFile(file);
         }
 
-        DiaryDto diaryDto = new DiaryDto(0, email, childNo, null, data.get("title"), data.get("content"), imgUrl, null, null);
+        DiaryDto diaryDto = new DiaryDto(0, email, childNo, 0,null, data.get("title"), data.get("content"), imgUrl, null, null);
 
 
         return responseService.getSingleResult(diaryService.registerDailyDiary(diaryDto));
@@ -207,7 +206,7 @@ public class DiaryController {
             imgUrl = s3Service.uploadFile(file);
         }
 
-        DiaryDto diaryDto = new DiaryDto(diaryNo, email, childNo, null, data.get("title"), data.get("content"), imgUrl, null, null);
+        DiaryDto diaryDto = new DiaryDto(diaryNo, email, childNo, 0,null, data.get("title"), data.get("content"), imgUrl, null, null);
 
         return responseService.getSingleResult(diaryService.modifyDailyDiary(diaryDto));
     }
