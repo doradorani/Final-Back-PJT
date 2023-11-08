@@ -8,7 +8,9 @@ import java.util.List;
 
 @Mapper
 public interface IChildNoteMapper {
-    List<ChildNoteDto> selectChildNotesByEmail(String email);
+    List<ChildNoteDto> selectChildrenInoculationNotesByEmail(String email);
 
     List<ChildNoteDto> selectChildNotesByNoAndEmail(String childNo, String email);
+
+    int insertChildNote(ChildNoteDto childNoteDto);
 }

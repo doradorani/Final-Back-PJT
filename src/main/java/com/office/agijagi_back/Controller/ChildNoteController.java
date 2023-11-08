@@ -57,16 +57,16 @@ public class ChildNoteController {
     }
 
     @ApiOperation(httpMethod = "GET"
-            , value = "모든 자녀의 건강기록 조회"
-            , notes = "search children Notes"
+            , value = "모든 자녀의 접종내역 조회"
+            , notes = "search children Inoculation Notes"
             , response = ChildNoteDto.class
             , responseContainer = "ListResult")
-    @GetMapping("/childrenNotes")
-    public ListResult<ChildNoteDto> searchChildrenNotes(){
-        log.info("[ChildNoteController] searchChildrenNotes");
+    @GetMapping("/inoculationNotes")
+    public ListResult<ChildNoteDto> searchChildrenInoculationNotes(){
+        log.info("[ChildNoteController] searchChildrenInoculationNotes");
         UserDetails userDetails  = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        return responseService.getListResult(childNoteService.searchChildrenNotes(userDetails.getUsername()));
+        return responseService.getListResult(childNoteService.searchChildrenInoculationNotes(userDetails.getUsername()));
     }
 
 
