@@ -13,9 +13,10 @@ public class NoticeDto {
     private @SQLInjectionSafe int no;
     private @SQLInjectionSafe String title;
     private @SQLInjectionSafe String content;
-    private @SQLInjectionSafe int admin_no;
-    private @SQLInjectionSafe String admin_name;
+    private @SQLInjectionSafe String admin_id;
     private @SQLInjectionSafe int attach_cnt;
+    private @SQLInjectionSafe String file_name;
+    private @SQLInjectionSafe String attach_path;
     private @SQLInjectionSafe int hit;
     private @SQLInjectionSafe int status;
     private @SQLInjectionSafe String reg_date;
