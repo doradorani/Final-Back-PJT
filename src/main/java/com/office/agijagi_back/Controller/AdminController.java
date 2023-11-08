@@ -35,9 +35,9 @@ public class AdminController {
         this.jwtProvider = jwtProvider;
     }
 
-    @PostMapping("/home")
-    public ResponseEntity home() {
-        log.info("home()");
+    @PostMapping("/validate")
+    public ResponseEntity validate() {
+        log.info("validate()");
 
         return ResponseEntity.ok(true);
     }
