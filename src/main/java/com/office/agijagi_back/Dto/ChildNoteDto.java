@@ -12,6 +12,7 @@ public class ChildNoteDto {
 
     private @SQLInjectionSafe int no;
     private @SQLInjectionSafe int cd_no;
+    private @SQLInjectionSafe int sequence;
     private @SQLInjectionSafe String cd_name;
     private @SQLInjectionSafe String u_email;
     private @SQLInjectionSafe float height;

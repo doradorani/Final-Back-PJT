@@ -12,5 +12,5 @@ public interface IChildNoteService {
     ChildNoteDto searchChildNoteByNo(String email, int childNo);
     int modifyChildNote(ChildNoteDto childNoteDto);
     int deleteChildNote(int cnNo);
-    List<ChildNoteDto> searchChildrenNotes(String username);
+    List<ChildNoteDto> searchChildrenInoculationNotes(String username);
 }

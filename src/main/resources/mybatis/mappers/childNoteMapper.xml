@@ -4,20 +4,20 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.office.agijagi_back.Mapper.IChildNoteMapper">
 
-    <select id="selectChildNotesByEmail" parameterType="String">
+    <select id="selectChildrenInoculationNotesByEmail" parameterType="String">
         SELECT
-            ch.*, c.name as cd_name
+            ch.*, c.name as cd_name, c.sequence as sequence
         FROM
             child_health ch
         JOIN
             child c
         ON ch.cd_no = c.no
         WHERE
-            ch.u_email = #{email} and ch.status = 1
+            ch.u_email = #{email} and ch.status = 1 and ch.vaccination_nm IS NOT NULL
     </select>
     <select id="selectChildNotesByNoAndEmail" parameterType="String" resultType="ChildNoteDto">
         SELECT
-            ch.*, c.name as cd_name
+            ch.no, ch.cd_no, avg(ch.height) as height, avg(ch.weight) as weight, avg(ch.head) as head, ch.vaccination_nm, ch.inoculation_agency, ch.inoculation_order, ch.etc, DATE_FORMAT(ch.reg_date, "%Y-%m-%d") reg_date, ch.mod_date, ch.u_email, ch.status, c.name as cd_name
         FROM
             child_health ch
         JOIN
@@ -26,5 +26,19 @@
             ch.cd_no = c.no
         WHERE
            ch.u_email = #{email} and ch.cd_no = #{childNo} and ch.status = 1
+        GROUP BY
+            reg_date
+        ORDER BY
+            reg_date
+        LIMIT 20
     </select>
+    <insert id="insertChildNote" parameterType="ChildNoteDto">
+        INSERT INTO
+        child_health
+        (
+            cd_no, u_email, height, weight, head, vaccination_nm, inoculation_order, inoculation_agency, etc, reg_date, mod_date
+        ) VALUES (
+            #{cd_no}, #{u_email}, #{height}, #{weight}, #{head}, #{vaccination_nm}, #{inoculation_order}, #{inoculation_agency}, #{etc}, now(), now()
+        )
+    </insert>
 </mapper>

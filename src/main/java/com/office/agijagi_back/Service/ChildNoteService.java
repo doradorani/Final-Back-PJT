@@ -25,7 +25,9 @@ public class ChildNoteService implements IChildNoteService {
 
     @Override
     public int registerChildNote(ChildNoteDto childNoteDto) {
-        return 0;
+        log.info("[ChildNoteService] registerChildNote");
+
+        return childNoteMapper.insertChildNote(childNoteDto);
     }
 
     @Override
@@ -57,8 +59,8 @@ public class ChildNoteService implements IChildNoteService {
     }
 
     @Override
-    public List<ChildNoteDto> searchChildrenNotes(String email) {
-        log.info("[ChildNoteService] searchChildrenNotes");
-        return childNoteMapper.selectChildNotesByEmail(email);
+    public List<ChildNoteDto> searchChildrenInoculationNotes(String email) {
+        log.info("[ChildNoteService] searchChildrenInoculationNotes");
+        return childNoteMapper.selectChildrenInoculationNotesByEmail(email);
     }
 }
