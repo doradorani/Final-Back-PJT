@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
 @Log4j2
+@Service
 public class S3Service{
     private final S3Uploader s3Uploader;
 
@@ -43,4 +43,16 @@ public class S3Service{
         }
         return Lists;
     }
+
+//    public List<String> uploadListFiles(MultipartFile[] files) throws IOException {
+//        log.info("[S3Service] uploadListFiles");
+//        List<String> Lists = new ArrayList<>();
+//        if (files != null){
+//            for (int i= 0; i < files.length; i++){
+//                String url = s3Uploader.putS3(files[i]);
+//                Lists.add(url);
+//            }
+//        }
+//        return Lists;
+//    }
 }
