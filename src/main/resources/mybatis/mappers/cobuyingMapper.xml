@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.office.agijagi_back.Mapper.ICobuyingMapper">
+
+    <insert id="coBuyRegister">
+        INSERT INTO
+            cobuying_product(id,
+                             name,
+                             price,
+                             start_date,
+                             end_date,
+                             img,
+                             option1,
+                             option2,
+                             option3,
+                             option4,
+                             option5,
+                             content,
+                             min_num,
+                             reg_date,
+                             mod_date
+                             )
+        VALUES (#{id},
+                #{name},
+                #{price},
+                #{start_date},
+                #{end_date},
+                #{img},
+                #{option1},
+                #{option2},
+                #{option3},
+                #{option4},
+                #{option5},
+                #{content},
+                #{min_num},
+                NOW(),
+                NOW()
+                )
+    </insert>
+
+    <select id="coBuyListCnt">
+        SELECT
+            COUNT(*)
+        FROM
+            cobuying_product
+        WHERE
+            status = 1
+    </select>
+
+    <select id="productList">
+        SELECT
+            cp.*,
+            (
+                SELECT COUNT(*)
+                FROM cobuying_list cl
+                WHERE cl.product_no = cp.no
+            ) AS accumulate
+        FROM
+            cobuying_product cp
+        WHERE
+            cp.status = 1
+        ORDER BY
+            cp.no DESC
+        LIMIT
+            #{perPage}
+        OFFSET
+            #{offset};
+    </select>
+
+    <select id="productTotalPage">
+        SELECT
+            (COUNT(*) / #{perPage}) + 1
+        FROM
+            cobuying_product
+    </select>
+
+    <select id="detailProductNo">
+        SELECT
+            *
+        FROM
+            cobuying_product
+        WHERE
+            no = #{detailProductNo}
+    </select>
+
+    <select id="accumulateProduct">
+        SELECT
+            COUNT(*)
+        FROM
+            cobuying_list
+        WHERE
+            product_no = #{detailProductNo}
+    </select>
+
+</mapper>
