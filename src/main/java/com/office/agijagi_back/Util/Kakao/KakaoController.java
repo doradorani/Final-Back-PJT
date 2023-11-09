@@ -82,6 +82,7 @@ public class KakaoController {
         //엑세스 토큰 이용해서 사용자 정보 가져오기
         kakaoTokenDto = getUserInfo(access_Token);
 
+
         return kakaoService.login(kakaoTokenDto);
     }
 

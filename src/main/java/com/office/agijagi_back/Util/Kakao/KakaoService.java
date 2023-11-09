@@ -27,11 +27,15 @@ public class KakaoService {
         int isUser = kakaoMapper.isUser(kakaoTokenDto.getEmail());
 
         int createUser = 0;
+        String newName = "";
+        String newEmail = "";
 
         if(isUser <= 0){        //회원가입
             String randomNickname = generateRandomNickname(10);
             kakaoTokenDto.setUserNickname(randomNickname);
             createUser = kakaoMapper.insertUser(kakaoTokenDto);
+            newName = kakaoTokenDto.getUserName();
+            newEmail = kakaoTokenDto.getEmail();
         }
 
         String nickname = kakaoMapper.getLoginNicknameByEmail(kakaoTokenDto.getEmail());
@@ -41,6 +45,8 @@ public class KakaoService {
         tokenDto.setNewUser(createUser);
         tokenDto.setUserNickname(nickname);
         tokenDto.setImg(img);
+        tokenDto.setUserName(newName);
+        tokenDto.setUserEmail(newEmail);
 
         return tokenService.setTokenForFront("refreshToken", tokenDto);
     }

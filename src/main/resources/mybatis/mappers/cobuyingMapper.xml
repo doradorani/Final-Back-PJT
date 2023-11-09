@@ -45,8 +45,6 @@
             COUNT(*)
         FROM
             cobuying_product
-        WHERE
-            status = 1
     </select>
 
     <select id="productList">
@@ -59,8 +57,6 @@
             ) AS accumulate
         FROM
             cobuying_product cp
-        WHERE
-            cp.status = 1
         ORDER BY
             cp.no DESC
         LIMIT
@@ -92,6 +88,184 @@
             cobuying_list
         WHERE
             product_no = #{detailProductNo}
+    </select>
+
+    <insert id="fundingProduct">
+        INSERT INTO
+            cobuying_list(
+                          u_email,
+                          product_no,
+                          product_option,
+                          reg_date,
+                          mod_date
+        )
+        VALUES (
+                #{email},
+                #{detailProductNo},
+                #{selectedOption},
+                NOW(),
+                NOW()
+               )
+    </insert>
+
+    <select id="alreadyFunding">
+        SELECT
+            COUNT(*)
+        FROM
+            cobuying_list
+        WHERE
+            u_email = #{email} AND
+            product_no = #{detailProductNo}
+    </select>
+
+    <select id="myFundings">
+        SELECT
+            product_no
+        FROM
+            cobuying_list
+        WHERE
+            u_email = #{email}
+    </select>
+
+    <select id="myHits">
+        SELECT
+            product_no
+        FROM
+            cobuying_like
+        WHERE
+            user_no = #{email}
+    </select>
+
+    <select id="alreadyHit">
+        SELECT
+            COUNT(*)
+        FROM
+            cobuying_like
+        WHERE
+            user_no = #{email} AND
+            product_no = #{detailProductNo}
+    </select>
+
+    <insert id="cobuyInsertHit">
+        INSERT INTO
+            cobuying_like(
+                          user_no,
+                          product_no
+        )
+        VALUES (
+                #{email},
+                #{detailProductNo}
+               )
+    </insert>
+
+    <delete id="cobuyDeleteHit">
+        DELETE
+        FROM
+            cobuying_like
+        WHERE
+            user_no = #{email} AND
+            product_no = #{detailProductNo}
+    </delete>
+
+    <update id="decreaseHit">
+        UPDATE
+            cobuying_product
+        SET
+            hit = hit-1
+        WHERE
+            no = #{detailProductNo}
+    </update>
+
+    <update id="increaseHit">
+        UPDATE
+            cobuying_product
+        SET
+            hit = hit+1
+        WHERE
+            no = #{detailProductNo}
+    </update>
+
+    <select id="getCobuyHitByNo">
+        SELECT
+            hit
+        FROM
+            cobuying_product
+        WHERE
+            no = #{detailProductNo}
+    </select>
+
+    <select id="myFundingProduct">
+        SELECT
+            cp.*
+        FROM
+            cobuying_product cp
+        INNER JOIN
+            cobuying_list cl
+        ON
+            cp.no = cl.product_no
+        WHERE
+            cl.u_email = #{email}
+        ORDER BY
+            cl.no DESC
+        LIMIT
+            #{perPage}
+        OFFSET
+            #{offset}
+    </select>
+
+    <select id="fundingListCnt">
+        SELECT
+            COUNT(*)
+        FROM
+            cobuying_list
+        WHERE
+            u_email = #{email}
+    </select>
+
+    <select id="fundingTotalPage">
+        SELECT
+            (COUNT(*) / #{perPage}) + 1
+        FROM
+            cobuying_list
+        WHERE
+            u_email = #{email}
+    </select>
+
+    <select id="myHitProduct">
+        SELECT
+            cp.*
+        FROM
+            cobuying_product cp
+                INNER JOIN
+            cobuying_like cl
+            ON
+                cp.no = cl.product_no
+        WHERE
+            cl.user_no = #{email}
+        ORDER BY
+            cl.no DESC
+            LIMIT
+            #{perPage}
+        OFFSET
+            #{offset}
+    </select>
+
+    <select id="hitListCnt">
+        SELECT
+            COUNT(*)
+        FROM
+            cobuying_like
+        WHERE
+            user_no = #{email}
+    </select>
+
+    <select id="hitTotalPage">
+        SELECT
+            (COUNT(*) / #{perPage}) + 1
+        FROM
+            cobuying_like
+        WHERE
+            user_no = #{email}
     </select>
 
 </mapper>
