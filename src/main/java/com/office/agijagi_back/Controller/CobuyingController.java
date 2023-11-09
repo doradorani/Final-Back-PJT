@@ -94,7 +94,8 @@ public class CobuyingController {
         field.set(obj, value);
     }
 
-    @GetMapping("/admin/list/{currentPage}/{perPage}")
+    //전체 상품
+    @GetMapping("/list/{currentPage}/{perPage}")
     public SingleResult<Map> coBuyList(@PathVariable @Valid int currentPage,
                                        @PathVariable @Valid int perPage) throws IOException {
         log.info("coBuyList()");
@@ -102,10 +103,63 @@ public class CobuyingController {
         return responseService.getSingleResult(cobuyingService.coBuyList(currentPage, perPage));
     }
 
-    @GetMapping("/admin/detailProduct/{detailProductNo}")
+    @GetMapping("/detailProduct/{detailProductNo}")
     public SingleResult<Map> detailProduct(@PathVariable @Valid int detailProductNo) throws IOException{
         log.info("coBuyList()");
 
         return responseService.getSingleResult(cobuyingService.detailProductNo(detailProductNo));
+    }
+
+    @PostMapping("/fundingProduct/{detailProductNo}/{selectedOption}")
+    public SingleResult<Integer> fundingProduct(@PathVariable @Valid int detailProductNo,
+                                                @PathVariable @Valid String selectedOption) throws IOException{
+        log.info("fundingProduct()");
+
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetails.getUsername();
+
+        return responseService.getSingleResult(cobuyingService.fundingProduct(email, detailProductNo, selectedOption));
+    }
+
+    @GetMapping("/myCobuy")
+    public SingleResult<Map> myCobuy(){
+        log.info("myCobuy()");
+
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetails.getUsername();
+
+        return responseService.getSingleResult(cobuyingService.myCobuy(email));
+    }
+
+    @GetMapping("/coBuyHit/{detailProductNo}")
+    public SingleResult<Integer> cobuyHit(@PathVariable @Valid int detailProductNo) throws IOException {
+        log.info("cobuyHit()");
+
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetails.getUsername();
+
+        return responseService.getSingleResult(cobuyingService.cobuyHit(email, detailProductNo));
+    }
+
+    @GetMapping("/myFundingProduct/{currentPage}/{perPage}")
+    public SingleResult<Map> myFundingProduct(@PathVariable @Valid int currentPage,
+                                              @PathVariable @Valid int perPage) throws IOException {
+        log.info("myFundingProduct()");
+
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetails.getUsername();
+
+        return responseService.getSingleResult(cobuyingService.myFundingProduct(email, currentPage, perPage));
+    }
+
+    @GetMapping("/myHitProduct/{currentPage}/{perPage}")
+    public SingleResult<Map> myHitProduct(@PathVariable @Valid int currentPage,
+                                              @PathVariable @Valid int perPage) throws IOException {
+        log.info("myLikeProduct()");
+
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetails.getUsername();
+
+        return responseService.getSingleResult(cobuyingService.myHitProduct(email, currentPage, perPage));
     }
 }

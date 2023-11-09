@@ -14,6 +14,8 @@ public class TokenDto {
     private String refreshToken;
 
     private int newUser;
+    private String userName;
     private String userNickname;
+    private String userEmail;
     private String img;
 }
