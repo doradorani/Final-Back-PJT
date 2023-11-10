@@ -1,7 +1,6 @@
 package com.office.agijagi_back.Mapper;
 
 import com.office.agijagi_back.Dto.PostDto;
-import com.office.agijagi_back.Util.Response.SingleResult;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

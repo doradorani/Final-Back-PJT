@@ -76,6 +76,13 @@ public class NoticeController {
         return responseService.getListResult(noticeService.getNoticeDetail(noticeIndex, modifyRequest));
     }
 
+    @GetMapping("/detail/{noticeIndex}")
+    public SingleResult<Map<String, Object>> getNoticeDetailForUser(@PathVariable @Valid int noticeIndex) {
+        log.info("[NoticeController] getNoticeDetail");
+
+        return responseService.getSingleResult(noticeService.getNoticeDetailForUser(noticeIndex));
+    }
+
     @DeleteMapping("/deleteNotice/{noticeIndex}")
     public SingleResult<Integer> deleteNotice(@PathVariable @Valid int noticeIndex) throws Exception {
         log.info("[NoticeController] deleteNotice");

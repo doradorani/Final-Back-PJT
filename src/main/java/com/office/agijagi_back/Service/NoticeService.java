@@ -60,8 +60,6 @@ public class NoticeService {
         if (modifyRequest == 0) {
             int result = noticeMapper.updateNoticeDetailHit(noticeIndex);
             int firstNoticeIndex = noticeMapper.selectFirstNoticeNo();
-            System.out.println(noticeIndex);
-            System.out.println(firstNoticeIndex);
             if (result != 0 && firstNoticeIndex != noticeIndex) {
                 List<NoticeDto> noticeDtos = noticeMapper.selectNoticeDetailContent(noticeIndex);
                 return noticeDtos;
@@ -76,6 +74,30 @@ public class NoticeService {
         }
         return null;
     }
+
+    public Map<String, Object> getNoticeDetailForUser(int noticeIndex) {
+        log.info("[NoticeService] getNoticeDetailForUser");
+
+        Map<String, Object> noticeDtosMap = new HashMap<>();
+        int result = noticeMapper.updateNoticeDetailHit(noticeIndex);
+        int firstNoticeIndex = noticeMapper.selectFirstNoticeNoWithStatus();
+        if (result != 0 && firstNoticeIndex != noticeIndex) {
+            int noBeforeIndex = noticeMapper.selectNoBeforeIndex(noticeIndex);
+            NoticeDto noticeDto = noticeMapper.selectNoticeDetailForDelete(noBeforeIndex);
+            List<NoticeDto> noticeDtos = noticeMapper.selectNoticeDetailForUserWithTwoRow(noticeIndex);
+            noticeDtosMap.put("data1",noticeDto);
+            noticeDtosMap.put("data2",noticeDtos);
+
+            return noticeDtosMap;
+        } else if (result != 0 && firstNoticeIndex == noticeIndex) {
+            List<NoticeDto> noticeDtos = noticeMapper.selectNoticeDetailForUserWithTwoRow(noticeIndex);
+            noticeDtosMap.put("data1",noticeDtos);
+
+            return noticeDtosMap;
+        }
+        return null;
+    };
+
 
     public int deleteNotice(int noticeIndex) throws Exception {
         log.info("[NoticeService] deleteNotice");
@@ -164,6 +186,7 @@ public class NoticeService {
         }
         return result;
     }
+
 
 
 }

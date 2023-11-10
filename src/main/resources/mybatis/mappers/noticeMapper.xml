@@ -49,6 +49,17 @@
             LIMIT 1;
     </select>
 
+    <select id="selectNoBeforeIndex" parameterType="Integer" resultType="Integer">
+        SELECT *
+        FROM notice
+        WHERE status = 1
+        AND no = (
+            SELECT MAX(no)
+            FROM notice
+            WHERE status = 1 AND no &lt; #{noticeIndex}
+        );
+    </select>
+
     <select id="selectNoticeDetailContent" parameterType="Integer" resultType="NoticeDto">
         SELECT *
         FROM notice
@@ -61,6 +72,14 @@
         SELECT *
         FROM notice
         WHERE no >= (#{noticeIndex})
+        ORDER BY no
+            LIMIT 2;
+    </select>
+
+    <select id="selectNoticeDetailForUserWithTwoRow" parameterType="Integer" resultType="NoticeDto">
+        SELECT *
+        FROM notice
+        WHERE no >= (#{noticeIndex}) AND status = 1
         ORDER BY no
             LIMIT 2;
     </select>
@@ -88,6 +107,14 @@
         SELECT *
         FROM notice
         WHERE no = #{noticeIndex}
+    </select>
+
+    <select id="selectFirstNoticeNoWithStatus" parameterType="Integer" resultType="Integer">
+        SELECT no
+        FROM notice
+        WHERE status = 1
+        ORDER BY no
+            LIMIT 1;
     </select>
 
 </mapper>

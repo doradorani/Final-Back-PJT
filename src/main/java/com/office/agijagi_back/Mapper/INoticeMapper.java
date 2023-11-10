@@ -20,6 +20,8 @@ public interface INoticeMapper {
     List<NoticeDto> selectNoticeDetailContentForTwoRow(int noticeIndex);
     int selectRecentNotice();
     NoticeDto selectNoticeDetailForDelete(int noticeIndex);
+    List<NoticeDto> selectNoticeDetailForUserWithTwoRow(int noticeIndex);
+    int selectNoBeforeIndex(int noticeIndex);
 
-
+    int selectFirstNoticeNoWithStatus();
 }
