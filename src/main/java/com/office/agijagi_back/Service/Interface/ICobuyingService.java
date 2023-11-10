@@ -16,4 +16,6 @@ public interface ICobuyingService {
     public int cobuyHit(String email, int detailProductNo);
     public Map<String, Object> myFundingProduct(String email, int currentPage, int perPage);
     public Map<String, Object> myHitProduct(String email, int currentPage, int perPage);
+    public Map<String, Object> userDetailProduct(String email, int detailProductNo);
+    public int cancelFundingProduct(String email, int detailProductNo);
 }

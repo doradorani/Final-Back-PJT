@@ -60,7 +60,7 @@ public class SecurityConfig {
                 .antMatchers("/admin/newToken", "/admin/signUp", "/admin/signIn", "/admin/logOut", "/admin/signOut").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/coBuy/admin/**").hasRole("ADMIN")
-                .antMatchers("/coBuy/fundingProduct/**", "/coBuy/coBuyHit/**", "/coBuy/myFundingProduct/**", "/coBuy/myHitProduct/**").hasRole("USER")
+                .antMatchers("/coBuy/fundingProduct/**", "/coBuy/userDetailProduct/**", "/coBuy/coBuyHit/**", "/coBuy/myFundingProduct/**", "/coBuy/myHitProduct/**").hasRole("USER")
                 .antMatchers("/coBuy/**").permitAll()
                 .antMatchers("/kakao/**").permitAll()
                 .antMatchers("/swagger-ui.html", "/api/v2/**", "/health", "/swagger/**", "/swagger-resources/**", "/webjars/**", "/v2/api-docs").permitAll()
