@@ -90,6 +90,16 @@
             product_no = #{detailProductNo}
     </select>
 
+    <select id="myCobuyOption">
+        SELECT
+            product_option
+        FROM
+            cobuying_list
+        WHERE
+            u_email = #{email} AND
+            product_no = #{detailProductNo}
+    </select>
+
     <insert id="fundingProduct">
         INSERT INTO
             cobuying_list(
@@ -107,6 +117,14 @@
                 NOW()
                )
     </insert>
+
+    <delete id="cancelFundingProduct">
+        DELETE FROM
+            cobuying_list
+        WHERE
+            u_email = #{email} AND
+            product_no = #{detailProductNo}
+    </delete>
 
     <select id="alreadyFunding">
         SELECT
@@ -196,21 +214,25 @@
 
     <select id="myFundingProduct">
         SELECT
-            cp.*
+            cp.*,
+            (SELECT COUNT(*)
+             FROM cobuying_list cl
+             WHERE cl.product_no = cp.no) AS accumulate
         FROM
             cobuying_product cp
-        INNER JOIN
+                INNER JOIN
             cobuying_list cl
-        ON
-            cp.no = cl.product_no
+            ON
+                cp.no = cl.product_no
         WHERE
             cl.u_email = #{email}
         ORDER BY
             cl.no DESC
-        LIMIT
+            LIMIT
             #{perPage}
         OFFSET
-            #{offset}
+            #{offset};
+
     </select>
 
     <select id="fundingListCnt">
@@ -233,7 +255,10 @@
 
     <select id="myHitProduct">
         SELECT
-            cp.*
+            cp.*,
+            (SELECT COUNT(*)
+             FROM cobuying_list cll
+             WHERE cll.product_no = cp.no) AS accumulate
         FROM
             cobuying_product cp
                 INNER JOIN
@@ -247,7 +272,8 @@
             LIMIT
             #{perPage}
         OFFSET
-            #{offset}
+            #{offset};
+
     </select>
 
     <select id="hitListCnt">

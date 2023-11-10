@@ -105,9 +105,19 @@ public class CobuyingController {
 
     @GetMapping("/detailProduct/{detailProductNo}")
     public SingleResult<Map> detailProduct(@PathVariable @Valid int detailProductNo) throws IOException{
-        log.info("coBuyList()");
+        log.info("detailProduct()");
 
         return responseService.getSingleResult(cobuyingService.detailProductNo(detailProductNo));
+    }
+
+    @GetMapping("/userDetailProduct/{detailProductNo}")
+    public SingleResult<Map> userDetailProduct(@PathVariable @Valid int detailProductNo) throws IOException{
+        log.info("userDetailProduct()");
+
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetails.getUsername();
+
+        return responseService.getSingleResult(cobuyingService.userDetailProduct(email, detailProductNo));
     }
 
     @PostMapping("/fundingProduct/{detailProductNo}/{selectedOption}")
@@ -119,6 +129,16 @@ public class CobuyingController {
         String email = userDetails.getUsername();
 
         return responseService.getSingleResult(cobuyingService.fundingProduct(email, detailProductNo, selectedOption));
+    }
+
+    @PostMapping("/cancelFundingProduct/{detailProductNo}")
+    public SingleResult<Integer> cancelFundingProduct(@PathVariable @Valid int detailProductNo) throws IOException{
+        log.info("cancelFundingProduct()");
+
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetails.getUsername();
+
+        return responseService.getSingleResult(cobuyingService.cancelFundingProduct(email, detailProductNo));
     }
 
     @GetMapping("/myCobuy")

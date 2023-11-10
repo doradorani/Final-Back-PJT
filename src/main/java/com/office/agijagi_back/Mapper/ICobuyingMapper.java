@@ -30,4 +30,6 @@ public interface ICobuyingMapper {
     List<CoBuyProductDto> myHitProduct(String email, int perPage, int offset);
     int hitListCnt(String email);
     int hitTotalPage(String email, int perPage);
+    String myCobuyOption(String email, int detailProductNo);
+    int cancelFundingProduct(String email, int detailProductNo);
 }

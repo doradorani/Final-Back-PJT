@@ -5,6 +5,8 @@ import com.office.agijagi_back.Dto.NoticeDto;
 import com.office.agijagi_back.Mapper.ICobuyingMapper;
 import com.office.agijagi_back.Service.Interface.ICobuyingService;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -57,14 +59,31 @@ public class CobuyingService implements ICobuyingService {
     public Map<String, Object> detailProductNo(int detailProductNo) {
         log.info("detailProductNo()");
 
+        Map<String, Object> CoBuyDetailMap = new HashMap<>();
+
         CoBuyProductDto coBuyProductDto = iCobuyingMapper.detailProductNo(detailProductNo);
-
         int accumulateUser = iCobuyingMapper.accumulateProduct(detailProductNo);
-
         coBuyProductDto.setAccumulate(accumulateUser);
 
-        Map<String, Object> CoBuyDetailMap = new HashMap<>();
         CoBuyDetailMap.put("coBuyDetailProduct", coBuyProductDto);
+
+        return CoBuyDetailMap;
+    }
+
+    @Override
+    public Map<String, Object> userDetailProduct(String email, int detailProductNo) {
+        log.info("userDetailProduct()");
+
+        Map<String, Object> CoBuyDetailMap = new HashMap<>();
+
+        CoBuyProductDto coBuyProductDto = iCobuyingMapper.detailProductNo(detailProductNo);
+        int accumulateUser = iCobuyingMapper.accumulateProduct(detailProductNo);
+        coBuyProductDto.setAccumulate(accumulateUser);
+
+        String myCobuyOption = iCobuyingMapper.myCobuyOption(email, detailProductNo);
+
+        CoBuyDetailMap.put("coBuyDetailProduct", coBuyProductDto);
+        CoBuyDetailMap.put("myCobuyOption", myCobuyOption);
 
         return CoBuyDetailMap;
     }
@@ -79,6 +98,13 @@ public class CobuyingService implements ICobuyingService {
         }
 
         return iCobuyingMapper.fundingProduct(email, detailProductNo, selectedOption);
+    }
+
+    @Override
+    public int cancelFundingProduct(String email, int detailProductNo) {
+        log.info("cancelFundingProduct()");
+
+        return iCobuyingMapper.cancelFundingProduct(email, detailProductNo);
     }
 
     @Override
