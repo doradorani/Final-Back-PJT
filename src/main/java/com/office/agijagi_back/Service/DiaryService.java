@@ -40,7 +40,7 @@ public class DiaryService {
     }
 
     public ChildDto searchChildDetail(int childNo) {
-        log.info("[DiaryService] searchChildren");
+        log.info("[DiaryService] searchChildDetail");
 
         return diaryMapper.selectChildByNo(childNo);
     }
@@ -58,12 +58,12 @@ public class DiaryService {
     }
 
     public List<DiaryDto> searchDailyDiary(int childNo) {
-        log.info("[DiaryService] searchDailyDiaries");
+        log.info("[DiaryService] searchDailyDiary");
 
         return diaryMapper.selectDailyDiary(childNo);
     }
     public DiaryDto searchDiaryDetail(int childNo, int diaryNo) {
-        log.info("[DiaryService] searchDailyDiary");
+        log.info("[DiaryService] searchDiaryDetail");
 
         return diaryMapper.selectDailyDetail(childNo, diaryNo);
     }
@@ -75,7 +75,7 @@ public class DiaryService {
     }
 
     public int deleteDailyDiary(int childNo, int diaryNo) {
-        log.info("[DiaryService] modifyDailyDiary");
+        log.info("[DiaryService] deleteDailyDiary");
 
         return diaryMapper.deleteDailyDiary(childNo, diaryNo);
     }
@@ -84,5 +84,17 @@ public class DiaryService {
         log.info("[DiaryService] searchDailyDiaries");
 
         return diaryMapper.searchDailyDiaries(email);
+    }
+
+    public List<DiaryDto> searchChildRandomPictures(int childNo) {
+        log.info("[DiaryService] searchChildRandomPictures");
+
+        return diaryMapper.selectChildRandomPictures(childNo);
+    }
+
+    public List<DiaryDto> searchChildrenRandomPictures(String username) {
+        log.info("[DiaryService] searchChildrenRandomPictures");
+
+        return diaryMapper.selectChildrenRandomPictures(username);
     }
 }

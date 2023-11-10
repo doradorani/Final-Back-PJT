@@ -15,9 +15,9 @@
     <insert id="insertChildInfo" parameterType="ChildDto">
         INSERT INTO
             child (
-                   u_email, name, birth_date, img, content, sequence, reg_date, mod_date
+                   u_email, name, birth_date, img, content, sequence,  reg_date, mod_date
         )
-        VALUES (#{u_email}, #{name}, #{birth_date}, #{img}, #{content},  #{sequence}, now(), now());
+        VALUES (#{u_email}, #{name}, #{birth_date}, #{img}, #{content},  #{sequence}, #{fourcuts_checked}, now(), now());
     </insert>
     <update id="updateChild" parameterType="ChildDto" >
         UPDATE
@@ -57,9 +57,9 @@
     <insert id="insertDailyDiary" parameterType="ChildDto">
         INSERT INTO
             diary (
-            u_email, cd_no, title, content, img, reg_date, mod_date
+            u_email, cd_no, title, content, img,fourcuts_checked, reg_date, mod_date
         )
-        VALUES (#{u_email}, #{cd_no}, #{title}, #{content},#{img}, now(), now());
+        VALUES (#{u_email}, #{cd_no}, #{title}, #{content},#{img}, #{fourcuts_checked},now(), now());
     </insert>
     <select id="selectDailyDetail" parameterType="Integer">
         SELECT
@@ -116,6 +116,27 @@
         WHERE
             cd_no = #{childNo} and no = #{diaryNo}
     </update>
-
+    <select id="selectChildRandomPictures" parameterType="Integer">
+        SELECT
+            *
+        FROM
+            diary
+        WHERE
+            cd_no = #{cd_no} and status = 1
+        ORDER BY
+            RAND()
+        LIMIT 4;
+    </select>
+    <select id="selectChildrenRandomPictures" parameterType="String">
+        SELECT
+            *
+        FROM
+            diary
+        WHERE
+            u_email = #{email} and status = 1
+        ORDER BY
+            RAND()
+        LIMIT 4;
+    </select>
 
 </mapper>

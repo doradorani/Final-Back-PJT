@@ -25,7 +25,7 @@
         ON
             ch.cd_no = c.no
         WHERE
-           ch.u_email = #{email} and ch.cd_no = #{childNo} and ch.status = 1
+            ch.u_email = #{email}  and ch.status = 1 and ch.cd_no = #{childNo}
         GROUP BY
             reg_date
         ORDER BY
