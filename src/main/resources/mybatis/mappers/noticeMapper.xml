@@ -5,19 +5,35 @@
 <mapper namespace="com.office.agijagi_back.Mapper.INoticeMapper">
 
     <select id="selectNoticeTableList" parameterType="Integer" resultType="NoticeDto">
-        SELECT n.*, a.name AS admin_name
-        FROM notice n
-        INNER JOIN admin a
-        ON n.admin_no = a.no
-        ORDER BY n.no DESC
+        SELECT *
+        FROM notice
+        ORDER BY
+            no DESC
             LIMIT #{perPage}
         OFFSET #{offset}
     </select>
 
     <select id="selectNoticeTotalPage" parameterType="Integer" resultType="Integer">
-        SELECT (COUNT(*) / #{perPage}) + 1
+        SELECT CEIL(COUNT(*) / #{perPage})
         AS totalPages
         FROM notice
+    </select>
+
+    <select id="selectNotices" parameterType="Integer" resultType="NoticeDto">
+        SELECT *
+        FROM notice
+        where status = 1
+        ORDER BY
+            no DESC
+            LIMIT #{perPage}
+        OFFSET #{offset}
+    </select>
+
+    <select id="selectNoticesTotalPage" parameterType="Integer" resultType="Integer">
+        SELECT CEIL(COUNT(*) / #{perPage})
+                   AS totalPages
+        FROM notice
+        where status = 1
     </select>
 
     <update id="updateNoticeDetailHit" parameterType="Integer">
@@ -26,12 +42,46 @@
         WHERE no = #{noticeIndex}
     </update>
 
+    <select id="selectFirstNoticeNo" parameterType="Integer" resultType="Integer">
+        SELECT no
+        FROM notice
+        ORDER BY no
+            LIMIT 1;
+    </select>
+
+    <select id="selectNoBeforeIndex" parameterType="Integer" resultType="Integer">
+        SELECT *
+        FROM notice
+        WHERE status = 1
+        AND no = (
+            SELECT MAX(no)
+            FROM notice
+            WHERE status = 1 AND no &lt; #{noticeIndex}
+        );
+    </select>
+
     <select id="selectNoticeDetailContent" parameterType="Integer" resultType="NoticeDto">
-        SELECT n.*, a.name AS admin_name
-        FROM notice n
-        INNER JOIN admin a
-        ON n.admin_no = a.no
-        WHERE n.no = #{noticeIndex}
+        SELECT *
+        FROM notice
+        WHERE no >= (#{noticeIndex} - 1)
+        ORDER BY no
+            LIMIT 3;
+    </select>
+
+    <select id="selectNoticeDetailContentForTwoRow" parameterType="Integer" resultType="NoticeDto">
+        SELECT *
+        FROM notice
+        WHERE no >= (#{noticeIndex})
+        ORDER BY no
+            LIMIT 2;
+    </select>
+
+    <select id="selectNoticeDetailForUserWithTwoRow" parameterType="Integer" resultType="NoticeDto">
+        SELECT *
+        FROM notice
+        WHERE no >= (#{noticeIndex}) AND status = 1
+        ORDER BY no
+            LIMIT 2;
     </select>
 
     <update id="updateNoticeStatus" parameterType="Integer">
@@ -40,5 +90,31 @@
             mod_date = NOW()
         WHERE no = #{noticeIndex}
     </update>
+
+    <insert id="insertNotice" parameterType="NoticeDto">
+        INSERT INTO notice (title, content, admin_id, attach_cnt, file_name, attach_path, reg_date, mod_date)
+        VALUES (#{title}, #{content}, #{admin_id}, #{attach_cnt}, #{file_name}, #{attach_path}, now(), now())
+    </insert>
+
+    <select id="selectRecentNotice" parameterType="Integer" resultType="Integer">
+        SELECT no
+        FROM notice
+        ORDER BY no DESC
+            LIMIT 1;
+    </select>
+
+    <select id="selectNoticeDetailForDelete" parameterType="Integer" resultType="NoticeDto">
+        SELECT *
+        FROM notice
+        WHERE no = #{noticeIndex}
+    </select>
+
+    <select id="selectFirstNoticeNoWithStatus" parameterType="Integer" resultType="Integer">
+        SELECT no
+        FROM notice
+        WHERE status = 1
+        ORDER BY no
+            LIMIT 1;
+    </select>
 
 </mapper>

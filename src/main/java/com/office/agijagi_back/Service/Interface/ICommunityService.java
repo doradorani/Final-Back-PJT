@@ -9,5 +9,5 @@ public interface ICommunityService {
 
     PostDto getDetailPost(int no);
 
-    int uploadPost(PostDto postDto);
+    int uploadPost(List<String> imgUrls, String text, String user_mail);
 }
