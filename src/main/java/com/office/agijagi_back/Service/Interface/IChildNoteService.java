@@ -9,8 +9,8 @@ public interface IChildNoteService {
 
     int registerChildNote(ChildNoteDto childNoteDto);
     Map<String, Object> searchChildNotes(String childNo, String email);
-    ChildNoteDto searchChildNoteByNo(String email, int childNo);
     int modifyChildNote(ChildNoteDto childNoteDto);
-    int deleteChildNote(int cnNo);
     List<ChildNoteDto> searchChildrenInoculationNotes(String username);
+    int deleteChildNote(ChildNoteDto childNoteDto);
+    ChildNoteDto searchChildHealthNote(ChildNoteDto childNoteDto);
 }

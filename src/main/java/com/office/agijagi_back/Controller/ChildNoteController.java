@@ -57,6 +57,21 @@ public class ChildNoteController {
     }
 
     @ApiOperation(httpMethod = "GET"
+            , value = "해당 자녀의 특정 건강 기록 조회"
+            , notes = "search child Note"
+            , response = ChildNoteDto.class
+            , responseContainer = "ListResult")
+    @GetMapping("/childNotes/{childNo}/{healthNo}")
+    public SingleResult<ChildNoteDto> searchChildHealthNote(@PathVariable int childNo, @PathVariable int healthNo){
+        log.info("[ChildNoteController] searchChildHealthNote");
+        UserDetails userDetails  = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        ChildNoteDto childNoteDto = new ChildNoteDto(healthNo, childNo, userDetails.getUsername());
+
+        return responseService.getSingleResult(childNoteService.searchChildHealthNote(childNoteDto));
+    }
+
+    @ApiOperation(httpMethod = "GET"
             , value = "모든 자녀의 접종내역 조회"
             , notes = "search children Inoculation Notes"
             , response = ChildNoteDto.class
@@ -67,6 +82,34 @@ public class ChildNoteController {
         UserDetails userDetails  = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         return responseService.getListResult(childNoteService.searchChildrenInoculationNotes(userDetails.getUsername()));
+    }
+    @ApiOperation(httpMethod = "DELETE"
+            , value = "해당 자녀 해당 접종내역 삭제"
+            , notes = "delete child Inoculation NOTE"
+            , response = ChildNoteDto.class
+            , responseContainer = "SingleResult")
+    @DeleteMapping("/childNote/{childNo}/{healthNo}")
+    public SingleResult<Integer> deleteChildInoculationNote(@PathVariable int childNo, @PathVariable int healthNo){
+        log.info("[ChildNoteController] deleteChildInoculationNote");
+        UserDetails userDetails  = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        ChildNoteDto childNoteDto = new ChildNoteDto(healthNo, childNo, userDetails.getUsername());
+
+        return responseService.getSingleResult(childNoteService.deleteChildNote(childNoteDto));
+    }
+  @ApiOperation(httpMethod = "PUT"
+            , value = "자녀 접종내역 삭제"
+            , notes = "delete chilㅇ Inoculation NOTE"
+            , response = ChildNoteDto.class
+            , responseContainer = "SingleResult")
+    @PutMapping("/childNote/{childNo}/{healthNo}")
+    public SingleResult<Integer> modifyChildNote(@PathVariable int childNo, @PathVariable int healthNo){
+        log.info("[ChildNoteController] modifyChildNote");
+        UserDetails userDetails  = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        ChildNoteDto childNoteDto = new ChildNoteDto(healthNo, childNo, userDetails.getUsername());
+
+        return responseService.getSingleResult(childNoteService.modifyChildNote(childNoteDto));
     }
 
 

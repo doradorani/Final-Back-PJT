@@ -23,7 +23,7 @@
         UPDATE
             child
         SET
-            name = #{name},birth_date = #{birth_date}, mod_date= now(), content = #{content}
+            name = #{name},birth_date = #{birth_date}, mod_date= now(), content = #{content}, fourcuts_checked = #{fourcuts_checked}, mod_date = now()
         <if test='img != ""'>
             ,img = #{img}
         </if>
@@ -42,7 +42,7 @@
         UPDATE
             child
         SET
-            status = 0
+            status = 0, mod_date = now()
         WHERE
             no = #{childNo}
     </update>
@@ -112,7 +112,7 @@
         UPDATE
             diary
         SET
-            status = 0
+            status = 0, mode_date = now()
         WHERE
             cd_no = #{childNo} and no = #{diaryNo}
     </update>

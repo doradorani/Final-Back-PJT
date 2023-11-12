@@ -41,4 +41,20 @@
             #{cd_no}, #{u_email}, #{height}, #{weight}, #{head}, #{vaccination_nm}, #{inoculation_order}, #{inoculation_agency}, #{etc}, now(), now()
         )
     </insert>
+    <update id="deleteChildNote" parameterType="ChildNoteDto">
+        UPDATE
+            child_health
+        SET
+            status = 0
+        WHERE
+            cd_no = #{cd_no} and no = #{no} and u_email = #{u_email}
+    </update>
+    <update id="updateChildNote" parameterType="ChildNoteDto">
+        UPDATE
+            child_health
+        SET
+            height = #{height}, weight = #{weight}, head = #{head}, vaccination_nm = #{vaccination_nm}, inoculation_agency = #{inoculation_agency}, inoculation_order = #{inoculation_order}, etc = #{etc}, mode_date = now()
+        WHERE
+            no = #{no} and u_email = #{u_email}
+    </update>
 </mapper>

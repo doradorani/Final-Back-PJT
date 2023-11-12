@@ -43,24 +43,27 @@ public class ChildNoteService implements IChildNoteService {
         return result;
     }
 
-    @Override
-    public ChildNoteDto searchChildNoteByNo(String email, int childNo) {
-        return null;
-    }
-
-    @Override
-    public int modifyChildNote(ChildNoteDto childNoteDto) {
-        return 0;
-    }
-
-    @Override
-    public int deleteChildNote(int cnNo) {
-        return 0;
-    }
 
     @Override
     public List<ChildNoteDto> searchChildrenInoculationNotes(String email) {
         log.info("[ChildNoteService] searchChildrenInoculationNotes");
         return childNoteMapper.selectChildrenInoculationNotesByEmail(email);
+    }
+
+    @Override
+    public int deleteChildNote(ChildNoteDto childNoteDto){
+        log.info("[ChildNoteService] deleteChildNote");
+        return childNoteMapper.deleteChildNote(childNoteDto);
+    }
+
+    @Override
+    public ChildNoteDto searchChildHealthNote(ChildNoteDto childNoteDto) {
+        return null;
+    }
+
+    @Override
+    public int modifyChildNote(ChildNoteDto childNoteDto){
+        log.info("[ChildNoteService] modifyChildNote");
+        return childNoteMapper.updateChildNote(childNoteDto);
     }
 }
