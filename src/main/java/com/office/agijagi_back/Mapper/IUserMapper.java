@@ -17,4 +17,5 @@ public interface IUserMapper {
     List<Map<String, Object>> userManageList(int perPage, int offset);
     int totalPageByUserManageList(int perPage);
     int totalCntByUserManageList();
+    Map<String, Object> showUserDetailByEmail(String email);
 }

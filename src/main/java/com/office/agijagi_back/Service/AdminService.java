@@ -145,5 +145,19 @@ public class AdminService implements IAdminService {
         return noneAuthListMap;
     }
 
+    @Override
+    public int updateGrade(int no, int gradeData) {
+        log.info("updateGrade()");
+
+        return adminMapper.updateGradeByNoAndGrade(no, gradeData);
+    }
+
+    @Override
+    public Map<String, Object> showUserDetail(String email) {
+        log.info("showUserDetail");
+
+        return userMapper.showUserDetailByEmail(email);
+    }
+
 
 }

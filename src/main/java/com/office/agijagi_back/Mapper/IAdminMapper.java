@@ -21,4 +21,5 @@ public interface IAdminMapper {
     List<Map<String, Object>> noneAuthList(int perPage, int offset);
     int totalPageBynoneAuthList(int perPage);
     int totalCntBynoneAuthList();
+    int updateGradeByNoAndGrade(int no, int gradeData);
 }
