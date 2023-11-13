@@ -30,7 +30,7 @@ public class NoticeService {
         int offset = (currentPage - 1) * perPage;
 
         List<NoticeDto> noticeDtos = noticeMapper.selectNoticeTableList(perPage, offset);
-        int totalPages = noticeMapper.selectNoticeTotalPage(perPage);;
+        int totalPages = noticeMapper.selectNoticeTotalPage(perPage);
 
         Map<String, Object> NoticeMap = new HashMap<>();
         NoticeMap.put("noticeDtos", noticeDtos);
