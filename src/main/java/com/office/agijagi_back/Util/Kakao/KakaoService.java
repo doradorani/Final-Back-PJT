@@ -37,6 +37,17 @@ public class KakaoService {
             newName = kakaoTokenDto.getUserName();
             newEmail = kakaoTokenDto.getEmail();
         }
+        else{
+            int returnUser = kakaoMapper.returnUser(kakaoTokenDto.getEmail());  //정보는있는데 상태가 0이면
+            if(returnUser == 0){
+                int comeBackSuccess = kakaoMapper.comeBackUser(kakaoTokenDto.getEmail());   //상태 1로 변경
+                if(comeBackSuccess > 0){
+                    createUser = 2;
+                    newName = kakaoTokenDto.getUserName();
+                    newEmail = kakaoTokenDto.getEmail();
+                }
+            }
+        }
 
         String nickname = kakaoMapper.getLoginNicknameByEmail(kakaoTokenDto.getEmail());
         String img = kakaoMapper.getLoginProfileByEmail(kakaoTokenDto.getEmail());

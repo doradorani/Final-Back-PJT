@@ -13,6 +13,10 @@ public class TokenDto {
     private String accessToken;
     private String refreshToken;
 
+    //관리자용
+    private int adminGrade;
+
+    //사용자용
     private int newUser;
     private String userName;
     private String userNickname;

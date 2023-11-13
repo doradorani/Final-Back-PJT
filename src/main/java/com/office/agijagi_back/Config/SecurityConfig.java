@@ -55,7 +55,7 @@ public class SecurityConfig {
 
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS).permitAll() // CORS Preflight 방지
-                .antMatchers("/user/newToken", "/user/logOut", "/user/signOut", "/user/dupNickname/**").permitAll()
+                .antMatchers("/user/newToken", "/user/logOut", "/user/dupNickname/**").permitAll()
                 .antMatchers("/user/**").hasRole("USER")
                 .antMatchers("/admin/newToken", "/admin/signUp", "/admin/signIn", "/admin/logOut", "/admin/signOut").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
