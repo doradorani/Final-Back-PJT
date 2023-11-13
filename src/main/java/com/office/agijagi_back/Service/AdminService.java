@@ -1,7 +1,9 @@
 package com.office.agijagi_back.Service;
 
 import com.office.agijagi_back.Dto.AdminDto;
+import com.office.agijagi_back.Dto.UserDto;
 import com.office.agijagi_back.Mapper.IAdminMapper;
+import com.office.agijagi_back.Mapper.IUserMapper;
 import com.office.agijagi_back.Service.Interface.IAdminService;
 import com.office.agijagi_back.Util.Jwt.IjwtMapper;
 import com.office.agijagi_back.Util.Jwt.JwtProvider;
@@ -13,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -20,14 +23,16 @@ import java.util.Map;
 public class AdminService implements IAdminService {
 
     private final IAdminMapper adminMapper;
+    private final IUserMapper userMapper;
 
     private final JwtProvider jwtProvider;
     private final TokenService tokenService;
     private final PasswordEncoder passwordEncoder;
 
-    public AdminService(IAdminMapper adminMapper, JwtProvider jwtProvider, IjwtMapper jwtMapper, TokenService tokenService, PasswordEncoder passwordEncoder){
+    public AdminService(IAdminMapper adminMapper, JwtProvider jwtProvider, IjwtMapper jwtMapper, IUserMapper userMapper, TokenService tokenService, PasswordEncoder passwordEncoder){
         this.adminMapper = adminMapper;
         this.jwtProvider = jwtProvider;
+        this.userMapper = userMapper;
         this.tokenService = tokenService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -57,6 +62,7 @@ public class AdminService implements IAdminService {
             if (passwordEncoder.matches(adminDto.getPw(), loginedAdminDto.getPw())) {
 
                 TokenDto tokenDto = jwtProvider.generateTokenDto(adminDto.getId(), "ROLE_ADMIN");
+                tokenDto.setAdminGrade(loginedAdminDto.getGrade());
 
                 return tokenService.setTokenForFront("refreshTokenAdmin", tokenDto);
             }
@@ -83,6 +89,60 @@ public class AdminService implements IAdminService {
         log.info("AdminService(signOut)");
 
         return adminMapper.updateAdminToWithdraw(id);
+    }
+
+    @Override
+    public Map<String, Object> userManageList(int currentPage, int perPage) {
+        log.info("userManageList()");
+
+        int offset = (currentPage - 1) * perPage;
+
+        List<Map<String, Object>> userManageListDtos = userMapper.userManageList(perPage, offset);
+        int totalPages = userMapper.totalPageByUserManageList(perPage);
+        int userManageListCnt = userMapper.totalCntByUserManageList();
+
+        Map<String, Object> userListMap = new HashMap<>();
+        userListMap.put("userManageListDtos", userManageListDtos);
+        userListMap.put("totalPages", totalPages);
+        userListMap.put("userManageListCnt", userManageListCnt);
+
+        return userListMap;
+    }
+
+    @Override
+    public Map<String, Object> authList(int currentPage, int perPage) {
+        log.info("authList()");
+
+        int offset = (currentPage - 1) * perPage;
+
+        List<Map<String, Object>> authListDtos = adminMapper.authList(perPage, offset);
+        int totalPages = adminMapper.totalPageByauthList(perPage);
+        int userManageListCnt = adminMapper.totalCntByauthList();
+
+        Map<String, Object> authListMap = new HashMap<>();
+        authListMap.put("authListDtos", authListDtos);
+        authListMap.put("totalPages", totalPages);
+        authListMap.put("userManageListCnt", userManageListCnt);
+
+        return authListMap;
+    }
+
+    @Override
+    public Map<String, Object> noneAuthList(int currentPage, int perPage) {
+        log.info("noneAuthList()");
+
+        int offset = (currentPage - 1) * perPage;
+
+        List<Map<String, Object>> noneAuthListDtos = adminMapper.noneAuthList(perPage, offset);
+        int totalPages = adminMapper.totalPageBynoneAuthList(perPage);
+        int userManageListCnt = adminMapper.totalCntBynoneAuthList();
+
+        Map<String, Object> noneAuthListMap = new HashMap<>();
+        noneAuthListMap.put("noneAuthListDtos", noneAuthListDtos);
+        noneAuthListMap.put("totalPages", totalPages);
+        noneAuthListMap.put("userManageListCnt", userManageListCnt);
+
+        return noneAuthListMap;
     }
 
 

@@ -56,4 +56,42 @@
             email = #{email}
     </select>
 
+    <select id="userManageList">
+        SELECT
+            u.no,
+            u.name,
+            u.nickname,
+            u.email,
+            u.phone,
+            u.reg_date,
+            u.mod_date,
+            uc.code as status
+        FROM
+            user u
+        JOIN
+            user_code uc
+        ON
+            u.status = uc.no
+        ORDER BY
+            u.no DESC
+        LIMIT
+            #{perPage}
+        OFFSET
+            #{offset};
+    </select>
+
+    <select id="totalPageByUserManageList">
+        SELECT
+            (COUNT(*) / #{perPage}) + 1
+        FROM
+            user
+    </select>
+
+    <select id="totalCntByUserManageList">
+        SELECT
+            COUNT(*)
+        FROM
+            user
+    </select>
+
 </mapper>

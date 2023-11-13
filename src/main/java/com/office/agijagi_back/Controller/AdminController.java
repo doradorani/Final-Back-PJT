@@ -8,14 +8,13 @@ import com.office.agijagi_back.Service.AdminService;
 import com.office.agijagi_back.Service.ResponseService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Map;
 
 @RestController
@@ -131,6 +130,30 @@ public class AdminController {
         cookie.setMaxAge(0);
         cookie.setPath("/");
         response.addCookie(cookie);
-
     }
+
+    @GetMapping("userManageList/{currentPage}/{perPage}")
+    public SingleResult<Map> userManageList(@PathVariable @Valid int currentPage,
+                                       @PathVariable @Valid int perPage) throws IOException {
+        log.info("userManageList()");
+
+        return responseService.getSingleResult(adminService.userManageList(currentPage, perPage));
+    }
+
+    @GetMapping("authList/{currentPage}/{perPage}")
+    public SingleResult<Map> authList(@PathVariable @Valid int currentPage,
+                                            @PathVariable @Valid int perPage) throws IOException {
+        log.info("authList()");
+
+        return responseService.getSingleResult(adminService.authList(currentPage, perPage));
+    }
+
+    @GetMapping("noneAuthList/{currentPage}/{perPage}")
+    public SingleResult<Map> noneAuthList(@PathVariable @Valid int currentPage,
+                                      @PathVariable @Valid int perPage) throws IOException {
+        log.info("noneAuthList()");
+
+        return responseService.getSingleResult(adminService.noneAuthList(currentPage, perPage));
+    }
+
 }

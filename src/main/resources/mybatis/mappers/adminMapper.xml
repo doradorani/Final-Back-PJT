@@ -55,4 +55,85 @@
             id = #{id}
     </update>
 
+    <select id="authList">
+        SELECT
+            no,
+            id,
+            name,
+            email,
+            phone,
+            grade,
+            reg_date,
+            mod_date
+        FROM
+            admin
+        WHERE
+            grade != 0
+        ORDER BY
+            no DESC
+        LIMIT
+            #{perPage}
+        OFFSET
+            #{offset};
+    </select>
+
+    <select id="totalPageByauthList">
+        SELECT
+            (COUNT(*) / #{perPage}) + 1
+        FROM
+            admin
+        WHERE
+            grade != 0
+    </select>
+
+    <select id="totalCntByauthList">
+        SELECT
+            COUNT(*)
+        FROM
+            admin
+        WHERE
+            grade != 0
+    </select>
+
+    <select id="noneAuthList">
+        SELECT
+            no,
+            id,
+            name,
+            email,
+            phone,
+            grade,
+            reg_date,
+            mod_date
+        FROM
+            admin
+        WHERE
+            grade = 0
+        ORDER BY
+            no DESC
+            LIMIT
+            #{perPage}
+        OFFSET
+            #{offset};
+    </select>
+
+    <select id="totalPageBynoneAuthList">
+        SELECT
+            (COUNT(*) / #{perPage}) + 1
+        FROM
+            admin
+        WHERE
+            grade = 0
+    </select>
+
+    <select id="totalCntBynoneAuthList">
+        SELECT
+            COUNT(*)
+        FROM
+            admin
+        WHERE
+            grade = 0
+    </select>
+
+
 </mapper>

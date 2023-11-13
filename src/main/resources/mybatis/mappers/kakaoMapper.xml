@@ -21,6 +21,25 @@
                )
     </insert>
 
+    <select id="returnUser">
+        SELECT
+            status
+        FROM
+            user
+        WHERE
+            email = #{email}
+    </select>
+
+    <update id="comeBackUser">
+        UPDATE
+            user
+        SET
+            status = 1
+        WHERE
+            email = #{email}
+    </update>
+
+
     <select id="getLoginNicknameByEmail">
         SELECT
             nickname

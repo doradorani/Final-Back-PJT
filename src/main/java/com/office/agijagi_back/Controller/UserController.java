@@ -97,28 +97,35 @@ public class UserController {
     }
 
     @PostMapping("/signOut")
-    public void signOut(HttpServletRequest request, HttpServletResponse response){
+    public int signOut(HttpServletRequest request, HttpServletResponse response){
+        log.info("signOut()");
 
         String refreshToken = "";
         String email = "";
-        Cookie[] list = request.getCookies();
 
+        Cookie[] list = request.getCookies();
         if (list != null) {
             for (Cookie cookie : list) {
+                System.out.println(cookie.getName());
                 if (cookie.getName().equals("refreshToken")) {
                     refreshToken = cookie.getValue().substring(6);
                 }
             }
         }
+        else{
+            System.out.println("없음");
+        }
 
         email = userService.getEmailByRefreshToken(refreshToken);
+
         int deleteToken = userService.deleteRefreshTokenByToken(refreshToken);
-        int deleteUser = userService.deleteUser(email);
 
         Cookie cookie = new Cookie("refreshToken", null);
         cookie.setMaxAge(0);
         cookie.setPath("/");
         response.addCookie(cookie);
+
+        return userService.deleteUser(email);
     }
 
     @GetMapping("/info")
@@ -149,23 +156,21 @@ public class UserController {
     public SingleResult<Integer> modifyInfo(@RequestPart(value = "file", required = false) MultipartFile file,
                                             @RequestPart("info") Map<String, Object> item) throws IOException {
 
-        String imgUrl = null;
+        log.info("modifyInfo()");
 
-        if(file != null){
+        String imgUrl = null;
+        if (file != null) {
             imgUrl = s3Service.uploadFile(file);
-        }
-        else{
-            imgUrl = userService.getImgByEmail((String) item.get("email"));
         }
 
         UserDto modifyUserDto = new UserDto(item.get("name"),
-                                            item.get("nickname"),
-                                            item.get("email"),
-                                            item.get("phone"),
-                                            item.get("zip_code"),
-                                            item.get("address_detail1"),
-                                            item.get("address_detail2"),
-                                            imgUrl);
+                item.get("nickname"),
+                item.get("email"),
+                item.get("phone"),
+                item.get("zip_code"),
+                item.get("address_detail1"),
+                item.get("address_detail2"),
+                imgUrl);
 
         return responseService.getSingleResult(userService.modifyInfo(modifyUserDto));
     }

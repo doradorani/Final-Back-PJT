@@ -11,4 +11,6 @@ public interface IKakaoMapper {
     int insertUser(KakaoTokenDto kakaoTokenDto);
     String getLoginNicknameByEmail(String email);
     String getLoginProfileByEmail(String email);
+    int returnUser(String email);
+    int comeBackUser(String email);
 }
