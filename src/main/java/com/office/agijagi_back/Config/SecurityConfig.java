@@ -65,6 +65,8 @@ public class SecurityConfig {
                 .antMatchers("/kakao/**").permitAll()
                 .antMatchers("/swagger-ui.html", "/api/v2/**", "/health", "/swagger/**", "/swagger-resources/**", "/webjars/**", "/v2/api-docs").permitAll()
                 .antMatchers("/notice/**").permitAll()
+                .antMatchers("/community/getMyPosts/**").hasRole("USER")
+                .antMatchers("/community/**").permitAll()
                 // 특정 URL 경로에 대한 요청을 모두 허용
                 .anyRequest().authenticated() // 나머지 모든 요청은 인증이 필요
                 .and()
