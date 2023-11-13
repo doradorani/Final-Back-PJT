@@ -26,4 +26,9 @@ public class ChildNoteDto {
     private @SQLInjectionSafe String reg_date;
     private @SQLInjectionSafe String mod_date;
 
+    public ChildNoteDto(int healthNo, int childNo, String email) {
+        this.no = healthNo;
+        this.cd_no = childNo;
+        this.u_email = email;
+    }
 }

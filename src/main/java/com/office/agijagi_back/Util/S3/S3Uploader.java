@@ -2,14 +2,23 @@ package com.office.agijagi_back.Util.S3;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.util.IOUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.UUID;
 
 @Service
@@ -88,7 +97,63 @@ public class S3Uploader {
         }
     }
 
-//    /**
+    /**
+     * file 다운로드
+     *
+     * @param fileKey  파일 key 로 해당 버킷에서 파일 찾아서 들고옴
+     * @param filePath 다운로드 url
+     * @param request
+     * @param response
+     * @return
+     */
+    public boolean download(String filePath, HttpServletRequest request, HttpServletResponse response) {
+        String downloadFileName = filePath.substring(59);
+        S3Object fullObject = null;
+        try {
+            fullObject = amazonS3Client.getObject(bucket, downloadFileName);
+            if (fullObject == null) {
+                return false;
+            }
+        } catch (AmazonS3Exception e) {
+        }
+
+        OutputStream os = null;
+        FileInputStream fis = null;
+        boolean success = false;
+        try {
+            S3ObjectInputStream objectInputStream = fullObject.getObjectContent();
+            byte[] bytes = IOUtils.toByteArray(objectInputStream);
+
+            response.setContentType("application/octet-stream;charset=UTF-8");
+            response.setHeader("Content-Transfer-Encoding", "binary");
+            response.setHeader( "Content-Disposition", "attachment; filename=\"" + downloadFileName + "\";" );
+            response.setHeader("Content-Length", String.valueOf(fullObject.getObjectMetadata().getContentLength()));
+            response.setHeader("Set-Cookie", "fileDownload=true; path=/");
+            FileCopyUtils.copy(bytes, response.getOutputStream());
+            success = true;
+        } catch (IOException e) {
+            log.debug(e.getMessage(), e);
+        } finally {
+            try {
+                if (fis != null) {
+                    fis.close();
+                }
+            } catch (IOException e) {
+                log.debug(e.getMessage(), e);
+            }
+            try {
+                if (os != null) {
+                    os.close();
+                }
+            } catch (IOException e) {
+                log.debug(e.getMessage(), e);
+            }
+        }
+        return success;
+    }
+
+
+    //    /**
 //     * 로컬에 저장된 파일 지우기
 //     * @param targetFile : 저장된 파일
 //     */

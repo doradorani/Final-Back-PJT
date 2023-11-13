@@ -132,7 +132,7 @@ public class DiaryController {
             , response = Integer.class
             , responseContainer = "SingleResult")
     @PostMapping("/dailyDiary/{childNo}")
-    public SingleResult<Integer> registerDailyDiary(@RequestPart(value = "data") @ApiParam(value = "data", required = true) Map<String, String> data,
+    public SingleResult<Integer> registerDailyDiary(@RequestPart(value = "data") @ApiParam(value = "data", required = true) DiaryDto diaryDto,
                                                     @RequestPart(value = "file") @ApiParam(value = "file", required = true) MultipartFile file,
                                                     @PathVariable int childNo) throws IOException {
         log.info("[DiaryController] registerDailyDiary");
@@ -143,7 +143,10 @@ public class DiaryController {
             imgUrl = s3Service.uploadFile(file);
         }
 
-        DiaryDto diaryDto = new DiaryDto(0, email, childNo, 0,null, data.get("title"), data.get("content"), imgUrl, null, null);
+        diaryDto.setU_email(email);
+        diaryDto.setImg(imgUrl);
+
+//        DiaryDto diaryDto = new DiaryDto(0, email, childNo, 0,data.get("fourcuts_checked"), null, data.get("title"), data.get("content"), imgUrl, null, null);
 
 
         return responseService.getSingleResult(diaryService.registerDailyDiary(diaryDto));
@@ -206,7 +209,8 @@ public class DiaryController {
             imgUrl = s3Service.uploadFile(file);
         }
 
-        DiaryDto diaryDto = new DiaryDto(diaryNo, email, childNo, 0,null, data.get("title"), data.get("content"), imgUrl, null, null);
+//        DiaryDto diaryDto = new DiaryDto(diaryNo, email, childNo, 0,null, data.get("title"), data.get("content"), imgUrl, null, null);
+        DiaryDto diaryDto = null;
 
         return responseService.getSingleResult(diaryService.modifyDailyDiary(diaryDto));
     }
@@ -222,6 +226,32 @@ public class DiaryController {
         log.info("[DiaryController] deleteDailyDiary");
 
         return responseService.getSingleResult(diaryService.deleteDailyDiary(childNo, diaryNo));
+    }
+
+    @ApiOperation(httpMethod = "GET"
+            , value = "해당 자녀의 사진 랜덤 조회"
+            , notes = "select child pictures randomly"
+            , response = DiaryDto.class
+            , responseContainer = "ListResult")
+    @GetMapping("/childPictures/{childNo}")
+    public ListResult<DiaryDto> searchChildRandomPictures(@PathVariable @ApiParam int childNo) {
+        log.info("[DiaryController] searchChildRandomPictures");
+
+        return responseService.getListResult(diaryService.searchChildRandomPictures(childNo));
+    }
+
+    @ApiOperation(httpMethod = "GET"
+            , value = "해당 계정의 자녀 사진 랜덤 조회"
+            , notes = "select children pictures randomly"
+            , response = DiaryDto.class
+            , responseContainer = "ListResult")
+    @GetMapping("/childrenPictures")
+    public ListResult<DiaryDto> searchChildrenRandomPictures() {
+        log.info("[DiaryController] searchChildrenRandomPictures");
+
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return responseService.getListResult(diaryService.searchChildrenRandomPictures(userDetails.getUsername()));
     }
 
 

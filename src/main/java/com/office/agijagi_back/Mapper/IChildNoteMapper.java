@@ -13,4 +13,8 @@ public interface IChildNoteMapper {
     List<ChildNoteDto> selectChildNotesByNoAndEmail(String childNo, String email);
 
     int insertChildNote(ChildNoteDto childNoteDto);
+
+    Integer deleteChildNote(ChildNoteDto childNoteDto);
+
+    Integer updateChildNote(ChildNoteDto childNoteDto);
 }

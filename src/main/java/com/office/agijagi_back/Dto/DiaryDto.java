@@ -14,6 +14,7 @@ public class DiaryDto {
     private @SQLInjectionSafe String u_email;
     private @SQLInjectionSafe int cd_no;
     private @SQLInjectionSafe int sequence;
+    private @SQLInjectionSafe int fourcuts_checked;
     private @SQLInjectionSafe String cd_name;
     private @SQLInjectionSafe String title;
     private @SQLInjectionSafe String content;

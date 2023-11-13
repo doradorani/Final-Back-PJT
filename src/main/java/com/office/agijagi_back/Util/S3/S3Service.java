@@ -44,15 +44,17 @@ public class S3Service{
         return Lists;
     }
 
-//    public List<String> uploadListFiles(MultipartFile[] files) throws IOException {
-//        log.info("[S3Service] uploadListFiles");
-//        List<String> Lists = new ArrayList<>();
-//        if (files != null){
-//            for (int i= 0; i < files.length; i++){
-//                String url = s3Uploader.putS3(files[i]);
-//                Lists.add(url);
-//            }
-//        }
-//        return Lists;
-//    }
+    public String uploadListFiles(MultipartFile[] files) throws IOException {
+        log.info("[S3Service] uploadListFiles");
+        List<String> Lists = new ArrayList<>();
+        String url = "";
+        if (files != null){
+            for (int i= 0; i < files.length; i++){
+                url += s3Uploader.putS3(files[i]);
+                Lists.add(url);
+            }
+        }
+        return url;
+    }
+
 }
