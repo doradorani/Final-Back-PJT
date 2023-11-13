@@ -135,5 +135,13 @@
             grade = 0
     </select>
 
+    <update id="updateGradeByNoAndGrade">
+        UPDATE
+            admin
+        SET
+            grade = #{gradeData}
+        WHERE
+            no = #{no}
+    </update>
 
 </mapper>

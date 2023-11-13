@@ -94,4 +94,13 @@
             user
     </select>
 
+    <select id="showUserDetailByEmail">
+        SELECT
+            *
+        FROM
+            user
+        WHERE
+            email = #{email}
+    </select>
+
 </mapper>

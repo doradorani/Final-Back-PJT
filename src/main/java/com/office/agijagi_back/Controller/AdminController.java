@@ -140,6 +140,13 @@ public class AdminController {
         return responseService.getSingleResult(adminService.userManageList(currentPage, perPage));
     }
 
+    @GetMapping("showUserDetail/{email}")
+    public SingleResult<Map> showUserDetail(@PathVariable @Valid String email) throws IOException {
+        log.info("showUserDetail()");
+
+        return responseService.getSingleResult(adminService.showUserDetail(email));
+    }
+
     @GetMapping("authList/{currentPage}/{perPage}")
     public SingleResult<Map> authList(@PathVariable @Valid int currentPage,
                                             @PathVariable @Valid int perPage) throws IOException {
@@ -154,6 +161,14 @@ public class AdminController {
         log.info("noneAuthList()");
 
         return responseService.getSingleResult(adminService.noneAuthList(currentPage, perPage));
+    }
+
+    @PutMapping("updateGrade/{no}/{gradeData}")
+    public SingleResult<Integer> updateGrade(@PathVariable @Valid int no,
+                                         @PathVariable @Valid int gradeData) throws IOException {
+        log.info("updateGrade()");
+
+        return responseService.getSingleResult(adminService.updateGrade(no, gradeData));
     }
 
 }
