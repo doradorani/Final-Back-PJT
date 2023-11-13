@@ -98,7 +98,7 @@ public class ChildNoteController {
         return responseService.getSingleResult(childNoteService.deleteChildNote(childNoteDto));
     }
   @ApiOperation(httpMethod = "PUT"
-            , value = "자녀 접종내역 삭제"
+            , value = "해당 자녀 해당 접종 내역 수정"
             , notes = "delete chilㅇ Inoculation NOTE"
             , response = ChildNoteDto.class
             , responseContainer = "SingleResult")
