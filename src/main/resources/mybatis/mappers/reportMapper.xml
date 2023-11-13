@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.office.agijagi_back.Mapper.IReportMapper">
+
+    <select id="selectPostReportTable" parameterType="Integer" resultType="PostReportDto">
+        SELECT post_report.*, post.post_text, post.user_mail, post.status as post_status
+        FROM post_report
+        INNER JOIN post
+        ON post_report.post_no = post.no
+        ORDER BY no DESC
+        LIMIT #{perPage}
+        OFFSET #{offset}
+    </select>
+
+    <select id="selectPostReportTotalPage" parameterType="Integer" resultType="Integer">
+        SELECT CEIL(COUNT(*) / #{perPage})
+        AS totalPages
+        FROM post_report
+    </select>
+
+    <select id="selectReplyReportTable" parameterType="Integer" resultType="ReplyReportDto">
+        SELECT reply_report.*, reply.comment, reply.user_mail , reply.post_no, post.status as post_status
+        FROM reply_report
+        INNER JOIN reply
+        ON reply_report.reply_no = reply.no
+        INNER JOIN post
+        ON reply.post_no = post.no
+        ORDER BY reply_report.no DESC
+        LIMIT #{perPage}
+        OFFSET #{offset}
+    </select>
+
+    <select id="selectReplyReportTotalPage" parameterType="Integer" resultType="Integer">
+        SELECT CEIL(COUNT(*) / #{perPage})
+        AS totalPages
+        FROM post_report
+    </select>
+
+    <update id="updatePostReportStatusForDelete" parameterType="Integer">
+        UPDATE post_report
+        SET status = status - 1,
+            mod_date = NOW()
+        WHERE no = #{reportIndex}
+    </update>
+
+</mapper>

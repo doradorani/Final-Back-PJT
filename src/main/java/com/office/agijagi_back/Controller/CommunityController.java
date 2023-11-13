@@ -1,6 +1,7 @@
 package com.office.agijagi_back.Controller;
 
 import com.office.agijagi_back.Dto.PostDto;
+import com.office.agijagi_back.Dto.ReplyDto;
 import com.office.agijagi_back.Service.CommunityService;
 import com.office.agijagi_back.Service.RefreshTokenValidateService;
 import com.office.agijagi_back.Service.ResponseService;
@@ -45,6 +46,13 @@ public class CommunityController {
         return responseService.getListResult(communityService.getAllPosts());
     }
 
+    @GetMapping("/getMorePosts/{lastPostId}")
+    public ListResult<PostDto> getMorePosts(@PathVariable @Valid int lastPostId) {
+        log.info("[CommunityController] getMorePosts");
+
+        return responseService.getListResult(communityService.getMorePosts(lastPostId));
+    }
+
     @GetMapping("/getDetailPost/{postId}")
     public SingleResult<PostDto> getDetailPost(@PathVariable @Valid int postId) {
         log.info("[CommunityController] getDetailPost");
@@ -79,4 +87,83 @@ public class CommunityController {
         return responseService.getSingleResult(0);
     }
 
+    @DeleteMapping("/deletePost/{postIndex}")
+    public SingleResult<Integer> deletePost(@PathVariable @Valid int postIndex) {
+        log.info("[CommunityController] deletePost");
+
+        if (postIndex != 0) {
+            return responseService.getSingleResult(communityService.deletePost(postIndex));
+        } else {
+            return responseService.getSingleResult(0);
+        }
+    }
+
+    @PutMapping("/updateEmotionBtn/{btnIndex}/{postIndex}")
+    public SingleResult<Integer> updateEmotionBtn(@PathVariable @Valid int btnIndex, @PathVariable @Valid int postIndex) {
+        log.info("[CommunityController] deletePost");
+
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String user_mail = userDetails.getUsername();
+
+        return responseService.getSingleResult(communityService.updateEmotionBtn(btnIndex, postIndex, user_mail));
+    }
+
+    @GetMapping("/getReplys/{postIndex}")
+    public ListResult<ReplyDto> getAllReplys(@PathVariable @Valid int postIndex) {
+        log.info("[CommunityController] getAllPosts");
+
+        return responseService.getListResult(communityService.getAllReplys(postIndex));
+    }
+
+    @PutMapping("/registReply/{postId}/{replyText}")
+    public SingleResult<Integer> registReply(@PathVariable @Valid int postId, @PathVariable @Valid String replyText) {
+        log.info("[CommunityController] registReply");
+
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String user_mail = userDetails.getUsername();
+
+        return responseService.getSingleResult(communityService.registReply(user_mail, postId, replyText));
+    }
+
+    @PutMapping("/registReReply/{postId}/{replyText}/{replyIndex}")
+    public SingleResult<Integer> registReReply(@PathVariable @Valid int postId, @PathVariable @Valid String replyText, @PathVariable @Valid int replyIndex) {
+        log.info("[CommunityController] registReReply");
+
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String user_mail = userDetails.getUsername();
+
+        return responseService.getSingleResult(communityService.registReReply(user_mail, postId, replyText, replyIndex));
+    }
+
+    @DeleteMapping("/deleteReply/{postId}/{replyIndex}")
+    public SingleResult<Integer> deleteReply(@PathVariable @Valid int postId, @PathVariable @Valid int replyIndex) {
+        log.info("[CommunityController] deletePost");
+
+        if (replyIndex != 0) {
+            return responseService.getSingleResult(communityService.deleteReply(postId, replyIndex));
+        } else {
+            return responseService.getSingleResult(0);
+        }
+    }
+
+    @PutMapping("/modifyReply/{replyIndex}/{replyText}")
+    public SingleResult<Integer> modifyReply(@PathVariable @Valid int replyIndex, @PathVariable @Valid String replyText) {
+        log.info("[CommunityController] modifyReply");
+
+        if (replyIndex != 0) {
+            return responseService.getSingleResult(communityService.modifyReply(replyIndex, replyText));
+        } else {
+            return responseService.getSingleResult(0);
+        }
+    }
+
+    @PostMapping("/summitReport/{postId}/{replyIndex}/{reportReason}")
+    public SingleResult<Integer> summitReport (@PathVariable @Valid int postId, @PathVariable @Valid int replyIndex, @PathVariable @Valid String reportReason) {
+        log.info("[CommunityController] summitReport");
+
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String user_mail = userDetails.getUsername();
+
+        return responseService.getSingleResult(communityService.summitReport(postId, replyIndex, reportReason, user_mail));
+    }
 }
