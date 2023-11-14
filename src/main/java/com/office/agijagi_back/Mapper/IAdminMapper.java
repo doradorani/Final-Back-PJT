@@ -22,4 +22,8 @@ public interface IAdminMapper {
     int totalPageBynoneAuthList(int perPage);
     int totalCntBynoneAuthList();
     int updateGradeByNoAndGrade(int no, int gradeData);
+    Map<String, Object> myAdminInfoById(String adminAccount);
+    int modifyAdminInfo(AdminDto modifyAdminDto);
+    int modifyAdminInfoAndPw(AdminDto modifyAdminDto);
+    int duplicateById(String id);
 }

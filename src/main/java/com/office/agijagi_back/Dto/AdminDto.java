@@ -17,6 +17,8 @@ public class AdminDto {
     private @SQLInjectionSafe String reg_date;
     private @SQLInjectionSafe String mod_date;
 
+    private @SQLInjectionSafe String currentId;
+
     public AdminDto(String id, String pw) {
         this.id = id;
         this.pw = pw;
@@ -45,6 +47,12 @@ public class AdminDto {
     }
 
 
-
-
+    public AdminDto(Object id, Object pw, Object name, Object email, Object phone, Object currentId) {
+        this.id = (String) id;
+        this.pw = (String) pw;
+        this.name = (String) name;
+        this.email = (String) email;
+        this.phone = (String) phone;
+        this.currentId = (String) currentId;
+    }
 }
