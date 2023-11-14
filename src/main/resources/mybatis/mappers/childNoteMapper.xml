@@ -13,7 +13,7 @@
             child c
         ON ch.cd_no = c.no
         WHERE
-            ch.u_email = #{email} and ch.status = 1 and ch.vaccination_nm IS NOT NULL
+            ch.u_email = #{email} and ch.status = 1
     </select>
     <select id="selectChildNotesByNoAndEmail" parameterType="String" resultType="ChildNoteDto">
         SELECT
@@ -57,4 +57,12 @@
         WHERE
             no = #{no} and u_email = #{u_email}
     </update>
+    <select id="selectChildrenHealthNote" parameterType="ChildNoteDto">
+        SELECT
+            *
+        FROM
+            child_health
+        WHERE
+            no = #{no} and cd_no = #{cd_no} and u_email = #{u_email}
+    </select>
 </mapper>
