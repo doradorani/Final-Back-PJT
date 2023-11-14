@@ -22,4 +22,9 @@ public class TokenDto {
     private String userNickname;
     private String userEmail;
     private String img;
+    private int userStatus;
+
+    public TokenDto(int userStatus) {
+        this.userStatus = userStatus;
+    }
 }

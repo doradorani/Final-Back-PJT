@@ -26,4 +26,5 @@ public interface IAdminMapper {
     int modifyAdminInfo(AdminDto modifyAdminDto);
     int modifyAdminInfoAndPw(AdminDto modifyAdminDto);
     int duplicateById(String id);
+    int updateUserStatusByNo(int no, int statusData);
 }

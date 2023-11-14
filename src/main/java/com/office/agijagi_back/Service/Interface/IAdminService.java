@@ -19,4 +19,5 @@ public interface IAdminService  {
     Map<String, Object> showUserDetail(String email);
     Map<String, Object> myAdminInfo(String adminAccount);
     int modifyInfo(AdminDto modifyAdminDto);
+    int updateUserStatus(int no, int statusData);
 }
