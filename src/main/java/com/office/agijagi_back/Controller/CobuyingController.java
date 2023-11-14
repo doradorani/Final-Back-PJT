@@ -95,12 +95,24 @@ public class CobuyingController {
     }
 
     //전체 상품
-    @GetMapping("/list/{currentPage}/{perPage}")
-    public SingleResult<Map> coBuyList(@PathVariable @Valid int currentPage,
+    @GetMapping("/list/{optionList}/{currentPage}/{perPage}")
+    public SingleResult<Map> coBuyList(@PathVariable @Valid String optionList,
+                                       @PathVariable @Valid int currentPage,
                                        @PathVariable @Valid int perPage) throws IOException {
         log.info("coBuyList()");
 
-        return responseService.getSingleResult(cobuyingService.coBuyList(currentPage, perPage));
+        return responseService.getSingleResult(cobuyingService.coBuyList(optionList, currentPage, perPage));
+    }
+
+    //진행 관련 옵션 상품
+    @GetMapping("/list/{status}/{optionList}/{currentPage}/{perPage}")
+    public SingleResult<Map> coBuyProceed(@PathVariable @Valid String status,
+                                        @PathVariable @Valid String optionList,
+                                        @PathVariable @Valid int currentPage,
+                                        @PathVariable @Valid int perPage) throws IOException {
+        log.info("coBuyProceed()");
+
+        return responseService.getSingleResult(cobuyingService.coBuyProceed(status, optionList, currentPage, perPage));
     }
 
     @GetMapping("/detailProduct/{detailProductNo}")
