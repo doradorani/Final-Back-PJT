@@ -63,10 +63,6 @@ public class CobuyingService implements ICobuyingService {
 
         List<CoBuyProductDto> coBuyProductDtos = iCobuyingMapper.productProceed(status, optionList, perPage, offset);;
 
-//        if(status.equals("going")) coBuyProductDtos = iCobuyingMapper.productProceedGoing(status, optionList, perPage, offset);
-//        else if(status.equals("end")) coBuyProductDtos = iCobuyingMapper.productProceedEnd(status, optionList, perPage, offset);
-//        else coBuyProductDtos = iCobuyingMapper.productProceedIng(status, optionList, perPage, offset);
-
         int totalPages = iCobuyingMapper.productTotalPage(perPage);
         int productListCnt = coBuyListCnt();
 
