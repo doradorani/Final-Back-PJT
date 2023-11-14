@@ -17,4 +17,6 @@ public interface IChildNoteMapper {
     Integer deleteChildNote(ChildNoteDto childNoteDto);
 
     Integer updateChildNote(ChildNoteDto childNoteDto);
+
+    ChildNoteDto selectChildrenHealthNote(ChildNoteDto childNoteDto);
 }

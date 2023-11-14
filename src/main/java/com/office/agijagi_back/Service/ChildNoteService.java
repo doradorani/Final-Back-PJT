@@ -58,7 +58,8 @@ public class ChildNoteService implements IChildNoteService {
 
     @Override
     public ChildNoteDto searchChildHealthNote(ChildNoteDto childNoteDto) {
-        return null;
+        log.info("[ChildNoteService] searchChildHealthNote");
+        return childNoteMapper.selectChildrenHealthNote(childNoteDto);
     }
 
     @Override
