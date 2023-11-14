@@ -1,6 +1,7 @@
 package com.office.agijagi_back.Controller;
 
 import com.office.agijagi_back.Dto.AdminDto;
+import com.office.agijagi_back.Dto.UserDto;
 import com.office.agijagi_back.Util.Jwt.JwtProvider;
 import com.office.agijagi_back.Util.Jwt.TokenService;
 import com.office.agijagi_back.Util.Response.SingleResult;
@@ -8,7 +9,10 @@ import com.office.agijagi_back.Service.AdminService;
 import com.office.agijagi_back.Service.ResponseService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -169,6 +173,27 @@ public class AdminController {
         log.info("updateGrade()");
 
         return responseService.getSingleResult(adminService.updateGrade(no, gradeData));
+    }
+
+    @GetMapping("myAdminInfo/{adminAccount}")
+    public SingleResult<Map> myAdminInfo(@PathVariable @Valid String adminAccount) throws IOException{
+        log.info("myAdminInfo()");
+
+        return responseService.getSingleResult(adminService.myAdminInfo(adminAccount));
+    }
+
+    @PutMapping("modifyInfo")
+    public SingleResult<Integer> modifyInfo(@RequestPart("info") Map<String, Object> item) throws IOException {
+        log.info("updateAdminInfo");
+
+        AdminDto modifyAdminDto = new AdminDto(item.get("id"),
+                item.get("pw"),
+                item.get("name"),
+                item.get("email"),
+                item.get("phone"),
+                item.get("currentId"));
+
+        return responseService.getSingleResult(adminService.modifyInfo(modifyAdminDto));
     }
 
 }

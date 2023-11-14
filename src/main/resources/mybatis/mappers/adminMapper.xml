@@ -144,4 +144,53 @@
             no = #{no}
     </update>
 
+    <select id="myAdminInfoById">
+        SELECT
+            id,
+            name,
+            email,
+            phone,
+            reg_date,
+            mod_date
+        FROM
+            admin
+        WHERE
+            id = #{adminAccount}
+    </select>
+
+    <select id="duplicateById">
+        SELECT
+            COUNT(*)
+        FROM
+            admin
+        WHERE id=#{id}
+    </select>
+
+    <update id="modifyAdminInfo">
+        UPDATE
+            admin
+        SET
+            id=#{id},
+            name=#{name},
+            email=#{email},
+            phone=#{phone},
+            mod_date=NOW()
+        WHERE
+            id=#{currentId}
+    </update>
+
+    <update id="modifyAdminInfoAndPw">
+        UPDATE
+            admin
+        SET
+            id=#{id},
+            pw=#{pw},
+            name=#{name},
+            email=#{email},
+            phone=#{phone},
+            mod_date=NOW()
+        WHERE
+            id=#{currentId}
+    </update>
+
 </mapper>

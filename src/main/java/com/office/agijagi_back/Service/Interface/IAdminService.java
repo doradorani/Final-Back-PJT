@@ -17,4 +17,6 @@ public interface IAdminService  {
     Map<String, Object> noneAuthList(int currentPage, int perPage);
     int updateGrade(int no, int gradeData);
     Map<String, Object> showUserDetail(String email);
+    Map<String, Object> myAdminInfo(String adminAccount);
+    int modifyInfo(AdminDto modifyAdminDto);
 }

@@ -42,7 +42,8 @@
             zip_code=#{zip_code},
             address_detail1=#{address_detail1},
             address_detail2=#{address_detail2},
-            img=#{img}
+            img=#{img},
+            mod_date=NOW()
         WHERE
             email = #{email}
     </update>

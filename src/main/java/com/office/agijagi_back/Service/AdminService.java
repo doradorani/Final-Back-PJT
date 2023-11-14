@@ -154,10 +154,40 @@ public class AdminService implements IAdminService {
 
     @Override
     public Map<String, Object> showUserDetail(String email) {
-        log.info("showUserDetail");
+        log.info("showUserDetail()");
 
         return userMapper.showUserDetailByEmail(email);
     }
 
+    @Override
+    public Map<String, Object> myAdminInfo(String adminAccount) {
+        log.info("myAdminInfo()");
 
+        return adminMapper.myAdminInfoById(adminAccount);
+    }
+
+    @Override
+    public int modifyInfo(AdminDto modifyAdminDto) {
+        log.info("modifyInfo()");
+
+        //아이디 변경 시
+        if(!modifyAdminDto.getCurrentId().equals(modifyAdminDto.getId())){
+
+            //변경한 아이디가 이미 존재한다면
+            int dupCnt = adminMapper.duplicateById(modifyAdminDto.getId());
+            if(dupCnt > 0){
+                return 0;
+            }
+        }
+
+        if(modifyAdminDto.getPw() != null && modifyAdminDto.getPw() != ""){
+            modifyAdminDto.setPw(passwordEncoder.encode(modifyAdminDto.getPw()));
+            log.info("modifyAdminInfoAndPw()");
+            return adminMapper.modifyAdminInfoAndPw(modifyAdminDto);
+        }
+        else{
+            log.info("modifyAdminInfo()");
+            return adminMapper.modifyAdminInfo(modifyAdminDto);
+        }
+    }
 }
