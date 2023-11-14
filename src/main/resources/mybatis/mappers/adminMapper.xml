@@ -193,4 +193,13 @@
             id=#{currentId}
     </update>
 
+    <update id="updateUserStatusByNo">
+        UPDATE
+            user
+        SET
+            status = #{statusData}
+        WHERE
+            no = #{no}
+    </update>
+
 </mapper>

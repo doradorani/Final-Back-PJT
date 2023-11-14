@@ -196,4 +196,12 @@ public class AdminController {
         return responseService.getSingleResult(adminService.modifyInfo(modifyAdminDto));
     }
 
+    @PutMapping("/updateUserStatus/{no}/{statusData}")
+    public SingleResult<Integer> updateUserStatus(@PathVariable int no,
+                                                @PathVariable int statusData) throws IOException {
+        log.info("updateUserStatus()");
+
+        return responseService.getSingleResult(adminService.updateUserStatus(no, statusData));
+    }
+
 }

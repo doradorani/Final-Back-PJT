@@ -190,4 +190,10 @@ public class AdminService implements IAdminService {
             return adminMapper.modifyAdminInfo(modifyAdminDto);
         }
     }
+
+    @Override
+    public int updateUserStatus(int no, int statusData) {
+
+        return adminMapper.updateUserStatusByNo(no, statusData);
+    }
 }

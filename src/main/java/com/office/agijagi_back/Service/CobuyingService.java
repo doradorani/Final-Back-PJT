@@ -63,8 +63,8 @@ public class CobuyingService implements ICobuyingService {
 
         List<CoBuyProductDto> coBuyProductDtos = iCobuyingMapper.productProceed(status, optionList, perPage, offset);;
 
-        int totalPages = iCobuyingMapper.productTotalPage(perPage);
-        int productListCnt = coBuyListCnt();
+        int totalPages = iCobuyingMapper.proceedTotalPage(status, perPage);
+        int productListCnt = iCobuyingMapper.coBuyProceedCnt(status);
 
         Map<String, Object> CoBuyMap = new HashMap<>();
         CoBuyMap.put("coBuyProductDtos", coBuyProductDtos);

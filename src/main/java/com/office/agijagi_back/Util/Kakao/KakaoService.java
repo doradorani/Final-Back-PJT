@@ -37,10 +37,18 @@ public class KakaoService {
             newName = kakaoTokenDto.getUserName();
             newEmail = kakaoTokenDto.getEmail();
         }
-        else{
+        else{   //이미 존재하는 유저
+            //제제
+            int ban = kakaoMapper.getStatusByEmail(kakaoTokenDto.getEmail());
+            if(ban == 2){
+                TokenDto banDto = new TokenDto(ban);
+                return ResponseEntity.ok().body(banDto);
+            }
+
+            //탈퇴했던 유저 복귀
             int returnUser = kakaoMapper.returnUser(kakaoTokenDto.getEmail());  //정보는있는데 상태가 0이면
             if(returnUser == 0){
-                int comeBackSuccess = kakaoMapper.comeBackUser(kakaoTokenDto.getEmail());   //상태 1로 변경
+                int comeBackSuccess = kakaoMapper.comeBackUser(kakaoTokenDto.getEmail());
                 if(comeBackSuccess > 0){
                     createUser = 2;
                     newName = kakaoTokenDto.getUserName();

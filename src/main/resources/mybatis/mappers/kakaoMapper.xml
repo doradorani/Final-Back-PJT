@@ -39,6 +39,15 @@
             email = #{email}
     </update>
 
+    <select id="getStatusByEmail">
+        SELECT
+            status
+        FROM
+            user
+        WHERE
+            email = #{email}
+    </select>
+
 
     <select id="getLoginNicknameByEmail">
         SELECT

@@ -33,4 +33,6 @@ public interface ICobuyingMapper {
     String myCobuyOption(String email, int detailProductNo);
     int cancelFundingProduct(String email, int detailProductNo);
     List<CoBuyProductDto> productProceed(String status, String optionList, int perPage, int offset);
+    int proceedTotalPage(String status, int perPage);
+    int coBuyProceedCnt(String status);
 }
