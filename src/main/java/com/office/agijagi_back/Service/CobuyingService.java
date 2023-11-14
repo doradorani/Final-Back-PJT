@@ -38,12 +38,35 @@ public class CobuyingService implements ICobuyingService {
     }
 
     @Override
-    public Map<String, Object> coBuyList(int currentPage, int perPage) {
+    public Map<String, Object> coBuyList(String optionList, int currentPage, int perPage) {
         log.info("coBuyList()");
 
         int offset = (currentPage - 1) * perPage;
 
-        List<CoBuyProductDto> coBuyProductDtos = iCobuyingMapper.productList(perPage, offset);
+        List<CoBuyProductDto> coBuyProductDtos = iCobuyingMapper.productList(optionList, perPage, offset);
+        int totalPages = iCobuyingMapper.productTotalPage(perPage);
+        int productListCnt = coBuyListCnt();
+
+        Map<String, Object> CoBuyMap = new HashMap<>();
+        CoBuyMap.put("coBuyProductDtos", coBuyProductDtos);
+        CoBuyMap.put("totalPages", totalPages);
+        CoBuyMap.put("productListCnt", productListCnt);
+
+        return CoBuyMap;
+    }
+
+    @Override
+    public Map<String, Object> coBuyProceed(String status, String optionList, int currentPage, int perPage) {
+        log.info("coBuyProceed()");
+
+        int offset = (currentPage - 1) * perPage;
+
+        List<CoBuyProductDto> coBuyProductDtos = iCobuyingMapper.productProceed(status, optionList, perPage, offset);;
+
+//        if(status.equals("going")) coBuyProductDtos = iCobuyingMapper.productProceedGoing(status, optionList, perPage, offset);
+//        else if(status.equals("end")) coBuyProductDtos = iCobuyingMapper.productProceedEnd(status, optionList, perPage, offset);
+//        else coBuyProductDtos = iCobuyingMapper.productProceedIng(status, optionList, perPage, offset);
+
         int totalPages = iCobuyingMapper.productTotalPage(perPage);
         int productListCnt = coBuyListCnt();
 
@@ -106,6 +129,8 @@ public class CobuyingService implements ICobuyingService {
 
         return iCobuyingMapper.cancelFundingProduct(email, detailProductNo);
     }
+
+
 
     @Override
     public Map<String, Object> myCobuy(String email) {

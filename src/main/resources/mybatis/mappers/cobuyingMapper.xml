@@ -58,19 +58,104 @@
         FROM
             cobuying_product cp
         ORDER BY
-            cp.no DESC
+        <choose>
+            <when test="optionList == 'hit'">cp.hit DESC</when>
+            <when test="optionList == 'name'">cp.name ASC</when>
+            <when test="optionList == 'reg_date'">cp.reg_date DESC</when>
+            <otherwise>cp.no DESC</otherwise>
+        </choose>
         LIMIT
             #{perPage}
         OFFSET
             #{offset};
     </select>
 
+    <select id="productProceed">
+        SELECT
+            cp.*,
+            (
+                SELECT COUNT(*)
+                FROM cobuying_list cl
+                WHERE cl.product_no = cp.no
+            ) AS accumulate
+        FROM
+            cobuying_product cp
+        WHERE
+            <choose>
+                <when test="status == 'ing'">cp.start_date &lt;= NOW() AND cp.end_date &gt;= NOW()</when>
+                <when test="status == 'going'">cp.start_date &gt; NOW()</when>
+                <when test="status == 'end'">cp.end_date &lt; NOW()</when>
+                <otherwise>true</otherwise>
+            </choose>
+        ORDER BY
+            <choose>
+                <when test="optionList == 'hit'">cp.hit DESC</when>
+                <when test="optionList == 'name'">cp.name ASC</when>
+                <when test="optionList == 'reg_date'">cp.reg_date DESC</when>
+                <otherwise>cp.no DESC</otherwise>
+            </choose>
+        LIMIT
+            #{perPage}
+        OFFSET
+            #{offset}
+    </select>
+
+    <select id="productProceedGoing">
+        SELECT
+        cp.*,
+            (
+                SELECT COUNT(*)
+                FROM cobuying_list cl
+                WHERE cl.product_no = cp.no
+            ) AS accumulate
+        FROM
+            cobuying_product cp
+        ORDER BY
+            <choose>
+                <when test="optionList == 'hit'">cp.hit DESC</when>
+                <when test="optionList == 'name'">cp.name ASC</when>
+                <when test="optionList == 'reg_date'">cp.reg_date DESC</when>
+                <otherwise>cp.no DESC</otherwise>
+            </choose>
+        LIMIT
+            #{perPage}
+        OFFSET
+            #{offset}
+    </select>
+
+    <select id="productProceedEnd">
+        SELECT
+        cp.*,
+            (
+                SELECT COUNT(*)
+                FROM cobuying_list cl
+                WHERE cl.product_no = cp.no
+            ) AS accumulate
+        FROM
+                cobuying_product cp
+        ORDER BY
+            <choose>
+                <when test="optionList == 'hit'">cp.hit DESC</when>
+                <when test="optionList == 'name'">cp.name ASC</when>
+                <when test="optionList == 'reg_date'">cp.reg_date DESC</when>
+                <otherwise>cp.no DESC</otherwise>
+            </choose>
+        LIMIT
+            #{perPage}
+        OFFSET
+            #{offset}
+    </select>
+
     <select id="productTotalPage">
         SELECT
-            (COUNT(*) / #{perPage}) + 1
+            CASE WHEN COUNT(*) % #{perPage} = 0
+                     THEN COUNT(*) / #{perPage}
+                 ELSE COUNT(*) / #{perPage} + 1
+                END AS totalPage
         FROM
-            cobuying_product
+            cobuying_product;
     </select>
+
 
     <select id="detailProductNo">
         SELECT

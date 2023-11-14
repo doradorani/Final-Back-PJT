@@ -10,7 +10,7 @@ public interface ICobuyingMapper {
 
     int coBuyRegister(CoBuyProductDto coBuyProductDto);
     int coBuyListCnt();
-    List<CoBuyProductDto> productList(int perPage, int offset);
+    List<CoBuyProductDto> productList(String optionList, int perPage, int offset);
     int productTotalPage(int perPage);
     CoBuyProductDto detailProductNo(int detailProductNo);
     int accumulateProduct(int detailProductNo);
@@ -32,4 +32,8 @@ public interface ICobuyingMapper {
     int hitTotalPage(String email, int perPage);
     String myCobuyOption(String email, int detailProductNo);
     int cancelFundingProduct(String email, int detailProductNo);
+    List<CoBuyProductDto> productProceedGoing(String status, String optionList, int perPage, int offset);
+    List<CoBuyProductDto> productProceedEnd(String status, String optionList, int perPage, int offset);
+    List<CoBuyProductDto> productProceedIng(String status, String optionList, int perPage, int offset);
+    List<CoBuyProductDto> productProceed(String status, String optionList, int perPage, int offset);
 }
