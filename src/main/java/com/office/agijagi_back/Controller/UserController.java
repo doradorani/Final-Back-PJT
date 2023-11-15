@@ -175,7 +175,7 @@ public class UserController {
         return responseService.getSingleResult(result);
     }
 
-    @ApiOperation(httpMethod = "POSt"
+    @ApiOperation(httpMethod = "POST"
             , value = "내 정보 수정 User.ver"
             , notes = "update my info"
             , response = Integer.class
