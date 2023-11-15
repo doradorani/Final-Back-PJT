@@ -92,24 +92,4 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
                 .build();
     }
 
-    // 추가: 헤더 및 쿠키 파라미터 정의
-//    private List<Parameter> globalParameters() {
-//        Parameter refreshTokenParameter = new ParameterBuilder()
-//                .name("refreshToken")
-//                .description("Refresh Token")
-//                .modelRef(new springfox.documentation.schema.ModelRef("string"))
-//                .parameterType("cookie")
-//                .required(true)
-//                .build();
-//
-////        Parameter authenticationParameter = new ParameterBuilder()
-////                .name("Authorization")
-////                .description("Access Token")
-////                .modelRef(new springfox.documentation.schema.ModelRef("string"))
-////                .parameterType("header")
-////                .required(true)
-////                .build();
-//
-//        return Arrays.asList(refreshTokenParameter);
-//    }
 }

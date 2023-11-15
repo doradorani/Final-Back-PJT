@@ -8,6 +8,7 @@ import com.office.agijagi_back.Service.ResponseService;
 import com.office.agijagi_back.Util.Response.ListResult;
 import com.office.agijagi_back.Util.Response.SingleResult;
 import com.office.agijagi_back.Util.S3.S3Service;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,28 +39,44 @@ public class CommunityController {
         this.communityService = communityService;
         this.s3Service = s3Service;
     }
-
+    @ApiOperation(httpMethod = "GET"
+            , value = "모든 게시물 조회"
+            , notes = "select all posts"
+            , response = PostDto.class
+            , responseContainer = "ListResult")
     @GetMapping("/getAllPosts")
     public ListResult<PostDto> getAllPosts() {
         log.info("[CommunityController] getAllPosts");
 
         return responseService.getListResult(communityService.getAllPosts());
     }
-
+    @ApiOperation(httpMethod = "GET"
+            , value = "모든 게시물 조회"
+            , notes = "select all posts"
+            , response = PostDto.class
+            , responseContainer = "ListResult")
     @GetMapping("/getMorePosts/{lastPostId}")
     public ListResult<PostDto> getMorePosts(@PathVariable @Valid int lastPostId) {
         log.info("[CommunityController] getMorePosts");
 
         return responseService.getListResult(communityService.getMorePosts(lastPostId));
     }
-
+    @ApiOperation(httpMethod = "GET"
+            , value = "해당 게시물 상세 조회"
+            , notes = "select post detail"
+            , response = PostDto.class
+            , responseContainer = "SingleResult")
     @GetMapping("/getDetailPost/{postId}")
     public SingleResult<PostDto> getDetailPost(@PathVariable @Valid int postId) {
         log.info("[CommunityController] getDetailPost");
 
         return responseService.getSingleResult(communityService.getDetailPost(postId));
     }
-
+    @ApiOperation(httpMethod = "GET"
+            , value = "해당 계정의 모든 게시물 조회"
+            , notes = "select all my posts"
+            , response = Map.class
+            , responseContainer = "SingleResult")
     @GetMapping("/getMyPosts")
     public SingleResult<Map<String, Object>> getMyPosts() {
         log.info("[CommunityController] getMyPosts");
@@ -69,7 +86,11 @@ public class CommunityController {
 
         return responseService.getSingleResult(communityService.getMyPosts(user_mail));
     }
-
+    @ApiOperation(httpMethod = "POST"
+            , value = "게시물 작성"
+            , notes = "insert post"
+            , response = Integer.class
+            , responseContainer = "SingleResult")
     @PostMapping("/uploadPost")
     public SingleResult<Integer> uploadPost(@RequestPart(value = "data") @ApiParam(value = "data", required = true) Map<String, String> data,
                                             @RequestPart(value = "files") @ApiParam(value = "files", required = true) List<MultipartFile> files ,
@@ -86,7 +107,11 @@ public class CommunityController {
         }
         return responseService.getSingleResult(0);
     }
-
+    @ApiOperation(httpMethod = "DELETE"
+            , value = "게시물 삭제"
+            , notes = "delete post"
+            , response = Integer.class
+            , responseContainer = "SingleResult")
     @DeleteMapping("/deletePost/{postIndex}")
     public SingleResult<Integer> deletePost(@PathVariable @Valid int postIndex) {
         log.info("[CommunityController] deletePost");
@@ -97,24 +122,40 @@ public class CommunityController {
             return responseService.getSingleResult(0);
         }
     }
-
+    @ApiOperation(httpMethod = "PUT"
+            , value = "해당 게시물 공감 버튼 수정"
+            , notes = "delete post"
+            , response = Integer.class
+            , responseContainer = "SingleResult")
     @PutMapping("/updateEmotionBtn/{btnIndex}/{postIndex}")
     public SingleResult<Integer> updateEmotionBtn(@PathVariable @Valid int btnIndex, @PathVariable @Valid int postIndex) {
-        log.info("[CommunityController] deletePost");
+        log.info("[CommunityController] updateEmotionBtn");
 
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String user_mail = userDetails.getUsername();
 
         return responseService.getSingleResult(communityService.updateEmotionBtn(btnIndex, postIndex, user_mail));
     }
-
+    @ApiOperation(httpMethod = "GET"
+            , value = "해당 게시물 모든 댓글 조회"
+            , notes = "select all replies in a post"
+            , response = ReplyDto.class
+            , responseContainer = "ListResult")
     @GetMapping("/getReplys/{postIndex}")
     public ListResult<ReplyDto> getAllReplys(@PathVariable @Valid int postIndex) {
-        log.info("[CommunityController] getAllPosts");
+        log.info("[CommunityController] getAllReplys");
 
         return responseService.getListResult(communityService.getAllReplys(postIndex));
     }
 
+    // 지수님 REGISTER REPLY METHOD인데 수정도 같이 쓰는건가요??
+    // PUT METHOD라 여쭤봅니다.
+
+    @ApiOperation(httpMethod = "PUT"
+            , value = "댓글 등록"
+            , notes = "insert a reply in a post"
+            , response = Integer.class
+            , responseContainer = "SingleResult")
     @PutMapping("/registReply/{postId}/{replyText}")
     public SingleResult<Integer> registReply(@PathVariable @Valid int postId, @PathVariable @Valid String replyText) {
         log.info("[CommunityController] registReply");
@@ -124,7 +165,11 @@ public class CommunityController {
 
         return responseService.getSingleResult(communityService.registReply(user_mail, postId, replyText));
     }
-
+    @ApiOperation(httpMethod = "PUT"
+            , value = "대댓글 등록"
+            , notes = "insert a re-reply in a post"
+            , response = Integer.class
+            , responseContainer = "SingleResult")
     @PutMapping("/registReReply/{postId}/{replyText}/{replyIndex}")
     public SingleResult<Integer> registReReply(@PathVariable @Valid int postId, @PathVariable @Valid String replyText, @PathVariable @Valid int replyIndex) {
         log.info("[CommunityController] registReReply");
@@ -135,9 +180,14 @@ public class CommunityController {
         return responseService.getSingleResult(communityService.registReReply(user_mail, postId, replyText, replyIndex));
     }
 
+    @ApiOperation(httpMethod = "DELETE"
+            , value = "댓글 삭제"
+            , notes = "delete reply"
+            , response = Integer.class
+            , responseContainer = "SingleResult")
     @DeleteMapping("/deleteReply/{postId}/{replyIndex}")
     public SingleResult<Integer> deleteReply(@PathVariable @Valid int postId, @PathVariable @Valid int replyIndex) {
-        log.info("[CommunityController] deletePost");
+        log.info("[CommunityController] deleteReply");
 
         if (replyIndex != 0) {
             return responseService.getSingleResult(communityService.deleteReply(postId, replyIndex));
@@ -146,6 +196,11 @@ public class CommunityController {
         }
     }
 
+    @ApiOperation(httpMethod = "PUT"
+            , value = "댓글 수정"
+            , notes = "update reply to modified version"
+            , response = Integer.class
+            , responseContainer = "SingleResult")
     @PutMapping("/modifyReply/{replyIndex}/{replyText}")
     public SingleResult<Integer> modifyReply(@PathVariable @Valid int replyIndex, @PathVariable @Valid String replyText) {
         log.info("[CommunityController] modifyReply");
@@ -156,7 +211,11 @@ public class CommunityController {
             return responseService.getSingleResult(0);
         }
     }
-
+    @ApiOperation(httpMethod = "POST"
+            , value = "게시물 신고 등록"
+            , notes = "insert post report"
+            , response = Integer.class
+            , responseContainer = "SingleResult")
     @PostMapping("/summitReport/{postId}/{replyIndex}/{reportReason}")
     public SingleResult<Integer> summitReport (@PathVariable @Valid int postId, @PathVariable @Valid int replyIndex, @PathVariable @Valid String reportReason) {
         log.info("[CommunityController] summitReport");

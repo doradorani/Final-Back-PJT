@@ -38,7 +38,11 @@ public class NoticeController {
         this.noticeService = noticeService;
         this.s3Service = s3Service;
     }
-
+    @ApiOperation(httpMethod = "GET"
+            , value = "해당 페이지의 공지사항 Admin.ver"
+            , notes = "select all notices in a page"
+            , response = Map.class
+            , responseContainer = "SingleResult")
     @GetMapping("/noticeTable/{currentPage}/{perPage}")
     public SingleResult<Map> getNoticeTable(@PathVariable @Valid int currentPage,
                                             @PathVariable @Valid int perPage) throws IOException {
@@ -46,7 +50,11 @@ public class NoticeController {
 
         return responseService.getSingleResult(noticeService.getNoticeTable(currentPage, perPage));
     }
-
+    @ApiOperation(httpMethod = "GET"
+            , value = "해당 페이지의 공지사항 User.ver"
+            , notes = "select all notices in a page except deleted notices"
+            , response = Map.class
+            , responseContainer = "SingleResult")
     @GetMapping("/notices/{currentPage}/{perPage}")
     public SingleResult<Map> getNotices(@PathVariable @Valid int currentPage,
                                         @PathVariable @Valid int perPage) throws IOException {
@@ -55,6 +63,11 @@ public class NoticeController {
         return responseService.getSingleResult(noticeService.getNotices(currentPage, perPage));
     }
 
+    @ApiOperation(httpMethod = "POST"
+            , value = "공지사항 작성 Admin.ver"
+            , notes = "insert new notice"
+            , response = Integer.class
+            , responseContainer = "SingleResult")
     @PostMapping("/registNotice")
     public SingleResult<Integer> registNotice(@RequestPart(value = "data") @ApiParam(value = "data", required = true) Map<String, String> data,
                                               @RequestPart(value = "files" , required = false) @ApiParam(value = "files") List<MultipartFile> files) throws IOException {
@@ -68,35 +81,55 @@ public class NoticeController {
         }
         return responseService.getSingleResult(noticeService.registNotice(adminId, data, files, null));
     }
-
+    @ApiOperation(httpMethod = "GET"
+            , value = "공지사항 상세보기 Admin.ver"
+            , notes = "select notice detail for admin"
+            , response = NoticeDto.class
+            , responseContainer = "ListResult")
     @GetMapping("/noticeDetail/{noticeIndex}/{modifyRequest}")
     public ListResult<NoticeDto> getNoticeDetail(@PathVariable @Valid int noticeIndex, @PathVariable @Valid int modifyRequest) {
         log.info("[NoticeController] getNoticeDetail");
 
         return responseService.getListResult(noticeService.getNoticeDetail(noticeIndex, modifyRequest));
     }
-
+    @ApiOperation(httpMethod = "GET"
+            , value = "공지사항 상세보기 User.ver"
+            , notes = "select notice detail for user"
+            , response = Map.class
+            , responseContainer = "SingleResult")
     @GetMapping("/detail/{noticeIndex}")
     public SingleResult<Map<String, Object>> getNoticeDetailForUser(@PathVariable @Valid int noticeIndex) {
         log.info("[NoticeController] getNoticeDetail");
 
         return responseService.getSingleResult(noticeService.getNoticeDetailForUser(noticeIndex));
     }
-
+    @ApiOperation(httpMethod = "DELETE"
+            , value = "공지사항 삭제 Admin.ver"
+            , notes = "delete notice"
+            , response = Integer.class
+            , responseContainer = "SingleResult")
     @DeleteMapping("/deleteNotice/{noticeIndex}")
     public SingleResult<Integer> deleteNotice(@PathVariable @Valid int noticeIndex) throws Exception {
         log.info("[NoticeController] deleteNotice");
 
         return responseService.getSingleResult(noticeService.deleteNotice(noticeIndex));
     }
-
+    @ApiOperation(httpMethod = "GET"
+            , value = "공지사항 등록 후 상세보기 페이지"
+            , notes = "select recently registered notice number "
+            , response = Integer.class
+            , responseContainer = "SingleResult")
     @GetMapping("/recentNotice")
     public SingleResult<Integer> getRecentNotice() {
         log.info("[NoticeController] getRecentNotice");
 
         return responseService.getSingleResult(noticeService.getRecentNotice());
     }
-
+    @ApiOperation(httpMethod = "POST"
+            , value = "공지사항 수정"
+            , notes = "update notice"
+            , response = Integer.class
+            , responseContainer = "SingleResult")
     @PostMapping("/modifyNotice")
     public SingleResult<Integer> modifyNotice(@RequestPart(value = "data") @ApiParam(value = "data", required = true) Map<String, String> data,
                                               @RequestPart(value = "files" , required = false) @ApiParam(value = "files") List<MultipartFile> files) throws IOException {
