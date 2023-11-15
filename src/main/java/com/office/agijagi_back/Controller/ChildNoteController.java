@@ -83,6 +83,7 @@ public class ChildNoteController {
 
         return responseService.getListResult(childNoteService.searchChildrenInoculationNotes(userDetails.getUsername()));
     }
+
     @ApiOperation(httpMethod = "DELETE"
             , value = "해당 자녀 해당 접종내역 삭제"
             , notes = "delete child Inoculation NOTE"
@@ -99,7 +100,7 @@ public class ChildNoteController {
     }
   @ApiOperation(httpMethod = "PUT"
             , value = "해당 자녀 해당 접종 내역 수정"
-            , notes = "delete chilㅇ Inoculation NOTE"
+            , notes = "update child Inoculation NOTE"
             , response = ChildNoteDto.class
             , responseContainer = "SingleResult")
     @PutMapping("/childNote/{childNo}/{healthNo}")

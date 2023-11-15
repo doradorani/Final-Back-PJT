@@ -1,8 +1,11 @@
-package com.office.agijagi_back.Util.Kakao;
+package com.office.agijagi_back.Controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.office.agijagi_back.Util.Kakao.KakaoService;
+import com.office.agijagi_back.Util.Kakao.KakaoTokenDto;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -26,7 +29,11 @@ public class KakaoController {
     public KakaoController(KakaoService kakaoService) {
         this.kakaoService = kakaoService;
     }
-
+    @ApiOperation(httpMethod = "POST"
+            , value = "카카오 로그인"
+            , notes = "kakao login"
+            , response = KakaoTokenDto.class
+            , responseContainer = "ResponseEntity")
     @PostMapping("/login")
     public ResponseEntity kakaoLogin(@RequestParam ("code") String code, HttpServletResponse response) throws JsonProcessingException {
         // code: 카카오 서버로부터 받은 인가 코드
@@ -85,7 +92,6 @@ public class KakaoController {
 
         return kakaoService.login(kakaoTokenDto);
     }
-
 
     private KakaoTokenDto getUserInfo(String accessToken) {
 
