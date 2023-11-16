@@ -117,4 +117,22 @@
             LIMIT 1;
     </select>
 
+    <select id="selectNoticeDetailContentForModify" parameterType="Integer" resultType="NoticeDto">
+        SELECT *
+        FROM notice
+        WHERE no = #{noticeIndex}
+    </select>
+
+    <update id="updateNoticeForModify" parameterType="NoticeDto">
+        UPDATE notice
+        SET title = #{title},
+            content = #{content},
+            admin_id = #{admin_id},
+            attach_cnt = #{attach_cnt},
+            file_name = #{file_name},
+            attach_path = #{attach_path},
+            mod_date = now()
+        WHERE no = #{no}
+    </update>
+
 </mapper>

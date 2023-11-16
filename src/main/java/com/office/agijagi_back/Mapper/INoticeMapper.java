@@ -24,4 +24,8 @@ public interface INoticeMapper {
     int selectNoBeforeIndex(int noticeIndex);
 
     int selectFirstNoticeNoWithStatus();
+
+    List<NoticeDto> selectNoticeDetailContentForModify(int noticeIndex);
+
+    int updateNoticeForModify(NoticeDto noticeDto);
 }

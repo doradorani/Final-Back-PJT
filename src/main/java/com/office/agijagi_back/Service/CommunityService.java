@@ -90,25 +90,26 @@ public class CommunityService implements ICommunityService {
         return result;
     }
 
-    public int updateEmotionBtn(int btnIndex, int postIndex, String userMail) {
+    public int updateEmotionBtn(int btnIndex, int post_no, String userMail) {
         log.info("[CommunityService] updateEmotionBtn");
 
         int result = 0;
         EmotionBtnDto emotionBtnDto = new EmotionBtnDto();
         emotionBtnDto.setUser_mail(userMail);
-        emotionBtnDto.setPost_no(postIndex);
+        emotionBtnDto.setPost_no(post_no);
 
-//        switch (btnIndex) {
-//            case 1:
-//                result = communityMapper.updatePostForLike(emotionBtnDto);
-//                break;
-//            case 2:
+        switch (btnIndex) {
+            case 1:
+                emotionBtnDto = communityMapper.selectLikeForUpdate(emotionBtnDto);
+                result = communityMapper.updatePostForLike(emotionBtnDto);
+                break;
+            case 2:
 //                result = communityMapper.updatePostForGreat(emotionBtnDto);
-//                break;
-//            case 3:
+                break;
+            case 3:
 //                result = communityMapper.updatePostForSad(emotionBtnDto);
-//                break;
-//        }
+                break;
+        }
         return result;
 
     }

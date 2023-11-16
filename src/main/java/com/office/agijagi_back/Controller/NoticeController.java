@@ -131,7 +131,8 @@ public class NoticeController {
             , response = Integer.class
             , responseContainer = "SingleResult")
     @PostMapping("/modifyNotice")
-    public SingleResult<Integer> modifyNotice(@RequestPart(value = "data") @ApiParam(value = "data", required = true) Map<String, String> data,
+    public SingleResult<Integer> modifyNotice(@PathVariable @Valid int updatedFileCnt,
+                                              @RequestPart(value = "data") @ApiParam(value = "data", required = true) Map<String, Object> data,
                                               @RequestPart(value = "files" , required = false) @ApiParam(value = "files") List<MultipartFile> files) throws IOException {
         log.info("[NoticeController] modifyNotice");
 

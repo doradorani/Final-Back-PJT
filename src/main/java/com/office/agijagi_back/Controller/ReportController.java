@@ -61,6 +61,28 @@ public class ReportController {
     public SingleResult<Integer> deletePostReport(@PathVariable @Valid int postIndex, @PathVariable @Valid int reportIndex) {
         log.info("[ReportController] deletePostReport");
 
-        return responseService.getSingleResult(reportService.deletePostReport(postIndex, reportIndex));
+        int result = 0;
+        if (postIndex != 0) {
+            result = reportService.deletePostReport(postIndex, reportIndex);
+        } else {
+            result = reportService.rejectPostReport(reportIndex);
+        }
+
+        return responseService.getSingleResult(result);
     }
+
+    @DeleteMapping("/deleteReplyReport/{postIndex}/{replyIndex}/{reportIndex}")
+    public SingleResult<Integer> deleteReplyReport(@PathVariable @Valid int postIndex, @PathVariable @Valid int replyIndex, @PathVariable @Valid int reportIndex) {
+        log.info("[ReportController] deletePostReport");
+
+        int result = 0;
+        if (replyIndex != 0) {
+            result = reportService.deleteReplyReport(postIndex,replyIndex, reportIndex);
+        } else {
+            result = reportService.rejectReplyReport(reportIndex);
+        }
+
+        return responseService.getSingleResult(result);
+    }
+
 }

@@ -65,4 +65,32 @@ public class ReportService implements IReportService {
 
         return result;
     }
+
+    public int rejectPostReport(int reportIndex) {
+        log.info("[ReportService] rejectPostReport");
+
+        return reportMapper.updatePostReportStatusForDelete(reportIndex);
+    }
+
+    public int deleteReplyReport(int postIndex, int replyIndex, int reportIndex) {
+        log.info("[ReportService] deletePostReport");
+
+        int postId = postIndex;
+        int result1 = 0;
+        int result2 = 0;
+        if (replyIndex != 0) {
+            result1 = communityMapper.updateReplyCntForDelete(postId);
+            result2 = communityMapper.updateReplyForDelete(replyIndex);
+        }
+        if (result1 != 0 && result2 != 0) {
+            return reportMapper.updateReplyReportStatusForDelete(reportIndex);
+        }
+        return 0;
+    }
+
+    public int rejectReplyReport(int reportIndex) {
+        log.info("[ReportService] rejectPostReport");
+
+        return reportMapper.updateReplyReportStatusForDelete(reportIndex);
+    }
 }

@@ -38,4 +38,6 @@ public interface ICommunityMapper {
     int insertPostReport(PostReportDto postReportDto);
 
     int insertReplyReport(ReplyReportDto replyReportDto);
+
+    EmotionBtnDto selectLikeForUpdate(EmotionBtnDto emotionBtnDto);
 }

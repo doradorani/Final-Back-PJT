@@ -21,7 +21,7 @@
     </select>
 
     <select id="selectReplyReportTable" parameterType="Integer" resultType="ReplyReportDto">
-        SELECT reply_report.*, reply.comment, reply.user_mail , reply.post_no, post.status as post_status
+        SELECT reply_report.*, reply.comment, reply.user_mail , reply.post_no, reply.status as reply_status, post.status as post_status
         FROM reply_report
         INNER JOIN reply
         ON reply_report.reply_no = reply.no
@@ -40,6 +40,13 @@
 
     <update id="updatePostReportStatusForDelete" parameterType="Integer">
         UPDATE post_report
+        SET status = status - 1,
+            mod_date = NOW()
+        WHERE no = #{reportIndex}
+    </update>
+
+    <update id="updateReplyReportStatusForDelete" parameterType="Integer">
+        UPDATE reply_report
         SET status = status - 1,
             mod_date = NOW()
         WHERE no = #{reportIndex}
