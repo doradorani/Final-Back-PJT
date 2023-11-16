@@ -13,7 +13,6 @@ public class AdminDto {
     private @SQLInjectionSafe String email;
     private @SQLInjectionSafe String phone;
     private @SQLInjectionSafe int grade;
-    private @SQLInjectionSafe String role;
     private @SQLInjectionSafe String reg_date;
     private @SQLInjectionSafe String mod_date;
 
@@ -33,7 +32,7 @@ public class AdminDto {
     }
 
 
-    public AdminDto(int no, String id, String pw, String name, String email, String phone, int grade, String role, String reg_date, String mod_date) {
+    public AdminDto(int no, String id, String pw, String name, String email, String phone, int grade, String reg_date, String mod_date) {
         this.no = no;
         this.id = id;
         this.pw = pw;
@@ -41,7 +40,6 @@ public class AdminDto {
         this.email = email;
         this.phone = phone;
         this.grade = grade;
-        this.role = role;
         this.reg_date = reg_date;
         this.mod_date = mod_date;
     }

@@ -18,7 +18,6 @@ public class UserDto {
     private @SQLInjectionSafe String email;
     private @SQLInjectionSafe String phone;
     private @SQLInjectionSafe String status;
-    private @SQLInjectionSafe String role;
     private @SQLInjectionSafe String img;
     private @SQLInjectionSafe String reg_date;
     private @SQLInjectionSafe String mode_date;
