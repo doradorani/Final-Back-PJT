@@ -24,23 +24,12 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
 
     @Bean
     public Docket api() {
-        ParameterBuilder aParameterBuilder = new ParameterBuilder();
-        aParameterBuilder.name("Content-Type") //헤더 이름
-                .description("Content Type") //설명
-                .modelRef(new ModelRef("string"))
-                .parameterType("header")
-                .required(false)
-                .build();
-        List<Parameter> aParameters = new ArrayList<>();
-        aParameters.add(aParameterBuilder.build());
 
         return new Docket(DocumentationType.SWAGGER_2)
-                .globalOperationParameters(aParameters)
                 .securityContexts(Arrays.asList(securityContext()))
                 .consumes(getConsumeContentTypes())
                 .produces(getProduceContentTypes())
                 .securitySchemes(Arrays.asList(accessToken(), refreshToken()))
-//                .globalOperationParameters(globalParameters()) // 추가
                 .useDefaultResponseMessages(false)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.office.agijagi_back.Controller"))

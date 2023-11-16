@@ -70,7 +70,11 @@ public class ReportController {
 
         return responseService.getSingleResult(result);
     }
-
+    @ApiOperation(httpMethod = "DELETE"
+            , value = "해당 신고된 댓글 삭제"
+            , notes = "delete reported reply"
+            , response = Integer.class
+            , responseContainer = "SingleResult")
     @DeleteMapping("/deleteReplyReport/{postIndex}/{replyIndex}/{reportIndex}")
     public SingleResult<Integer> deleteReplyReport(@PathVariable @Valid int postIndex, @PathVariable @Valid int replyIndex, @PathVariable @Valid int reportIndex) {
         log.info("[ReportController] deletePostReport");

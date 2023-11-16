@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Map;
 
 @Log4j2
 @RestController
@@ -43,18 +42,18 @@ public class DiaryController {
             , response = Integer.class
             , responseContainer = "SingleResult")
     @PostMapping(value = "/childInfo")
-    public SingleResult<Integer> registerChild(@RequestPart(value = "data") @ApiParam(value = "data", required = true) Map<String, String> data,
-                                               @RequestPart(value = "file") @ApiParam(value = "file", required = true) MultipartFile file,
+    public SingleResult<Integer> registerChild(@RequestPart(value = "file") @ApiParam(value = "file", required = true) MultipartFile file,
+                                               @RequestPart(value = "data") @ApiParam(value = "data", required = true) ChildDto childDto,
                                                HttpServletRequest request) throws IOException {
         log.info("[DiaryController] registerChild");
 
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = userDetails.getUsername();
+        childDto.setU_email(email);
 
-        if (data != null) {
+        if (childDto != null) {
             String imgUrl = s3Service.uploadFile(file);
-            ChildDto childDto = new ChildDto(0, data.get("name"), 0, email, imgUrl, data.get("content"), data.get("birth_date"), null, null);
-
+            childDto.setImg(imgUrl);
             return responseService.getSingleResult(diaryService.registerChild(childDto));
         }
         return responseService.getSingleResult(null);
@@ -66,20 +65,20 @@ public class DiaryController {
             , response = Integer.class
             , responseContainer = "SingleResult")
     @PostMapping("/childInfo/{childNo}")
-    public SingleResult<Integer> modifyChild(@RequestPart(value = "data") @ApiParam(value = "data", required = false) Map<String, String> data,
-                                             @RequestPart(value = "file", required = false) @ApiParam(value = "file", required = false) MultipartFile file,
+    public SingleResult<Integer> modifyChild(@RequestPart(value = "file", required = false) @ApiParam(value = "file", required = false) MultipartFile file,
+                                             @RequestPart(value = "data") @ApiParam(value = "data", required = false) ChildDto childDto,
                                              @PathVariable int childNo) throws IOException {
         log.info("[DiaryController] updateChild");
 
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = userDetails.getUsername();
+        childDto.setU_email(email);
 
         String imgUrl = "";
         if (file != null) {
             imgUrl = s3Service.uploadFile(file);
+            childDto.setImg(imgUrl);
         }
-
-        ChildDto childDto = new ChildDto(childNo, data.get("name"), 0, email, imgUrl, data.get("content"), data.get("birth_date"), null, null);
 
         return responseService.getSingleResult(diaryService.modifyChild(childDto));
     }
@@ -132,8 +131,8 @@ public class DiaryController {
             , response = Integer.class
             , responseContainer = "SingleResult")
     @PostMapping("/dailyDiary/{childNo}")
-    public SingleResult<Integer> registerDailyDiary(@RequestPart(value = "data") @ApiParam(value = "data", required = true) DiaryDto diaryDto,
-                                                    @RequestPart(value = "file") @ApiParam(value = "file", required = true) MultipartFile file,
+    public SingleResult<Integer> registerDailyDiary(@RequestPart(value = "file") @ApiParam(value = "file", required = true) MultipartFile file,
+                                                    @RequestPart(value = "data") @ApiParam(value = "data", required = true) DiaryDto diaryDto,
                                                     @PathVariable int childNo) throws IOException {
         log.info("[DiaryController] registerDailyDiary");
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -145,9 +144,6 @@ public class DiaryController {
 
         diaryDto.setU_email(email);
         diaryDto.setImg(imgUrl);
-
-//        DiaryDto diaryDto = new DiaryDto(0, email, childNo, 0,data.get("fourcuts_checked"), null, data.get("title"), data.get("content"), imgUrl, null, null);
-
 
         return responseService.getSingleResult(diaryService.registerDailyDiary(diaryDto));
     }
@@ -197,20 +193,19 @@ public class DiaryController {
             , response = DiaryDto.class
             , responseContainer = "SingleResult")
     @PostMapping("/dailyDiaryDetail/{childNo}/{diaryNo}")
-    public SingleResult<Integer> modifyDailyDiary(@RequestPart(value = "data") @ApiParam(value = "data", required = true) Map<String, String> data,
-                                                  @RequestPart(value = "file", required = false) @ApiParam(value = "file", required = true) MultipartFile file,
+    public SingleResult<Integer> modifyDailyDiary(@RequestPart(value = "file", required = false) @ApiParam(value = "file", required = true) MultipartFile file,
+                                                  @RequestPart(value = "data") @ApiParam(value = "data", required = true) DiaryDto diaryDto,
                                                   @PathVariable int childNo,
                                                   @PathVariable int diaryNo) throws IOException {
         log.info("[DiaryController] updateDailyDiary");
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = userDetails.getUsername();
+        diaryDto.setU_email(email);
         String imgUrl = "";
         if (file != null) {
             imgUrl = s3Service.uploadFile(file);
+            diaryDto.setImg(imgUrl);
         }
-
-//        DiaryDto diaryDto = new DiaryDto(diaryNo, email, childNo, 0,null, data.get("title"), data.get("content"), imgUrl, null, null);
-        DiaryDto diaryDto = null;
 
         return responseService.getSingleResult(diaryService.modifyDailyDiary(diaryDto));
     }

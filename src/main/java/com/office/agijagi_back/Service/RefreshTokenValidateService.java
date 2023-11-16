@@ -1,5 +1,6 @@
 package com.office.agijagi_back.Service;
 
+import com.office.agijagi_back.Service.Interface.IRefreshTokenValidateService;
 import com.office.agijagi_back.Util.Jwt.IjwtMapper;
 import com.office.agijagi_back.Util.Jwt.JwtProvider;
 import com.office.agijagi_back.Util.Response.ErrorCode;
@@ -12,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Service
 @Log4j2
-public class RefreshTokenValidateService {
+public class RefreshTokenValidateService implements IRefreshTokenValidateService {
 
     private final JwtProvider jwtProvider;
     private final IjwtMapper jwtMapper;
