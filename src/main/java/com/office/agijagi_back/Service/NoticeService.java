@@ -2,6 +2,7 @@ package com.office.agijagi_back.Service;
 
 import com.office.agijagi_back.Dto.NoticeDto;
 import com.office.agijagi_back.Mapper.INoticeMapper;
+import com.office.agijagi_back.Service.Interface.INoticeSevice;
 import com.office.agijagi_back.Util.S3.S3Service;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ import java.util.StringJoiner;
 
 @Log4j2
 @Service
-public class NoticeService {
+public class NoticeService implements INoticeSevice {
 
     private final INoticeMapper noticeMapper;
     private final S3Service s3Service;

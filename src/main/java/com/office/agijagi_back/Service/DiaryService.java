@@ -3,6 +3,7 @@ package com.office.agijagi_back.Service;
 import com.office.agijagi_back.Dto.ChildDto;
 import com.office.agijagi_back.Dto.DiaryDto;
 import com.office.agijagi_back.Mapper.IDiaryMapper;
+import com.office.agijagi_back.Service.Interface.IDiaryService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Service
 @Log4j2
-public class DiaryService {
+public class DiaryService implements IDiaryService {
 
     private final IDiaryMapper diaryMapper;
 
