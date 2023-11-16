@@ -17,4 +17,6 @@ public interface IReportMapper {
     int selectReplyReportTotalPage(int perPage);
 
     int updatePostReportStatusForDelete(int reportIndex);
+
+    int updateReplyReportStatusForDelete(int reportIndex);
 }

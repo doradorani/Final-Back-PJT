@@ -127,14 +127,14 @@ public class CommunityController {
             , notes = "delete post"
             , response = Integer.class
             , responseContainer = "SingleResult")
-    @PutMapping("/updateEmotionBtn/{btnIndex}/{postIndex}")
-    public SingleResult<Integer> updateEmotionBtn(@PathVariable @Valid int btnIndex, @PathVariable @Valid int postIndex) {
+    @PutMapping("/updateEmotionBtn/{btnIndex}/{post_no}")
+    public SingleResult<Integer> updateEmotionBtn(@PathVariable @Valid int btnIndex, @PathVariable @Valid int post_no) {
         log.info("[CommunityController] updateEmotionBtn");
 
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String user_mail = userDetails.getUsername();
 
-        return responseService.getSingleResult(communityService.updateEmotionBtn(btnIndex, postIndex, user_mail));
+        return responseService.getSingleResult(communityService.updateEmotionBtn(btnIndex, post_no, user_mail));
     }
     @ApiOperation(httpMethod = "GET"
             , value = "해당 게시물 모든 댓글 조회"
@@ -148,15 +148,12 @@ public class CommunityController {
         return responseService.getListResult(communityService.getAllReplys(postIndex));
     }
 
-    // 지수님 REGISTER REPLY METHOD인데 수정도 같이 쓰는건가요??
-    // PUT METHOD라 여쭤봅니다.
-
-    @ApiOperation(httpMethod = "PUT"
+    @ApiOperation(httpMethod = "POST"
             , value = "댓글 등록"
             , notes = "insert a reply in a post"
             , response = Integer.class
             , responseContainer = "SingleResult")
-    @PutMapping("/registReply/{postId}/{replyText}")
+    @PostMapping("/registReply/{postId}/{replyText}")
     public SingleResult<Integer> registReply(@PathVariable @Valid int postId, @PathVariable @Valid String replyText) {
         log.info("[CommunityController] registReply");
 
@@ -165,12 +162,12 @@ public class CommunityController {
 
         return responseService.getSingleResult(communityService.registReply(user_mail, postId, replyText));
     }
-    @ApiOperation(httpMethod = "PUT"
+    @ApiOperation(httpMethod = "POST"
             , value = "대댓글 등록"
             , notes = "insert a re-reply in a post"
             , response = Integer.class
             , responseContainer = "SingleResult")
-    @PutMapping("/registReReply/{postId}/{replyText}/{replyIndex}")
+    @PostMapping("/registReReply/{postId}/{replyText}/{replyIndex}")
     public SingleResult<Integer> registReReply(@PathVariable @Valid int postId, @PathVariable @Valid String replyText, @PathVariable @Valid int replyIndex) {
         log.info("[CommunityController] registReReply");
 

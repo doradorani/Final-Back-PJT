@@ -17,7 +17,9 @@ public class ReplyReportDto {
     private @SQLInjectionSafe String user_mail;
     private @SQLInjectionSafe String reason;
     private @SQLInjectionSafe String report_user;
-    private @SQLInjectionSafe String post_status;
+    private @SQLInjectionSafe int post_status;
+    private @SQLInjectionSafe int reply_status;
+    private @SQLInjectionSafe int status;
     private @SQLInjectionSafe String reg_date;
     private @SQLInjectionSafe String mod_date;
 

@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 
 @Log4j2
 @Service
@@ -69,7 +70,7 @@ public class NoticeService {
                 return noticeDtos;
             }
         } else if (modifyRequest == 1) {
-            List<NoticeDto> noticeDtos = noticeMapper.selectNoticeDetailContent(noticeIndex);
+            List<NoticeDto> noticeDtos = noticeMapper.selectNoticeDetailContentForModify(noticeIndex);
             return noticeDtos;
         }
         return null;
@@ -157,33 +158,31 @@ public class NoticeService {
         return recentNoticeIndex;
     }
 
-    public int modifyNotice(String adminId, Map<String, String> data, List<MultipartFile> files, List<String> fileList) {
+    public int modifyNotice(String adminId, Map<String, Object> data, List<MultipartFile> files, List<String> fileList) {
         log.info("[NoticeService] modifyNotice");
 
         int result = -1;
         NoticeDto noticeDto = new NoticeDto();
         noticeDto.setAdmin_id(adminId);
-        noticeDto.setTitle(data.get("title"));
-        noticeDto.setContent(data.get("content"));
-        noticeDto.setAttach_cnt(Integer.parseInt(data.get("uploadFile_cnt")));
-        if (fileList == null) {
-            result = noticeMapper.insertNotice(noticeDto);
+        noticeDto.setNo((Integer) data.get("no"));
+        noticeDto.setTitle((String) data.get("title"));
+        noticeDto.setContent((String) data.get("content"));
+        List<String> existingFileNames = (List<String>) data.get("fileNames");
+        List<String> existingFilePaths = (List<String>) data.get("filePaths");
+        noticeDto.setAttach_cnt(existingFileNames.size());
+
+        if (fileList != null) {
+            existingFilePaths.addAll(fileList);
+
+            noticeDto.setFile_name(String.join(",", existingFileNames));
+            noticeDto.setAttach_path(String.join(",", existingFilePaths));
         } else {
-            String attachFilePath = "";
-            String fileName = "";
-            for (int i = 0; i < fileList.size() ; i++) {
-                if (i == 0) {
-                    attachFilePath = fileList.get(i);
-                    fileName = files.get(i).getOriginalFilename();
-                } else {
-                    attachFilePath = attachFilePath + "," + fileList.get(i);
-                    fileName = fileName + "," + files.get(i).getOriginalFilename();
-                }
-            }
-            noticeDto.setFile_name(fileName);
-            noticeDto.setAttach_path(attachFilePath);
-            result = noticeMapper.insertNotice(noticeDto);
+            // 새로운 파일이 없으면 기존 파일 목록을 그대로 사용
+            noticeDto.setFile_name(String.join(",", existingFileNames));
+            noticeDto.setAttach_path(String.join(",", existingFilePaths));
         }
+
+        result = noticeMapper.updateNoticeForModify(noticeDto);
         return result;
     }
 
