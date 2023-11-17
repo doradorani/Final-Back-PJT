@@ -109,7 +109,8 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
         // 특정 도메인 패턴을 지정합니다.
-        corsConfiguration.setAllowedOriginPatterns(Collections.singletonList("https://www.agijagi.site"));
+        //corsConfiguration.setAllowedOriginPatterns(Collections.singletonList("https://www.agijagi.site"));
+        corsConfiguration.setAllowedOriginPatterns(Collections.singletonList("http://localhost:3000"));
 
         source.registerCorsConfiguration("/**", corsConfiguration);
 
