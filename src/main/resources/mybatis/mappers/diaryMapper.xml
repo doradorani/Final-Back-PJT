@@ -84,6 +84,8 @@
             d.cd_no = c.no
         WHERE
             d.cd_no = #{childNo} and d.status = 1
+        ORDER BY
+            reg_date DESC
     </select>
     <select id="searchDailyDiaries" parameterType="String">
         SELECT
