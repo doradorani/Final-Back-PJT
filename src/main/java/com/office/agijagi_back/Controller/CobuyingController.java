@@ -1,6 +1,7 @@
 package com.office.agijagi_back.Controller;
 
 import com.office.agijagi_back.Dto.CoBuyProductDto;
+import com.office.agijagi_back.Dto.UserDto;
 import com.office.agijagi_back.Service.CobuyingService;
 import com.office.agijagi_back.Service.ResponseService;
 import com.office.agijagi_back.Util.Response.SingleResult;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -63,15 +65,7 @@ public class CobuyingController {
         coBuyProductDto.setId(userName);
         coBuyProductDto.setName((String) info.get("productName"));
         coBuyProductDto.setContent((String) info.get("productDescription"));
-
-        String minParticipantsStr = (String) info.get("minParticipants");
-        try {
-            int minParticipants = Integer.parseInt(minParticipantsStr);
-            coBuyProductDto.setMin_num(minParticipants);
-        } catch (NumberFormatException e) {
-            log.info(e);
-        }
-
+        coBuyProductDto.setMin_num((String) info.get("minParticipants"));
         coBuyProductDto.setPrice((String) info.get("productPrice"));
         coBuyProductDto.setStart_date((String) info.get("productStart"));
         coBuyProductDto.setEnd_date((String) info.get("productEnd"));
@@ -90,6 +84,68 @@ public class CobuyingController {
         }
 
         return responseService.getSingleResult(cobuyingService.coBuyRegister(coBuyProductDto));
+    }
+
+    @ApiOperation(httpMethod = "PUT"
+            , value = "상품 수정 admin.ver"
+            , notes = "admin modify product"
+            , response = Integer.class
+            , responseContainer = "SingleResult")
+    @PutMapping(value = "/admin/modify", consumes = {"multipart/form-data"})
+    public SingleResult<Integer> coBuyModify(@RequestPart(value = "files", required = false) List<MultipartFile> files,
+                                               @RequestPart("info") Map<String, Object> info) throws IOException {
+
+        log.info("coBuyModify()");
+
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String userName = userDetails.getUsername();
+
+        ArrayList<String> productImgList = (ArrayList<String>) info.get("productImg");
+        String existImg = String.join(",", productImgList);
+        List<String> filesUrl = s3Service.uploadListFiles(files);
+
+        String imgUrl = "";
+        if(existImg != null && !existImg.equals("")) {
+            imgUrl += existImg;
+            if(filesUrl.size() > 0){
+                imgUrl += ",";
+            }
+        }
+
+        for (int i =0; i< filesUrl.size(); i++){
+            imgUrl += filesUrl.get(i);
+            if(i != filesUrl.size()-1) imgUrl += ",";
+        }
+
+        CoBuyProductDto coBuyProductDto = new CoBuyProductDto();
+
+        String productNoString = (String) info.get("productNo");
+        int productNo = Integer.parseInt(productNoString);
+        coBuyProductDto.setNo(productNo);
+
+        coBuyProductDto.setImg(imgUrl);
+        coBuyProductDto.setId(userName);
+        coBuyProductDto.setName((String) info.get("productName"));
+        coBuyProductDto.setContent((String) info.get("productDescription"));
+        coBuyProductDto.setMin_num((String) info.get("minParticipants"));
+        coBuyProductDto.setPrice((String) info.get("productPrice"));
+        coBuyProductDto.setStart_date((String) info.get("productStart"));
+        coBuyProductDto.setEnd_date((String) info.get("productEnd"));
+
+        List<String> productOptions = (List<String>) info.get("productOptions");
+
+        for (int i = 0; i < Math.min(productOptions.size(), 5); i++) {
+            String fieldName = "option" + (i + 1);
+            String optionValue = productOptions.get(i);
+
+            try {
+                setFieldValue(coBuyProductDto, fieldName, optionValue);
+            } catch (Exception e) {
+                log.info(e);
+            }
+        }
+
+        return responseService.getSingleResult(cobuyingService.coBuyModify(coBuyProductDto));
     }
 
     //옵셥 1~5 필터 필드
@@ -248,5 +304,17 @@ public class CobuyingController {
         String email = userDetails.getUsername();
 
         return responseService.getSingleResult(cobuyingService.myHitProduct(email, currentPage, perPage));
+    }
+
+    @ApiOperation(httpMethod = "GET"
+            , value = "배너 User.ver"
+            , notes = "Random banner"
+            , response = Map.class
+            , responseContainer = "SingleResult")
+    @GetMapping("/randomBanner/{num}")
+    public SingleResult<Map> randomBanner(@PathVariable @Valid int num) throws IOException {
+        log.info("randomBanner()");
+
+        return responseService.getSingleResult(cobuyingService.randomBanner(num));
     }
 }

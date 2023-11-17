@@ -18,5 +18,7 @@ public interface ICobuyingService {
     public Map<String, Object> myHitProduct(String email, int currentPage, int perPage);
     public Map<String, Object> userDetailProduct(String email, int detailProductNo);
     public int cancelFundingProduct(String email, int detailProductNo);
-    public Map<String, Object>  coBuyProceed(String status, String optionList, int currentPage, int perPage);
+    public Map<String, Object> coBuyProceed(String status, String optionList, int currentPage, int perPage);
+    public int coBuyModify(CoBuyProductDto coBuyProductDto);
+    public Map<String, Object> randomBanner(int num);
 }

@@ -40,6 +40,27 @@
                 )
     </insert>
 
+    <update id="coBuyModify">
+        UPDATE
+            cobuying_product
+        SET
+            name = #{name},
+            price = #{price},
+            start_date = #{start_date},
+            end_date = #{end_date},
+            img = #{img},
+            option1 = #{option1},
+            option2 = #{option2},
+            option3 = #{option3},
+            option4 = #{option4},
+            option5 = #{option5},
+            content = #{content},
+            min_num = #{min_num},
+            mod_date = NOW()
+        WHERE
+            no = #{no}
+    </update>
+
     <select id="productList">
         SELECT
             cp.*,
@@ -360,6 +381,20 @@
             cobuying_like
         WHERE
             user_no = #{email}
+    </select>
+
+    <select id="randomBanner">
+        SELECT
+            no
+        FROM
+            cobuying_product
+        WHERE
+            NOW() >= start_date AND
+            end_date >= NOW()
+        ORDER BY
+            RAND()
+        LIMIT
+            #{num}
     </select>
 
 </mapper>

@@ -1,14 +1,12 @@
 package com.office.agijagi_back.Service;
 
 import com.office.agijagi_back.Dto.CoBuyProductDto;
-import com.office.agijagi_back.Dto.NoticeDto;
 import com.office.agijagi_back.Mapper.ICobuyingMapper;
 import com.office.agijagi_back.Service.Interface.ICobuyingService;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +26,31 @@ public class CobuyingService implements ICobuyingService {
         log.info("coBuyRegister()");
 
         return iCobuyingMapper.coBuyRegister(coBuyProductDto);
+    }
+
+    @Override
+    public int coBuyModify(CoBuyProductDto coBuyProductDto) {
+        log.info("coBuyModify()");
+
+        return iCobuyingMapper.coBuyModify(coBuyProductDto);
+    }
+
+    @Override
+    public Map<String, Object> randomBanner(int num) {
+        log.info("randomBanner()");
+
+        List<CoBuyProductDto> bannerDtos = iCobuyingMapper.randomBanner(num);
+        List<Integer> noList = new ArrayList<>();
+        for (CoBuyProductDto dto : bannerDtos) {
+            if (dto != null) {
+                noList.add(dto.getNo());
+            }
+        }
+
+        Map<String, Object> bannerMap = new HashMap<>();
+        bannerMap.put("banner", noList);
+
+        return bannerMap;
     }
 
     @Override

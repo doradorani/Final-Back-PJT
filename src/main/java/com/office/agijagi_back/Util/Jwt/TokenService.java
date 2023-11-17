@@ -32,7 +32,7 @@ public class TokenService {
     }
 
     public ResponseEntity<TokenDto> setNewAccessToken(TokenDto tokenDto){
-        System.out.println("새로운 엑세스 토큰 발급");
+        log.info("New AccessToken");
         log.info(tokenDto.getAccessToken());
         log.info(tokenDto.getRefreshToken());
         return ResponseEntity.ok()
