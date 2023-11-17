@@ -4,6 +4,7 @@ import com.office.agijagi_back.Dto.CoBuyProductDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface ICobuyingMapper {
@@ -35,4 +36,6 @@ public interface ICobuyingMapper {
     List<CoBuyProductDto> productProceed(String status, String optionList, int perPage, int offset);
     int proceedTotalPage(String status, int perPage);
     int coBuyProceedCnt(String status);
+    int coBuyModify(CoBuyProductDto coBuyProductDto);
+    List<CoBuyProductDto> randomBanner(int num);
 }

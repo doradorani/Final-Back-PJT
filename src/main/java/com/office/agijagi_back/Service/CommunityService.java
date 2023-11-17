@@ -171,7 +171,6 @@ public class CommunityService implements ICommunityService {
         replyDto.setComment(replyText);
 
         int result =communityMapper.updateReplyForModify(replyDto);
-        System.out.println(result);
 
         return result;
     }

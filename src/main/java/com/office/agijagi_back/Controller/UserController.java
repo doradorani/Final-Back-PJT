@@ -59,6 +59,7 @@ public class UserController {
 
         return responseService.getSingleResult(dto);
     }
+
     @ApiOperation(httpMethod = "POST"
             , value = "새 토큰 발급 User.ver"
             , notes = "generate a new token"
@@ -84,6 +85,7 @@ public class UserController {
 
         return tokenService.setNewAccessToken(jwtProvider.newAccessToken(email, "ROLE_USER"));
     }
+
     @ApiOperation(httpMethod = "POST"
             , value = "로그아웃 User.ver"
             , notes = "log out"
@@ -107,8 +109,8 @@ public class UserController {
         cookie.setMaxAge(0);
         cookie.setPath("/");
         response.addCookie(cookie);
-
     }
+
     @ApiOperation(httpMethod = "POST"
             , value = "회원탈퇴 User.ver"
             , notes = "sign out"
@@ -124,14 +126,13 @@ public class UserController {
         Cookie[] list = request.getCookies();
         if (list != null) {
             for (Cookie cookie : list) {
-                System.out.println(cookie.getName());
                 if (cookie.getName().equals("refreshToken")) {
                     refreshToken = cookie.getValue().substring(6);
                 }
             }
         }
         else{
-            System.out.println("없음");
+            log.info("No Cookie");
         }
 
         email = userService.getEmailByRefreshToken(refreshToken);
@@ -145,6 +146,7 @@ public class UserController {
 
         return userService.deleteUser(email);
     }
+
     @ApiOperation(httpMethod = "GET"
             , value = "해당 계정 정보 조회 User.ver"
             , notes = "select my info for user"
@@ -161,6 +163,7 @@ public class UserController {
 
         return userDto;
     }
+
     @ApiOperation(httpMethod = "GET"
             , value = "별명 중복 조회 User.ver"
             , notes = "check nickname duplicated"
@@ -202,5 +205,7 @@ public class UserController {
 
         return responseService.getSingleResult(userService.modifyInfo(modifyUserDto));
     }
+
+
 
 }
