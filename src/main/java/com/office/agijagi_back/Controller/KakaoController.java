@@ -57,7 +57,7 @@ public class KakaoController {
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
             sb.append("&client_id=675a168b3fa5bd60254c92260c6a62d4"); // REST_API_KEY를 입력
-            sb.append("&redirect_uri=http://localhost:3000/login/oauth2/callback/kakao"); // 인가 코드를 받은 redirect_uri를 입력
+            sb.append("&redirect_uri=https://www.agijagi.site/login/oauth2/callback/kakao"); // 인가 코드를 받은 redirect_uri를 입력
             sb.append("&code=" + code);
             bw.write(sb.toString());
             bw.flush();
