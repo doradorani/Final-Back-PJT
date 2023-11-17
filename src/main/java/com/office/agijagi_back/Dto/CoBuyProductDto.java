@@ -21,7 +21,7 @@ public class CoBuyProductDto {
     private @SQLInjectionSafe String option4;
     private @SQLInjectionSafe String option5;
     private @SQLInjectionSafe String content;
-    private @SQLInjectionSafe int min_num;
+    private @SQLInjectionSafe String min_num;
     private @SQLInjectionSafe int hit;
     private @SQLInjectionSafe int status;
     private @SQLInjectionSafe String reg_date;
