@@ -9,26 +9,27 @@ public interface IDiaryService {
 
     int registerChild(ChildDto childDto);
 
-    int deleteChildInfo(int no, String email);
+    int deleteChildInfo(String no, String email);
 
     List<ChildDto> searchChildren(String email);
 
-    ChildDto searchChildDetail(int childNo);
+    ChildDto searchChildDetail(String childNo, String email);
 
     int modifyChild(ChildDto childDto);
 
     int registerDailyDiary(DiaryDto diaryDto);
 
-    List<DiaryDto> searchDailyDiary(int childNo);
-    DiaryDto searchDiaryDetail(int childNo, int diaryNo);
+    List<DiaryDto> searchDailyDiary(String childNo, String email);
+    DiaryDto searchDiaryDetail(String childNo, String diaryNo, String email);
 
     int modifyDailyDiary(DiaryDto diaryDto);
 
-    int deleteDailyDiary(int childNo, int diaryNo);
+    int deleteDailyDiary(String childNo, String diaryNo, String email);
 
     List<DiaryDto> searchDailyDiaries(String email);
 
-    List<DiaryDto> searchChildRandomPictures(int childNo);
+    List<DiaryDto> searchChildRandomPictures(String childNo, String email);
 
-     List<DiaryDto> searchChildrenRandomPictures(String username);
+     List<DiaryDto> searchChildrenRandomPictures(String email);
+
 }

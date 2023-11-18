@@ -17,7 +17,7 @@
     </select>
     <select id="selectChildNotesByNoAndEmail" parameterType="String" resultType="ChildNoteDto">
         SELECT
-            ch.no, ch.cd_no, avg(ch.height) as height, avg(ch.weight) as weight, avg(ch.head) as head, ch.vaccination_nm, ch.inoculation_agency, ch.inoculation_order, ch.etc, DATE_FORMAT(ch.reg_date, "%Y-%m-%d") reg_date, ch.mod_date, ch.u_email, ch.status, c.name as cd_name
+            ch.no, ch.cd_no, avg(ch.height) as height, avg(ch.weight) as weight, avg(ch.head) as head, ch.vaccination_nm, ch.inoculation_agency, ch.inoculation_order, ch.etc, DATE_FORMAT(ch.note_date, "%Y-%m-%d") note_date, ch.reg_date, ch.mod_date, ch.u_email, ch.status, c.name as cd_name
         FROM
             child_health ch
         JOIN
@@ -27,18 +27,18 @@
         WHERE
             ch.u_email = #{email}  and ch.status = 1 and ch.cd_no = #{childNo}
         GROUP BY
-            reg_date
+            note_date
         ORDER BY
-            reg_date
+            note_date
         LIMIT 20
     </select>
     <insert id="insertChildNote" parameterType="ChildNoteDto">
         INSERT INTO
         child_health
         (
-            cd_no, u_email, height, weight, head, vaccination_nm, inoculation_order, inoculation_agency, etc, reg_date, mod_date
+            cd_no, u_email, height, weight, head, vaccination_nm, inoculation_order, inoculation_agency, etc, note_date, reg_date, mod_date
         ) VALUES (
-            #{cd_no}, #{u_email}, #{height}, #{weight}, #{head}, #{vaccination_nm}, #{inoculation_order}, #{inoculation_agency}, #{etc}, now(), now()
+            #{cd_no}, #{u_email}, #{height}, #{weight}, #{head}, #{vaccination_nm}, #{inoculation_order}, #{inoculation_agency}, #{etc}, #{note_date}, now(), now()
         )
     </insert>
     <update id="deleteChildNote" parameterType="ChildNoteDto">
@@ -53,16 +53,20 @@
         UPDATE
             child_health
         SET
-            height = #{height}, weight = #{weight}, head = #{head}, vaccination_nm = #{vaccination_nm}, inoculation_agency = #{inoculation_agency}, inoculation_order = #{inoculation_order}, etc = #{etc}, mode_date = now()
+            height = #{height}, weight = #{weight}, head = #{head}, vaccination_nm = #{vaccination_nm}, inoculation_agency = #{inoculation_agency}, inoculation_order = #{inoculation_order}, etc = #{etc},note_date = #{note_date}, mod_date = now()
         WHERE
             no = #{no} and u_email = #{u_email}
     </update>
     <select id="selectChildrenHealthNote" parameterType="ChildNoteDto">
         SELECT
-            *
+            ch.*, c.name as cd_name
         FROM
-            child_health
+            child_health ch
+        JOIN
+            child c
+        ON
+            ch.cd_no = c.no
         WHERE
-            no = #{no} and cd_no = #{cd_no} and u_email = #{u_email}
+            ch.no = #{no} and ch.cd_no = #{cd_no} and ch.u_email = #{u_email}
     </select>
 </mapper>

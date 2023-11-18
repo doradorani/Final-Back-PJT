@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,6 +37,12 @@ public class DiaryController {
         this.s3Service = s3Service;
     }
 
+    private String getUserEmail(){
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return userDetails.getUsername();
+    }
+
     @ApiOperation(httpMethod = "POST"
             , value = "자녀 정보 등록"
             , notes = "insert child information"
@@ -43,14 +50,10 @@ public class DiaryController {
             , responseContainer = "SingleResult")
     @PostMapping(value = "/childInfo")
     public SingleResult<Integer> registerChild(@RequestPart(value = "file") @ApiParam(value = "file", required = true) MultipartFile file,
-                                               @RequestPart(value = "data") @ApiParam(value = "data", required = true) ChildDto childDto,
-                                               HttpServletRequest request) throws IOException {
+                                               @RequestPart(value = "data") @ApiParam(value = "data", required = true) ChildDto childDto) throws IOException {
         log.info("[DiaryController] registerChild");
 
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = userDetails.getUsername();
-        childDto.setU_email(email);
-
+        childDto.setU_email(getUserEmail());
         if (childDto != null) {
             String imgUrl = s3Service.uploadFile(file);
             childDto.setImg(imgUrl);
@@ -70,9 +73,8 @@ public class DiaryController {
                                              @PathVariable int childNo) throws IOException {
         log.info("[DiaryController] updateChild");
 
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = userDetails.getUsername();
-        childDto.setU_email(email);
+        childDto.setU_email(getUserEmail());
+        childDto.setNo(childNo);
 
         String imgUrl = "";
         if (file != null) {
@@ -91,10 +93,8 @@ public class DiaryController {
     @GetMapping("/childrenInfo")
     public ListResult<ChildDto> searchChildren() {
         log.info("[DiaryController] searchChildren");
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = userDetails.getUsername();
 
-        return responseService.getListResult(diaryService.searchChildren(email));
+        return responseService.getListResult(diaryService.searchChildren(getUserEmail()));
     }
 
     @ApiOperation(httpMethod = "GET"
@@ -103,12 +103,10 @@ public class DiaryController {
             , response = Integer.class
             , responseContainer = "SingleResult")
     @GetMapping("/childrenDetail/{childNo}")
-    public SingleResult<ChildDto> searchChildDetail(@ApiParam(value = "childNo") @PathVariable int childNo) {
+    public SingleResult<ChildDto> searchChildDetail(@ApiParam(value = "childNo") @PathVariable String childNo) {
         log.info("[DiaryController] searchChildren");
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = userDetails.getUsername();
 
-        return responseService.getSingleResult(diaryService.searchChildDetail(childNo));
+        return responseService.getSingleResult(diaryService.searchChildDetail(childNo, getUserEmail()));
     }
 
     @ApiOperation(httpMethod = "DELETE"
@@ -117,12 +115,10 @@ public class DiaryController {
             , response = Integer.class
             , responseContainer = "SingleResult")
     @DeleteMapping("/childBook/{childNo}")
-    public SingleResult<Integer> deleteChild(@ApiParam(value = "childNo") @PathVariable int childNo) {
+    public SingleResult<Integer> deleteChild(@ApiParam(value = "childNo") @PathVariable String childNo) {
         log.info("[DiaryController] deleteChild");
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = userDetails.getUsername();
 
-        return responseService.getSingleResult(diaryService.deleteChildInfo(childNo, email));
+        return responseService.getSingleResult(diaryService.deleteChildInfo(childNo, getUserEmail()));
     }
 
     @ApiOperation(httpMethod = "POST"
@@ -135,15 +131,14 @@ public class DiaryController {
                                                     @RequestPart(value = "data") @ApiParam(value = "data", required = true) DiaryDto diaryDto,
                                                     @PathVariable int childNo) throws IOException {
         log.info("[DiaryController] registerDailyDiary");
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = userDetails.getUsername();
+
         String imgUrl = "";
         if (file != null) {
             imgUrl = s3Service.uploadFile(file);
+            diaryDto.setImg(imgUrl);
         }
-
-        diaryDto.setU_email(email);
-        diaryDto.setImg(imgUrl);
+        diaryDto.setU_email(getUserEmail());
+        diaryDto.setCd_no(childNo);
 
         return responseService.getSingleResult(diaryService.registerDailyDiary(diaryDto));
     }
@@ -156,10 +151,8 @@ public class DiaryController {
     @GetMapping("/dailyDiaries")
     public ListResult<DiaryDto> searchDailyDiaries() {
         log.info("[DiaryController] searchDailyDiaries");
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = userDetails.getUsername();
 
-        return responseService.getListResult(diaryService.searchDailyDiaries(email));
+        return responseService.getListResult(diaryService.searchDailyDiaries(getUserEmail()));
     }
 
     @ApiOperation(httpMethod = "GET"
@@ -168,10 +161,10 @@ public class DiaryController {
             , response = DiaryDto.class
             , responseContainer = "ListResult")
     @GetMapping("/dailyDiary/{childNo}")
-    public ListResult<DiaryDto> searchDailyDiary(@PathVariable @ApiParam int childNo) {
+    public ListResult<DiaryDto> searchDailyDiary(@PathVariable @ApiParam String childNo) {
         log.info("[DiaryController] searchDailyDiary");
 
-        return responseService.getListResult(diaryService.searchDailyDiary(childNo));
+        return responseService.getListResult(diaryService.searchDailyDiary(childNo, getUserEmail()));
     }
 
 
@@ -181,10 +174,10 @@ public class DiaryController {
             , response = DiaryDto.class
             , responseContainer = "SingleResult")
     @GetMapping("/dailyDiaryDetail/{childNo}/{diaryNo}")
-    public SingleResult<DiaryDto> searchDiaryDetail(@PathVariable @ApiParam int childNo, @PathVariable @ApiParam int diaryNo) {
+    public SingleResult<DiaryDto> searchDiaryDetail(@PathVariable @ApiParam String childNo, @PathVariable @ApiParam String diaryNo) {
         log.info("[DiaryController] searchDiaryDetail");
 
-        return responseService.getSingleResult(diaryService.searchDiaryDetail(childNo, diaryNo));
+        return responseService.getSingleResult(diaryService.searchDiaryDetail(childNo, diaryNo, getUserEmail()));
     }
 
     @ApiOperation(httpMethod = "POST"
@@ -198,9 +191,9 @@ public class DiaryController {
                                                   @PathVariable int childNo,
                                                   @PathVariable int diaryNo) throws IOException {
         log.info("[DiaryController] updateDailyDiary");
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = userDetails.getUsername();
-        diaryDto.setU_email(email);
+        diaryDto.setU_email(getUserEmail());
+        diaryDto.setNo(diaryNo);
+        diaryDto.setCd_no(childNo);
         String imgUrl = "";
         if (file != null) {
             imgUrl = s3Service.uploadFile(file);
@@ -216,11 +209,11 @@ public class DiaryController {
             , response = DiaryDto.class
             , responseContainer = "SingleResult")
     @DeleteMapping("/dailyDiary/{childNo}/{diaryNo}")
-    public SingleResult<Integer> deleteDailyDiary(@PathVariable int childNo,
-                                                  @PathVariable int diaryNo) throws IOException {
+    public SingleResult<Integer> deleteDailyDiary(@PathVariable String childNo,
+                                                  @PathVariable String diaryNo) throws IOException {
         log.info("[DiaryController] deleteDailyDiary");
 
-        return responseService.getSingleResult(diaryService.deleteDailyDiary(childNo, diaryNo));
+        return responseService.getSingleResult(diaryService.deleteDailyDiary(childNo, diaryNo, getUserEmail()));
     }
 
     @ApiOperation(httpMethod = "GET"
@@ -229,10 +222,10 @@ public class DiaryController {
             , response = DiaryDto.class
             , responseContainer = "ListResult")
     @GetMapping("/childPictures/{childNo}")
-    public ListResult<DiaryDto> searchChildRandomPictures(@PathVariable @ApiParam int childNo) {
+    public ListResult<DiaryDto> searchChildRandomPictures(@PathVariable @ApiParam String childNo) {
         log.info("[DiaryController] searchChildRandomPictures");
 
-        return responseService.getListResult(diaryService.searchChildRandomPictures(childNo));
+        return responseService.getListResult(diaryService.searchChildRandomPictures(childNo, getUserEmail()));
     }
 
     @ApiOperation(httpMethod = "GET"
@@ -243,10 +236,9 @@ public class DiaryController {
     @GetMapping("/childrenPictures")
     public ListResult<DiaryDto> searchChildrenRandomPictures() {
         log.info("[DiaryController] searchChildrenRandomPictures");
+;
 
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        return responseService.getListResult(diaryService.searchChildrenRandomPictures(userDetails.getUsername()));
+        return responseService.getListResult(diaryService.searchChildrenRandomPictures(getUserEmail()));
     }
 
 
