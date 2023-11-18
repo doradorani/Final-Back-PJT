@@ -10,31 +10,31 @@ import java.util.List;
 public interface IDiaryMapper {
     int insertChildInfo(ChildDto childDto);
 
-    int deleteChildInfoByNo(int no);
+    int deleteChildInfoByNo(String no, String email);
 
     List<ChildDto> selectChildrenByEmail(String email);
 
-    ChildDto selectChildByNo(int no);
+    ChildDto selectChildByNo(String no, String email);
 
     int updateChild(ChildDto childDto);
 
     int insertDailyDiary(DiaryDto diaryDto);
 
-    List<DiaryDto> selectDailyDiaries(int childNo);
+    List<DiaryDto> selectDailyDiaries(String childNo);
 
     int updateDailyDiary(DiaryDto diaryDto);
 
-    int deleteDailyDiary(int childNo, int diaryNo);
+    int deleteDailyDiary(String childNo, String diaryNo, String email);
 
-    DiaryDto selectDailyDetail(int childNo, int diaryNo);
+    DiaryDto selectDailyDetail(String childNo, String diaryNo, String email);
 
-    List<DiaryDto> selectDailyDiary(int childNo);
+    List<DiaryDto> selectDailyDiary(String childNo, String email);
 
     List<DiaryDto> searchDailyDiaries(String email);
 
     int selectChildCount(String uEmail);
 
-    List<DiaryDto> selectChildRandomPictures(int childNo);
+    List<DiaryDto> selectChildRandomPictures(String childNo, String email);
 
     List<DiaryDto> selectChildrenRandomPictures(String username);
 }

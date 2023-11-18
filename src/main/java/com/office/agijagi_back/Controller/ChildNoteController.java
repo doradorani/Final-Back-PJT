@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,6 @@ import java.util.Map;
 
 @RestController
 @Log4j2
-@Controller
 @RequestMapping("/childHealth")
 public class ChildNoteController {
 
@@ -28,6 +28,11 @@ public class ChildNoteController {
         this.childNoteService = childNoteService;
         this.responseService = responseService;
     }
+
+    private String getUserName() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userDetails.getUsername();
+    }
     @ApiOperation(httpMethod = "POST"
             , value = "해당 자녀의 건강기록 등록"
             , notes = "register child Note"
@@ -37,8 +42,7 @@ public class ChildNoteController {
     public SingleResult<Integer> registerChildNote(@ApiParam ChildNoteDto childNoteDto,
                                                    @PathVariable String childNo){
         log.info("[ChildNoteController] registerChildNote");
-        UserDetails userDetails  = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        childNoteDto.setU_email(userDetails.getUsername());
+        childNoteDto.setU_email(getUserName());
 
         return responseService.getSingleResult(childNoteService.registerChildNote(childNoteDto));
     }
@@ -51,9 +55,8 @@ public class ChildNoteController {
     @GetMapping("/childNotes/{childNo}")
     public SingleResult<Map<String, Object>> searchChildNotes(@PathVariable String childNo){
         log.info("[ChildNoteController] searchChildNotes");
-        UserDetails userDetails  = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        return responseService.getSingleResult(childNoteService.searchChildNotes(childNo,userDetails.getUsername()));
+        return responseService.getSingleResult(childNoteService.searchChildNotes(childNo,getUserName()));
     }
 
     @ApiOperation(httpMethod = "GET"
@@ -64,9 +67,7 @@ public class ChildNoteController {
     @GetMapping("/childNotes/{childNo}/{healthNo}")
     public SingleResult<ChildNoteDto> searchChildHealthNote(@PathVariable int childNo, @PathVariable int healthNo){
         log.info("[ChildNoteController] searchChildHealthNote");
-        UserDetails userDetails  = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        ChildNoteDto childNoteDto = new ChildNoteDto(healthNo, childNo, userDetails.getUsername());
+        ChildNoteDto childNoteDto = new ChildNoteDto(healthNo, childNo,getUserName());
 
         return responseService.getSingleResult(childNoteService.searchChildHealthNote(childNoteDto));
     }
@@ -79,9 +80,8 @@ public class ChildNoteController {
     @GetMapping("/inoculationNotes")
     public ListResult<ChildNoteDto> searchChildrenInoculationNotes(){
         log.info("[ChildNoteController] searchChildrenInoculationNotes");
-        UserDetails userDetails  = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        return responseService.getListResult(childNoteService.searchChildrenInoculationNotes(userDetails.getUsername()));
+        return responseService.getListResult(childNoteService.searchChildrenInoculationNotes(getUserName()));
     }
 
     @ApiOperation(httpMethod = "DELETE"
@@ -92,9 +92,7 @@ public class ChildNoteController {
     @DeleteMapping("/childNote/{childNo}/{healthNo}")
     public SingleResult<Integer> deleteChildInoculationNote(@PathVariable int childNo, @PathVariable int healthNo){
         log.info("[ChildNoteController] deleteChildInoculationNote");
-        UserDetails userDetails  = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        ChildNoteDto childNoteDto = new ChildNoteDto(healthNo, childNo, userDetails.getUsername());
+        ChildNoteDto childNoteDto = new ChildNoteDto(healthNo, childNo, getUserName());
 
         return responseService.getSingleResult(childNoteService.deleteChildNote(childNoteDto));
     }
@@ -104,11 +102,9 @@ public class ChildNoteController {
             , response = ChildNoteDto.class
             , responseContainer = "SingleResult")
     @PutMapping("/childNote/{childNo}/{healthNo}")
-    public SingleResult<Integer> modifyChildNote(@PathVariable int childNo, @PathVariable int healthNo){
+    public SingleResult<Integer> modifyChildNote(@ApiParam ChildNoteDto childNoteDto, @PathVariable int childNo, @PathVariable int healthNo){
         log.info("[ChildNoteController] modifyChildNote");
-        UserDetails userDetails  = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        ChildNoteDto childNoteDto = new ChildNoteDto(healthNo, childNo, userDetails.getUsername());
+        childNoteDto.setU_email(getUserName());
 
         return responseService.getSingleResult(childNoteService.modifyChildNote(childNoteDto));
     }

@@ -24,27 +24,27 @@
             child
         SET
             name = #{name},birth_date = #{birth_date}, mod_date= now(), content = #{content}, mod_date = now()
-        <if test='img != ""'>
+        <if test='img != null'>
             ,img = #{img}
         </if>
         WHERE
-            no = #{no}
+            no = #{no} and u_email = #{u_email}
     </update>
-    <select id="selectChildByNo" parameterType="Integer">
+    <select id="selectChildByNo" parameterType="String">
         SELECT
             *
         FROM
             child
         WHERE
-            no = #{childNo}
+            no = #{no} and u_email = #{email}
     </select>
-    <update id="deleteChildInfoByNo" parameterType="Integer">
+    <update id="deleteChildInfoByNo" parameterType="String">
         UPDATE
             child
         SET
             status = 0, mod_date = now()
         WHERE
-            no = #{childNo}
+            no = #{childNo} and u_email = #{email}
     </update>
     <select id="selectChildrenByEmail" parameterType="String" resultType="ChildDto">
         SELECT
@@ -61,7 +61,7 @@
         )
         VALUES (#{u_email}, #{cd_no}, #{title}, #{content},#{img}, #{fourcuts_checked},now(), now());
     </insert>
-    <select id="selectDailyDetail" parameterType="Integer">
+    <select id="selectDailyDetail" parameterType="String">
         SELECT
             d.*, c.name as cd_name, c.sequence as sequence
         FROM
@@ -71,9 +71,9 @@
             on
                 d.cd_no = c.no
         WHERE
-            d.cd_no = #{childNo} and d.no =#{diaryNo}
+            d.cd_no = #{childNo} and d.no =#{diaryNo} and d.u_email = #{email}
     </select>
-    <select id="selectDailyDiary" parameterType="Integer">
+    <select id="selectDailyDiary" parameterType="String">
         SELECT
             d.*, c.name as cd_name, c.sequence as sequence
         FROM
@@ -83,7 +83,7 @@
         on
             d.cd_no = c.no
         WHERE
-            d.cd_no = #{childNo} and d.status = 1
+            d.cd_no = #{childNo} and d.status = 1 and d.u_email = #{email}
         ORDER BY
             reg_date DESC
     </select>
@@ -106,27 +106,27 @@
             diary
         SET
             title = #{title}, content = #{content}, fourcuts_checked = #{fourcuts_checked},mod_date = now()
-        <if test='img != ""'>
+        <if test='img != null'>
             ,img = #{img}
         </if>
         WHERE
-            no = #{no}
+            no = #{no} and u_email = #{u_email}
     </update>
-    <update id="deleteDailyDiary" parameterType="Integer">
+    <update id="deleteDailyDiary" parameterType="String">
         UPDATE
             diary
         SET
             status = 0, mod_date = now()
         WHERE
-            cd_no = #{childNo} and no = #{diaryNo}
+            cd_no = #{childNo} and no = #{diaryNo} and u_email = #{email}
     </update>
-    <select id="selectChildRandomPictures" parameterType="Integer">
+    <select id="selectChildRandomPictures" parameterType="String">
         SELECT
             *
         FROM
             diary
         WHERE
-            cd_no = #{cd_no} and status = 1 and fourcuts_checked = 1
+            cd_no = #{cd_no} and status = 1 and fourcuts_checked = 1 and u_email = #{email}
         ORDER BY
             RAND()
         LIMIT 4;

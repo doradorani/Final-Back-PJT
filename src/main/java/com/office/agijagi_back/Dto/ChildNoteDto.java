@@ -23,6 +23,7 @@ public class ChildNoteDto {
     private @SQLInjectionSafe String inoculation_agency;
     private @SQLInjectionSafe String etc;
     private @SQLInjectionSafe int status;
+    private @SQLInjectionSafe String note_date;
     private @SQLInjectionSafe String reg_date;
     private @SQLInjectionSafe String mod_date;
 
