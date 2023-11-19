@@ -43,7 +43,7 @@ public interface ICommunityMapper {
 
     int insertLikeByPostNo(EmotionBtnDto emotionBtnDto);
 
-    int selectBtnNoByPostNo(EmotionBtnDto emotionBtnDto);
+    Integer selectBtnNoByPostNo(EmotionBtnDto emotionBtnDto);
 
     int selectBtnNoExistsForPostNo(EmotionBtnDto emotionBtnDto);
 

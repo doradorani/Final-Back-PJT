@@ -20,6 +20,7 @@ public interface ICommunityService {
     int deleteReply(int postId, int replyIndex);
     int modifyReply(int replyIndex, String replyText);
     int summitReport(int postId, int replyIndex, String reportReason, String user_mail);
-    int getEmotions(int postNo, String userMail);
+    Integer getEmotions(int postNo, String userMail);
     Map<String, Object> getMyLikedPosts(String userMail);
+
 }

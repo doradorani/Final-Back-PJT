@@ -148,7 +148,7 @@
           AND user_mail = #{user_mail}
     </select>
 
-    <select id="selectBtnNoByPostNo" parameterType="EmotionBtnDto" resultType="Integer">
+    <select id="selectBtnNoByPostNo" >
         SELECT btn_no
         FROM post_like
         where post_no = #{post_no}
