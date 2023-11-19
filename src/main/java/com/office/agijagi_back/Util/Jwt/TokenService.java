@@ -13,7 +13,7 @@ public class TokenService {
     public ResponseEntity<TokenDto> setTokenForFront(String tokenName, TokenDto tokenDto){
 
         ResponseCookie cookie = ResponseCookie.from(tokenName, tokenDto.getRefreshToken())
-                .maxAge(7 * 24 * 60 * 60)
+                .maxAge(60 * 60)
                 .path("/")
 //                .secure(true) // HTTP에서도 사용 가능
 //                .sameSite("None") // 모든 도메인 및 포트에서 사용
