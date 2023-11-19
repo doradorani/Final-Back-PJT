@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface ICommunityService {
-    List<PostDto> getAllPosts();
+    List<PostDto> getAllPosts(String user_mail);
     List<PostDto> getMorePosts(int lastPostId);
     PostDto getDetailPost(int postId);
     int uploadPost(List<String> imgUrls, String text, String user_mail);
@@ -20,4 +20,6 @@ public interface ICommunityService {
     int deleteReply(int postId, int replyIndex);
     int modifyReply(int replyIndex, String replyText);
     int summitReport(int postId, int replyIndex, String reportReason, String user_mail);
+    int getEmotions(int postNo, String userMail);
+    Map<String, Object> getMyLikedPosts(String userMail);
 }
