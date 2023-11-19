@@ -77,7 +77,7 @@ public class SecurityConfig {
                 .sameOrigin()                       //HTTP 헤더에서 프레임 옵션을 설정하여 동일한 출처에서만 프레임을 로드할 수 있도록 함
                 .and()
                 .cors()                             // CORS 에러 방지용
-                                                    // 원래 출처(http://localhost:3000)에서의 요청을 허용하도록 설정
+                                                    // 원래 출처(https://www.agijagi.site)에서의 요청을 허용하도록 설정
 
                 // 세션을 사용하지 않을거라 세션 설정을 Stateless 로 설정
                 //JSESSIONID 쿠키 생성 막음
@@ -109,8 +109,7 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
         // 특정 도메인 패턴을 지정합니다.
-        //corsConfiguration.setAllowedOriginPatterns(Collections.singletonList("https://www.agijagi.site"));
-        corsConfiguration.setAllowedOriginPatterns(Collections.singletonList("http://localhost:3000"));
+        corsConfiguration.setAllowedOriginPatterns(Collections.singletonList("https://www.agijagi.site"));
 
         source.registerCorsConfiguration("/**", corsConfiguration);
 

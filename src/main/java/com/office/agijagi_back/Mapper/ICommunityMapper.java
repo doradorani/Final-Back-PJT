@@ -41,11 +41,11 @@ public interface ICommunityMapper {
 
     int selectCurrnetReplyNo();
 
-    int insertLikeByPostNo(EmotionBtnDto emotionBtnDto);
+    Integer insertLikeByPostNo(EmotionBtnDto emotionBtnDto);
 
     Integer selectBtnNoByPostNo(EmotionBtnDto emotionBtnDto);
 
-    int selectBtnNoExistsForPostNo(EmotionBtnDto emotionBtnDto);
+    Integer selectBtnNoExistsForPostNo(EmotionBtnDto emotionBtnDto);
 
     int updatePostForGreat(EmotionBtnDto emotionBtnDto);
 

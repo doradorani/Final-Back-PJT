@@ -83,7 +83,7 @@
         on
             d.cd_no = c.no
         WHERE
-            d.cd_no = #{childNo} and d.status = 1 and d.u_email = #{email}
+            d.cd_no = #{childNo} and d.status = 1 and d.u_email = #{email} and c.status = 1
         ORDER BY
             reg_date DESC
     </select>
@@ -97,7 +97,7 @@
             on
                 d.cd_no = c.no
         WHERE
-            d.u_email = #{email} and d.status = 1
+            d.u_email = #{email} and d.status = 1 and c.status = 1
         ORDER BY
             reg_date DESC
     </select>
@@ -122,25 +122,33 @@
     </update>
     <select id="selectChildRandomPictures" parameterType="String">
         SELECT
-            *
+            d.*
         FROM
-            diary
+            diary d
+        JOIN
+            child c
+        ON
+            d.cd_no = c.no
         WHERE
-            cd_no = #{cd_no} and status = 1 and fourcuts_checked = 1 and u_email = #{email}
+            d.cd_no = #{cd_no} and d.status = 1 and d.fourcuts_checked = 1 and d.u_email = #{email} and c.status = 1
         ORDER BY
             RAND()
         LIMIT 4;
     </select>
     <select id="selectChildrenRandomPictures" parameterType="String">
         SELECT
-            *
+            d.*
         FROM
-            diary
+            diary d
+                JOIN
+            child c
+            ON
+                d.cd_no = c.no
         WHERE
-            u_email = #{email} and status = 1 and fourcuts_checked = 1
+            d.status = 1 and d.fourcuts_checked = 1 and d.u_email = #{email} and c.status = 1
         ORDER BY
             RAND()
-        LIMIT 4;
+            LIMIT 4;
     </select>
 
 </mapper>
