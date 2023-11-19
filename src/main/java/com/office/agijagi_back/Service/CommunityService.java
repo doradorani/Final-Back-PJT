@@ -93,7 +93,6 @@ public class CommunityService implements ICommunityService {
         log.info("[CommunityService] updateEmotionBtn");
 
         int result = 0;
-        int btnNo;
         EmotionBtnDto emotionBtnDto = new EmotionBtnDto();
         emotionBtnDto.setUser_mail(userMail);
         emotionBtnDto.setPost_no(post_no);
@@ -101,7 +100,12 @@ public class CommunityService implements ICommunityService {
 
         int isBtnNo = communityMapper.selectBtnNoExistsForPostNo(emotionBtnDto);
         if (isBtnNo != 0) {
-            btnNo = communityMapper.selectBtnNoByPostNo(emotionBtnDto);
+            Integer btnNo = communityMapper.selectBtnNoByPostNo(emotionBtnDto);
+
+            if (btnNo == null) {
+                return result;
+            }
+
             if (btnNo == btnIndex) {
                 // btnNo가 있고, 두 값이 같으면 좋아요 삭제
                 int deleteResult = communityMapper.deleteLikeByPostNo(emotionBtnDto);
