@@ -44,7 +44,7 @@
         SET
             status = 0, mod_date = now()
         WHERE
-            no = #{childNo} and u_email = #{email}
+            no = #{no} and u_email = #{email}
     </update>
     <select id="selectChildrenByEmail" parameterType="String" resultType="ChildDto">
         SELECT

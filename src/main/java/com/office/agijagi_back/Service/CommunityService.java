@@ -29,7 +29,7 @@ public class CommunityService implements ICommunityService {
 
         return communityMapper.selectAllPosts();
     }
-
+    @Override
     public List<PostDto> getMorePosts(int lastPostId) {
         log.info("[CommunityService] getMorePosts");
 
@@ -67,7 +67,7 @@ public class CommunityService implements ICommunityService {
 
         return result;
     }
-
+    @Override
     public Map<String, Object> getMyPosts(String email) {
         log.info("[CommunityService] getMyPosts");
 
@@ -81,7 +81,7 @@ public class CommunityService implements ICommunityService {
 
         return MyPosts;
     }
-
+    @Override
     public int deletePost(int postIndex) {
         log.info("[CommunityService] deletePost");
 
@@ -89,7 +89,7 @@ public class CommunityService implements ICommunityService {
         result = communityMapper.updatePostForDelete(postIndex);
         return result;
     }
-
+    @Override
     public int updateEmotionBtn(int btnIndex, int post_no, String userMail) {
         log.info("[CommunityService] updateEmotionBtn");
 
@@ -113,13 +113,13 @@ public class CommunityService implements ICommunityService {
         return result;
 
     }
-
+    @Override
     public List<ReplyDto> getAllReplys(int postIndex) {
         log.info("[CommunityService] getAllReplys");
 
         return communityMapper.selectAllReplysByPostNo(postIndex);
     }
-
+    @Override
     public int registReply(String user_mail,int postId,String  replyText) {
         log.info("[CommunityService] registReply");
 
@@ -134,7 +134,7 @@ public class CommunityService implements ICommunityService {
 
         return result;
     }
-
+    @Override
     public int registReReply(String user_mail, int postId, String replyText, int replyIndex) {
         log.info("[CommunityService] registReReply");
 
@@ -150,7 +150,7 @@ public class CommunityService implements ICommunityService {
 
         return result;
     }
-
+    @Override
     public int deleteReply(int postId, int replyIndex) {
         log.info("[CommunityService] deleteReply");
 
@@ -162,7 +162,7 @@ public class CommunityService implements ICommunityService {
 
         return deleteResult;
     }
-
+    @Override
     public int modifyReply(int replyIndex, String replyText) {
         log.info("[CommunityService] modifyReply");
 
@@ -174,7 +174,7 @@ public class CommunityService implements ICommunityService {
 
         return result;
     }
-
+    @Override
     public int summitReport(int postId, int replyIndex, String reportReason, String user_mail) {
         log.info("[CommunityService] modifyReply");
 

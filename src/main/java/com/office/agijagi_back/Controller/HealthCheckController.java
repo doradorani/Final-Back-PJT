@@ -22,7 +22,7 @@ public class HealthCheckController {
 
     @ApiOperation(httpMethod = "GET"
             , value = "ALB의 HealthCheck"
-            , notes = "Health Checking mehtod for alb"
+            , notes = "Health Checking method for alb"
             , response = String.class
             , responseContainer = "SingleResult")
     @GetMapping("/healthCheck")
