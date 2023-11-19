@@ -7,6 +7,7 @@ import com.office.agijagi_back.Service.Interface.ICommunityService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,11 +25,12 @@ public class CommunityService implements ICommunityService {
     }
 
     @Override
-    public List<PostDto> getAllPosts() {
+    public List<PostDto> getAllPosts(String user_mail) {
         log.info("[CommunityService] getAllPosts");
 
-        return communityMapper.selectAllPosts();
+        return communityMapper.selectAllPosts(user_mail);
     }
+
     @Override
     public List<PostDto> getMorePosts(int lastPostId) {
         log.info("[CommunityService] getMorePosts");
@@ -41,7 +43,6 @@ public class CommunityService implements ICommunityService {
 
         PostDto postdto = new PostDto();
         postdto = communityMapper.selectDetailPost(postId);
-        log.info("postdto{}", postdto);
 
         return communityMapper.selectDetailPost(postId);
     }
@@ -74,8 +75,6 @@ public class CommunityService implements ICommunityService {
         Map<String, Object> MyPosts = new HashMap<>();
         UserDto userDto = userMapper.info(email);
         List<PostDto> postDtos = communityMapper.selectMyPosts(email);
-        log.info(userDto);
-        log.info(postDtos);
         MyPosts.put("userDto", userDto);
         MyPosts.put("postDtos", postDtos);
 
@@ -94,24 +93,59 @@ public class CommunityService implements ICommunityService {
         log.info("[CommunityService] updateEmotionBtn");
 
         int result = 0;
+        int btnNo;
         EmotionBtnDto emotionBtnDto = new EmotionBtnDto();
         emotionBtnDto.setUser_mail(userMail);
         emotionBtnDto.setPost_no(post_no);
+        List<EmotionBtnDto> emotionBtnDtos = new ArrayList<>();
 
-        switch (btnIndex) {
-            case 1:
-                emotionBtnDto = communityMapper.selectLikeForUpdate(emotionBtnDto);
-                result = communityMapper.updatePostForLike(emotionBtnDto);
-                break;
-            case 2:
-//                result = communityMapper.updatePostForGreat(emotionBtnDto);
-                break;
-            case 3:
-//                result = communityMapper.updatePostForSad(emotionBtnDto);
-                break;
+        int isBtnNo = communityMapper.selectBtnNoExistsForPostNo(emotionBtnDto);
+        if (isBtnNo != 0) {
+            btnNo = communityMapper.selectBtnNoByPostNo(emotionBtnDto);
+            if (btnNo == btnIndex) {
+                // btnNo가 있고, 두 값이 같으면 좋아요 삭제
+                int deleteResult = communityMapper.deleteLikeByPostNo(emotionBtnDto);
+                if (btnIndex==1) {
+                    int updateResult = communityMapper.updatePostForLikeDelete(emotionBtnDto);
+                } else if (btnIndex==2) {
+                    int updateResult = communityMapper.updatePostForGreatDelete(emotionBtnDto);
+                } else if (btnIndex==3) {
+                    int updateResult = communityMapper.updatePostForSadDelete(emotionBtnDto);
+                }
+
+            } else if (btnNo != btnIndex) {
+                // btnNo가 있지만, 두 값이 다르면 좋아요 버튼 수정
+                emotionBtnDto.setBtn_no(btnIndex);
+                int modifyResult = communityMapper.updateLikeByPostNo(emotionBtnDto);
+                if (btnNo == 1) {
+                    int updateResult = communityMapper.updatePostForLikeDelete(emotionBtnDto);
+                } else if (btnNo == 2) {
+                    int updateResult = communityMapper.updatePostForGreatDelete(emotionBtnDto);
+                } else if (btnNo == 3) {
+                    int updateResult = communityMapper.updatePostForSadDelete(emotionBtnDto);
+                }
+                if (btnIndex==1) {
+                    int updateResult = communityMapper.updatePostForLike(emotionBtnDto);
+                } else if (btnIndex==2) {
+                    int updateResult = communityMapper.updatePostForGreat(emotionBtnDto);
+                } else if (btnIndex==3) {
+                    int updateResult = communityMapper.updatePostForSad(emotionBtnDto);
+                }
+            }
+        } else if (isBtnNo == 0) {
+            // btnNo가 없으면 좋아요 등록
+            emotionBtnDto.setBtn_no(btnIndex);
+            int insertResult = communityMapper.insertLikeByPostNo(emotionBtnDto);
+            if (btnIndex==1) {
+                int updateResult = communityMapper.updatePostForLike(emotionBtnDto);
+            } else if (btnIndex==2) {
+                int updateResult = communityMapper.updatePostForGreat(emotionBtnDto);
+            } else if (btnIndex==3) {
+                int updateResult = communityMapper.updatePostForSad(emotionBtnDto);
+            }
+
         }
         return result;
-
     }
     @Override
     public List<ReplyDto> getAllReplys(int postIndex) {
@@ -125,7 +159,9 @@ public class CommunityService implements ICommunityService {
 
         int result = communityMapper.updateReplyCnt(postId);
         if (result > 0) {
+            int reply_no = communityMapper.selectCurrnetReplyNo();
             ReplyDto replyDto = new ReplyDto();
+            replyDto.setReply_no(reply_no+1);
             replyDto.setUser_mail(user_mail);
             replyDto.setPost_no(postId);
             replyDto.setComment(replyText);
@@ -192,5 +228,28 @@ public class CommunityService implements ICommunityService {
             replyReportDto.setReport_user(user_mail);
             return communityMapper.insertReplyReport(replyReportDto);
         }
+    }
+
+    public int getEmotions(int postNo, String userMail) {
+        log.info("[CommunityService] getEmotions");
+
+        EmotionBtnDto emotionBtnDto = new EmotionBtnDto();
+        emotionBtnDto.setPost_no(postNo);
+        emotionBtnDto.setUser_mail(userMail);
+        int BtnNo = communityMapper.selectBtnNoByPostNo(emotionBtnDto);
+
+        return BtnNo;
+    }
+
+    public Map<String, Object> getMyLikedPosts(String userMail) {
+        log.info("[CommunityService] getMyLikedPosts");
+
+        Map<String, Object> MyLikedPosts = new HashMap<>();
+        UserDto userDto = userMapper.info(userMail);
+        List<PostDto> postDtos = communityMapper.selectMyLikedPosts(userMail);
+        MyLikedPosts.put("userDto", userDto);
+        MyLikedPosts.put("postDtos", postDtos);
+
+        return MyLikedPosts;
     }
 }

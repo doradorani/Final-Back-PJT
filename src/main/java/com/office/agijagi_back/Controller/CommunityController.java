@@ -48,7 +48,10 @@ public class CommunityController {
     public ListResult<PostDto> getAllPosts() {
         log.info("[CommunityController] getAllPosts");
 
-        return responseService.getListResult(communityService.getAllPosts());
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String user_mail = userDetails.getUsername();
+
+        return responseService.getListResult(communityService.getAllPosts(user_mail));
     }
     @ApiOperation(httpMethod = "GET"
             , value = "모든 게시물 조회"
@@ -221,5 +224,35 @@ public class CommunityController {
         String user_mail = userDetails.getUsername();
 
         return responseService.getSingleResult(communityService.summitReport(postId, replyIndex, reportReason, user_mail));
+    }
+
+    @ApiOperation(httpMethod = "GET"
+            , value = "게시물 감정 버튼 조회"
+            , notes = "get post emotions"
+            , response = Integer.class
+            , responseContainer = "SingleResult")
+    @GetMapping("/getEmotions/{post_no}")
+    public SingleResult<Integer> getEmotions (@PathVariable @Valid int post_no) {
+        log.info("[CommunityController] getEmotions");
+
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String user_mail = userDetails.getUsername();
+
+        return responseService.getSingleResult(communityService.getEmotions(post_no, user_mail));
+    }
+
+    @ApiOperation(httpMethod = "GET"
+            , value = "해당 계정이 좋아요를 누른 게시물 조회"
+            , notes = "select all my liked posts"
+            , response = Map.class
+            , responseContainer = "SingleResult")
+    @GetMapping("/getMyLikedPosts")
+    public SingleResult<Map<String, Object>> getMyLikedPosts() {
+        log.info("[CommunityController] getMyLikedPosts");
+
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String user_mail = userDetails.getUsername();
+
+        return responseService.getSingleResult(communityService.getMyLikedPosts(user_mail));
     }
 }

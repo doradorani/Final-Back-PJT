@@ -19,9 +19,11 @@ public class PostDto {
     private @SQLInjectionSafe int like_cnt;
     private @SQLInjectionSafe int great_cnt;
     private @SQLInjectionSafe int sad_cnt;
+    private @SQLInjectionSafe int btn_no;
     private @SQLInjectionSafe int reply_cnt;
     private @SQLInjectionSafe int status;
     private @SQLInjectionSafe String reg_date;
     private @SQLInjectionSafe String mod_date;
+
 
 }

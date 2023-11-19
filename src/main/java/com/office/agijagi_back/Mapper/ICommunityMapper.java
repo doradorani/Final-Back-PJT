@@ -7,7 +7,7 @@ import java.util.List;
 
 @Mapper
 public interface ICommunityMapper {
-    List<PostDto> selectAllPosts();
+    List<PostDto> selectAllPosts(String user_mail);
 
     PostDto selectDetailPost(int no);
 
@@ -39,5 +39,27 @@ public interface ICommunityMapper {
 
     int insertReplyReport(ReplyReportDto replyReportDto);
 
-    EmotionBtnDto selectLikeForUpdate(EmotionBtnDto emotionBtnDto);
+    int selectCurrnetReplyNo();
+
+    int insertLikeByPostNo(EmotionBtnDto emotionBtnDto);
+
+    int selectBtnNoByPostNo(EmotionBtnDto emotionBtnDto);
+
+    int selectBtnNoExistsForPostNo(EmotionBtnDto emotionBtnDto);
+
+    int updatePostForGreat(EmotionBtnDto emotionBtnDto);
+
+    int updatePostForSad(EmotionBtnDto emotionBtnDto);
+
+    int updatePostForLikeDelete(EmotionBtnDto emotionBtnDto);
+
+    int updatePostForGreatDelete(EmotionBtnDto emotionBtnDto);
+
+    int updatePostForSadDelete(EmotionBtnDto emotionBtnDto);
+
+    int deleteLikeByPostNo(EmotionBtnDto emotionBtnDto);
+
+    int updateLikeByPostNo(EmotionBtnDto emotionBtnDto);
+
+    List<PostDto> selectMyLikedPosts(String userMail);
 }

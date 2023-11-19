@@ -13,5 +13,6 @@ public class EmotionBtnDto {
     private @SQLInjectionSafe int no;
     private @SQLInjectionSafe String user_mail;
     private @SQLInjectionSafe int post_no;
+    private @SQLInjectionSafe int btn_no;
 
 }
