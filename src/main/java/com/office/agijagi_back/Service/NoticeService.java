@@ -25,7 +25,7 @@ public class NoticeService implements INoticeSevice {
         this.noticeMapper = noticeMapper;
         this.s3Service = s3Service;;
     }
-
+    @Override
     public Map<String, Object> getNoticeTable(int currentPage, int perPage) {
         log.info("[NoticeService] getNoticeTable");
 
@@ -40,7 +40,7 @@ public class NoticeService implements INoticeSevice {
 
         return NoticeMap;
     }
-
+    @Override
     public Map<String, Object> getNotices(int currentPage, int perPage) {
         log.info("[NoticeService] getNotices");
 
@@ -55,7 +55,7 @@ public class NoticeService implements INoticeSevice {
 
         return NoticeMap;
     }
-
+    @Override
     public List<NoticeDto> getNoticeDetail(int noticeIndex, int modifyRequest) {
         log.info("[NoticeService] getNoticeDetail");
 
@@ -76,7 +76,7 @@ public class NoticeService implements INoticeSevice {
         }
         return null;
     }
-
+    @Override
     public Map<String, Object> getNoticeDetailForUser(int noticeIndex) {
         log.info("[NoticeService] getNoticeDetailForUser");
 
@@ -100,7 +100,7 @@ public class NoticeService implements INoticeSevice {
         return null;
     };
 
-
+    @Override
     public int deleteNotice(int noticeIndex) throws Exception {
         log.info("[NoticeService] deleteNotice");
 
@@ -121,7 +121,7 @@ public class NoticeService implements INoticeSevice {
         }
         return result;
     }
-
+    @Override
     public int registNotice(String adminId, Map<String, String> data, List<MultipartFile> files, List<String> fileList) throws IOException {
         log.info("[NoticeService] registNotice");
 
@@ -151,14 +151,14 @@ public class NoticeService implements INoticeSevice {
         }
         return result;
     }
-
+    @Override
     public int getRecentNotice() {
         log.info("[NoticeService] registNotice");
 
         int recentNoticeIndex = noticeMapper.selectRecentNotice();
         return recentNoticeIndex;
     }
-
+    @Override
     public int modifyNotice(String adminId, Map<String, Object> data, List<MultipartFile> files, List<String> fileList) {
         log.info("[NoticeService] modifyNotice");
 

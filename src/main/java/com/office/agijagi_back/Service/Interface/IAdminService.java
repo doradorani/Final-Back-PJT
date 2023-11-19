@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import java.util.Map;
 
 public interface IAdminService  {
-
     int signUp(AdminDto adminDto);
     ResponseEntity signIn (AdminDto adminDto);
     int logOut(String refreshToken);
