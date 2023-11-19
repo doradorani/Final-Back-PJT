@@ -234,15 +234,15 @@ public class CommunityService implements ICommunityService {
         }
     }
 
-    public int getEmotions(int postNo, String userMail) {
+    public Integer getEmotions(int postNo, String userMail) {
         log.info("[CommunityService] getEmotions");
 
         EmotionBtnDto emotionBtnDto = new EmotionBtnDto();
         emotionBtnDto.setPost_no(postNo);
         emotionBtnDto.setUser_mail(userMail);
-        int BtnNo = communityMapper.selectBtnNoByPostNo(emotionBtnDto);
+        Integer btnNo = communityMapper.selectBtnNoByPostNo(emotionBtnDto);
 
-        return BtnNo;
+        return btnNo;
     }
 
     public Map<String, Object> getMyLikedPosts(String userMail) {
