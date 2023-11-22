@@ -30,6 +30,7 @@
     -   [API 명세서](#API-명세서)
 -   [JWT](#4-JWT)
     -   [JWT](#JWT)
+    -   [Flow Chart](#Flow-Chart)
 -   [환경 및 버전](#5-환경-및-버전)
     -   [Environment](#environment)
     -   [Dependency](#Dependency)
@@ -131,8 +132,7 @@ API 명세서(Swagger): https://drive.google.com/file/d/1UzdPXteyF15Cmijuztx27Bx
 ## JWT
 
 -   구조
-      - 헤더(HS256) + 페이로드(Json - Key/Value) + 서명(BASE64) => 대칭키
-      - ※ RSA를 활용하여 비대칭키로 보안 강화 가능
+      - 헤더(HS256) + 페이로드(Json - Key/Value) + 서명(BASE64) => 대칭키 (※ RSA를 활용하여 비대칭키로 보안 강화 가능)
 -   사용
       - 사용자 토큰 인증(401)과 권한(403)을 확인
 -   구조
@@ -141,6 +141,12 @@ API 명세서(Swagger): https://drive.google.com/file/d/1UzdPXteyF15Cmijuztx27Bx
       - Redux와 Redux-persist를 활용한 클라이언트 토큰 관리 방식 사용
       - 다중 로그인 방지를 위한 이메일과 토큰의 Key/Value 형식 검증(추후 IP 검증 기능을 추가하여 RefreshToken 탈취에 대한 보안 강화 예정)
       - Axios Interceptor를 활용한 프론트와 서버간의 통신 최소화 및 서버 부하 분산화
+
+## Flow Chart
+
+![image](https://github.com/doradorani/agijagi_back/assets/96163167/4c7dcd75-35c0-4f57-95e4-06fbac1ca434)
+
+![image](https://github.com/doradorani/agijagi_back/assets/96163167/2ee88b38-5bbc-43da-b1ea-664d46291cb7)
 
 
 # 5. 환경 및 버전
