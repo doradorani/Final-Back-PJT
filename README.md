@@ -120,7 +120,7 @@ Run AgijagiBackApplication
 
 ## API 명세서
 
-![API 명세서](https://github.com/doradorani/agijagi_front/files/13432261/swagger-api-.zip)
+API 명세서(Swagger): https://drive.google.com/file/d/1UzdPXteyF15Cmijuztx27BxKCEROs80U/view?usp=sharing
 
 # 4. 환경 및 버전
 
