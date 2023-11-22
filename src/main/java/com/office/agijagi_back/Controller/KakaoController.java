@@ -1,9 +1,13 @@
-package com.office.agijagi_back.Util.Kakao;
+package com.office.agijagi_back.Controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.office.agijagi_back.Util.Kakao.KakaoService;
+import com.office.agijagi_back.Util.Kakao.KakaoTokenDto;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,17 +19,25 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+
 @Log4j2
 @Controller
 @RequestMapping("/kakao")
 public class KakaoController {
 
-    private final KakaoService kakaoService ;
+    private final KakaoService kakaoService;
+
+    @Value("${my.kakao.key}")
+    private String KakaoApiKey;
 
     public KakaoController(KakaoService kakaoService) {
         this.kakaoService = kakaoService;
     }
-
+    @ApiOperation(httpMethod = "POST"
+            , value = "카카오 로그인"
+            , notes = "kakao login"
+            , response = KakaoTokenDto.class
+            , responseContainer = "ResponseEntity")
     @PostMapping("/login")
     public ResponseEntity kakaoLogin(@RequestParam ("code") String code, HttpServletResponse response) throws JsonProcessingException {
         // code: 카카오 서버로부터 받은 인가 코드
@@ -48,8 +60,8 @@ public class KakaoController {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
-            sb.append("&client_id=675a168b3fa5bd60254c92260c6a62d4"); // REST_API_KEY를 입력
-            sb.append("&redirect_uri=http://localhost:3000/login/oauth2/callback/kakao"); // 인가 코드를 받은 redirect_uri를 입력
+            sb.append("&client_id="+KakaoApiKey); // REST_API_KEY를 입력
+            sb.append("&redirect_uri=https://www.agijagi.site/login/oauth2/callback/kakao"); // 인가 코드를 받은 redirect_uri를 입력
             sb.append("&code=" + code);
             bw.write(sb.toString());
             bw.flush();
@@ -82,10 +94,8 @@ public class KakaoController {
         kakaoTokenDto = getUserInfo(access_Token);
 
 
-        //int result = kakaoService.login(kakaoTokenDto);
         return kakaoService.login(kakaoTokenDto);
     }
-
 
     private KakaoTokenDto getUserInfo(String accessToken) {
 

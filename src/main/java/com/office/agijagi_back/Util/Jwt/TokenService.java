@@ -1,17 +1,19 @@
 package com.office.agijagi_back.Util.Jwt;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
+@Log4j2
 public class TokenService {
 
-    public ResponseEntity<TokenDto> setTokenForFront(TokenDto tokenDto){
+    public ResponseEntity<TokenDto> setTokenForFront(String tokenName, TokenDto tokenDto){
 
-        ResponseCookie cookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
-                .maxAge(7 * 24 * 60 * 60)
+        ResponseCookie cookie = ResponseCookie.from(tokenName, tokenDto.getRefreshToken())
+                .maxAge(60 * 60)
                 .path("/")
 //                .secure(true) // HTTP에서도 사용 가능
 //                .sameSite("None") // 모든 도메인 및 포트에서 사용
@@ -30,7 +32,9 @@ public class TokenService {
     }
 
     public ResponseEntity<TokenDto> setNewAccessToken(TokenDto tokenDto){
-        System.out.println("새로운 엑세스 토큰 발급");
+        log.info("New AccessToken");
+        log.info(tokenDto.getAccessToken());
+        log.info(tokenDto.getRefreshToken());
         return ResponseEntity.ok()
                 .body(tokenDto);
     }

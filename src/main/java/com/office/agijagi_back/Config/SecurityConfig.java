@@ -1,4 +1,4 @@
-package com.office.agijagi_back.Security;
+package com.office.agijagi_back.Config;
 
 import com.office.agijagi_back.Util.Jwt.CustomAccessDeniedHandler;
 import com.office.agijagi_back.Util.Jwt.CustomAuthenticationEntryPoint;
@@ -10,6 +10,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -37,23 +39,37 @@ public class SecurityConfig {
         this.jwtProvider = jwtProvider;
     }
 
+    @Bean
+    public PasswordEncoder getPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.csrf().disable()                       //CSRF(Cross-Site Request Forgery) 보안을 비활성화
-                //.httpBasic().disable()              //HTTP Basic 인증을 비활성화
+//                .httpBasic().disable()              //HTTP Basic 인증을 비활성화
 
                 //하위 부분부터는 설정에 정의한 내용을 순서대로 실행
                 // 접근 권한 설정부
 
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS).permitAll() // CORS Preflight 방지
-                .antMatchers("/user/newToken", "/user/logOut", "/user/signOut").permitAll()
+                .antMatchers("/user/newToken", "/user/logOut", "/user/dupNickname/**").permitAll()
                 .antMatchers("/user/**").hasRole("USER")
-                .antMatchers("/kakao/**").permitAll()  // 특정 URL 경로에 대한 요청을 모두 허용
+                .antMatchers("/admin/newToken", "/admin/signUp", "/admin/signIn", "/admin/logOut", "/admin/signOut").permitAll()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/coBuy/admin/**").hasRole("ADMIN")
+                .antMatchers("/coBuy/fundingProduct/**", "/coBuy/userDetailProduct/**", "/coBuy/coBuyHit/**", "/coBuy/myFundingProduct/**", "/coBuy/myHitProduct/**").hasRole("USER")
+                .antMatchers("/coBuy/**").permitAll()
+                .antMatchers("/kakao/**").permitAll()
+                .antMatchers("/swagger-ui.html", "/api/v2/**", "/health", "/swagger/**", "/swagger-resources/**", "/webjars/**", "/v2/api-docs").permitAll()
+                .antMatchers("/notice/**").permitAll()
+                .antMatchers("/community/getMyPosts/**").hasRole("USER")
+                .antMatchers("/community/**").permitAll()
+                .antMatchers("/healthCheck").permitAll()
+                // 특정 URL 경로에 대한 요청을 모두 허용
                 .anyRequest().authenticated() // 나머지 모든 요청은 인증이 필요
-
                 .and()
                 .formLogin().disable()              //Form 로그인을 비활성화
                 .headers()                          //
@@ -61,7 +77,7 @@ public class SecurityConfig {
                 .sameOrigin()                       //HTTP 헤더에서 프레임 옵션을 설정하여 동일한 출처에서만 프레임을 로드할 수 있도록 함
                 .and()
                 .cors()                             // CORS 에러 방지용
-                                                    // 원래 출처(http://localhost:3000)에서의 요청을 허용하도록 설정
+                                                    // 원래 출처(https://www.agijagi.site)에서의 요청을 허용하도록 설정
 
                 // 세션을 사용하지 않을거라 세션 설정을 Stateless 로 설정
                 //JSESSIONID 쿠키 생성 막음
@@ -93,7 +109,7 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
         // 특정 도메인 패턴을 지정합니다.
-        corsConfiguration.setAllowedOriginPatterns(Collections.singletonList("http://localhost:3000"));
+        corsConfiguration.setAllowedOriginPatterns(Collections.singletonList("https://www.agijagi.site"));
 
         source.registerCorsConfiguration("/**", corsConfiguration);
 

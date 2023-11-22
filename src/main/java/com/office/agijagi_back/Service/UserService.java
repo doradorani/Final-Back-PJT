@@ -1,33 +1,60 @@
 package com.office.agijagi_back.Service;
 
+import com.office.agijagi_back.Dto.UserDto;
 import com.office.agijagi_back.Mapper.IUserMapper;
+import com.office.agijagi_back.Service.Interface.IUserService;
 import com.office.agijagi_back.Util.Jwt.IjwtMapper;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService {
+public class UserService implements IUserService {
 
-    private final IUserMapper iUserMapper;
-    private final IjwtMapper ijwtMapper;
+    private final IUserMapper userMapper;
+    private final IjwtMapper jwtMapper;
 
-    public UserService(IUserMapper iUserMapper, IjwtMapper ijwtMapper) {
-        this.iUserMapper = iUserMapper;
-        this.ijwtMapper = ijwtMapper;
+    public UserService(IUserMapper userMapper, IjwtMapper jwtMapper) {
+        this.userMapper = userMapper;
+        this.jwtMapper = jwtMapper;
     }
 
 
     public String getEmailByRefreshToken(String refreshToken) {
 
-        return ijwtMapper.getEmailByRefreshToken(refreshToken);
+        return jwtMapper.getEmailByRefreshToken(refreshToken);
     }
 
-    public int logOut(String refreshToken) {
+    public int deleteRefreshTokenByToken(String refreshToken) {
 
-        return ijwtMapper.logOut(refreshToken);
+        return jwtMapper.deleteRefreshTokenByToken(refreshToken);
     }
 
-    public int signOut(String email) {
+    public int deleteUser(String email) {
 
-        return iUserMapper.signOut(email);
+        return userMapper.deleteUser(email);
     }
+
+    @Override
+    public UserDto info(String email) {
+
+        return userMapper.info(email);
+    }
+
+    @Override
+    public int dupNickname(String userNickname) {
+
+        return userMapper.dupNickname(userNickname);
+    }
+
+    @Override
+    public int modifyInfo(UserDto modifyUserDto) {
+
+        return userMapper.modifyInfo(modifyUserDto);
+    }
+
+    @Override
+    public String getImgByEmail(String email) {
+
+        return userMapper.getImgByEmail(email);
+    }
+
 }

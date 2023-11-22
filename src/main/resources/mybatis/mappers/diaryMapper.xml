@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.office.agijagi_back.Mapper.IDiaryMapper">
+
+    <select id="selectChildCount" parameterType="String">
+        SELECT
+            count(*)
+        FROM
+            child
+        WHERE
+            u_email = #{u_email}
+    </select>
+    <insert id="insertChildInfo" parameterType="ChildDto">
+        INSERT INTO
+            child (
+                   u_email, name, birth_date, img, content, sequence,  reg_date, mod_date
+        )
+        VALUES (#{u_email}, #{name}, #{birth_date}, #{img}, #{content},  #{sequence},now(), now());
+    </insert>
+    <update id="updateChild" parameterType="ChildDto" >
+        UPDATE
+            child
+        SET
+            name = #{name},birth_date = #{birth_date}, mod_date= now(), content = #{content}, mod_date = now()
+        <if test='img != null'>
+            ,img = #{img}
+        </if>
+        WHERE
+            no = #{no} and u_email = #{u_email}
+    </update>
+    <select id="selectChildByNo" parameterType="String">
+        SELECT
+            *
+        FROM
+            child
+        WHERE
+            no = #{no} and u_email = #{email}
+    </select>
+    <update id="deleteChildInfoByNo" parameterType="String">
+        UPDATE
+            child
+        SET
+            status = 0, mod_date = now()
+        WHERE
+            no = #{no} and u_email = #{email}
+    </update>
+    <select id="selectChildrenByEmail" parameterType="String" resultType="ChildDto">
+        SELECT
+            *
+        FROM
+            child
+        WHERE
+            u_email = #{u_email} and status = 1
+    </select>
+    <insert id="insertDailyDiary" parameterType="DiaryDto">
+        INSERT INTO
+            diary (
+            u_email, cd_no, title, content, img, fourcuts_checked, reg_date, mod_date
+        )
+        VALUES (#{u_email}, #{cd_no}, #{title}, #{content},#{img}, #{fourcuts_checked},now(), now());
+    </insert>
+    <select id="selectDailyDetail" parameterType="String">
+        SELECT
+            d.*, c.name as cd_name, c.sequence as sequence
+        FROM
+            diary d
+        JOIN
+            child c
+            on
+                d.cd_no = c.no
+        WHERE
+            d.cd_no = #{childNo} and d.no =#{diaryNo} and d.u_email = #{email}
+    </select>
+    <select id="selectDailyDiary" parameterType="String">
+        SELECT
+            d.*, c.name as cd_name, c.sequence as sequence
+        FROM
+            diary d
+        JOIN
+            child c
+        on
+            d.cd_no = c.no
+        WHERE
+            d.cd_no = #{childNo} and d.status = 1 and d.u_email = #{email} and c.status = 1
+        ORDER BY
+            reg_date DESC
+    </select>
+    <select id="searchDailyDiaries" parameterType="String">
+        SELECT
+            d.*, c.name as cd_name, c.sequence as sequence
+        FROM
+            diary d
+        JOIN
+            child c
+            on
+                d.cd_no = c.no
+        WHERE
+            d.u_email = #{email} and d.status = 1 and c.status = 1
+        ORDER BY
+            reg_date DESC
+    </select>
+    <update id="updateDailyDiary" parameterType="DiaryDto">
+        UPDATE
+            diary
+        SET
+            title = #{title}, content = #{content}, fourcuts_checked = #{fourcuts_checked},mod_date = now()
+        <if test='img != null'>
+            ,img = #{img}
+        </if>
+        WHERE
+            no = #{no} and u_email = #{u_email}
+    </update>
+    <update id="deleteDailyDiary" parameterType="String">
+        UPDATE
+            diary
+        SET
+            status = 0, mod_date = now()
+        WHERE
+            cd_no = #{childNo} and no = #{diaryNo} and u_email = #{email}
+    </update>
+    <select id="selectChildRandomPictures" parameterType="String">
+        SELECT
+            d.*
+        FROM
+            diary d
+        JOIN
+            child c
+        ON
+            d.cd_no = c.no
+        WHERE
+            d.cd_no = #{cd_no} and d.status = 1 and d.fourcuts_checked = 1 and d.u_email = #{email} and c.status = 1
+        ORDER BY
+            RAND()
+        LIMIT 4;
+    </select>
+    <select id="selectChildrenRandomPictures" parameterType="String">
+        SELECT
+            d.*
+        FROM
+            diary d
+                JOIN
+            child c
+            ON
+                d.cd_no = c.no
+        WHERE
+            d.status = 1 and d.fourcuts_checked = 1 and d.u_email = #{email} and c.status = 1
+        ORDER BY
+            RAND()
+            LIMIT 4;
+    </select>
+
+</mapper>

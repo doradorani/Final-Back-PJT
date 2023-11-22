@@ -4,12 +4,104 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.office.agijagi_back.Mapper.IUserMapper">
 
-    <update id="signOut">
-        DELETE
-        FROM
-            userInfo
+    <update id="deleteUser">
+        UPDATE
+            user
+        SET
+            status = 0
         WHERE
             email = #{email}
     </update>
+
+    <select id="info">
+        SELECT
+            *
+        FROM
+            user
+        WHERE
+            email = #{email}
+    </select>
+
+    <select id="dupNickname">
+        SELECT
+            COUNT(*)
+        FROM
+            user
+        WHERE
+            nickname = #{userNickname}
+    </select>
+
+    <update id="modifyInfo">
+        UPDATE
+            user
+        SET
+            name=#{name},
+            nickname=#{nickname},
+            email=#{email},
+            phone=#{phone},
+            zip_code=#{zip_code},
+            address_detail1=#{address_detail1},
+            address_detail2=#{address_detail2},
+            img=#{img},
+            mod_date=NOW()
+        WHERE
+            email = #{email}
+    </update>
+
+    <select id="getImgByEmail">
+        SELECT
+            img
+        FROM
+            user
+        WHERE
+            email = #{email}
+    </select>
+
+    <select id="userManageList">
+        SELECT
+            u.no,
+            u.name,
+            u.nickname,
+            u.email,
+            u.phone,
+            u.reg_date,
+            u.mod_date,
+            uc.code as status
+        FROM
+            user u
+        JOIN
+            user_code uc
+        ON
+            u.status = uc.no
+        ORDER BY
+            u.no DESC
+        LIMIT
+            #{perPage}
+        OFFSET
+            #{offset};
+    </select>
+
+    <select id="totalPageByUserManageList">
+        SELECT
+            (COUNT(*) / #{perPage}) + 1
+        FROM
+            user
+    </select>
+
+    <select id="totalCntByUserManageList">
+        SELECT
+            COUNT(*)
+        FROM
+            user
+    </select>
+
+    <select id="showUserDetailByEmail">
+        SELECT
+            *
+        FROM
+            user
+        WHERE
+            email = #{email}
+    </select>
 
 </mapper>

@@ -1,60 +1,43 @@
 package com.office.agijagi_back.Dto;
 
+import com.github.rkpunjal.sqlsafe.SQLInjectionSafe;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
+import lombok.NoArgsConstructor;
 
 @Data
-@Builder
+@NoArgsConstructor
 @AllArgsConstructor
-public class UserDto implements UserDetails {
+public class UserDto {
 
-    private String id;
-    private String email;
-    private List<String> roles;
+    private @SQLInjectionSafe int no;
+    private @SQLInjectionSafe String name;
+    private @SQLInjectionSafe String nickname;
+    private @SQLInjectionSafe String address;
+    private @SQLInjectionSafe String address_detail1;
+    private @SQLInjectionSafe String address_detail2;
+    private @SQLInjectionSafe String zip_code;
+    private @SQLInjectionSafe String email;
+    private @SQLInjectionSafe String phone;
+    private @SQLInjectionSafe String status;
+    private @SQLInjectionSafe String img;
+    private @SQLInjectionSafe String reg_date;
+    private @SQLInjectionSafe String mode_date;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(   Collectors.toList());
+
+    public UserDto(int no, String userName) {
+        this.no = no;
+        this.email = userName;
     }
 
-    @Override
-    public String getPassword() {
-        return null;
-    }
-
-    @Override
-    public String getUsername() {
-        return this.email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return false;
+    public UserDto(Object name, Object nickname, Object email, Object phone, Object zip_code, Object address_detail1, Object address_detail2, Object img) {
+        this.name = (String) name;
+        this.nickname = (String) nickname;
+        this.email = (String) email;
+        this.phone = (String) phone;
+        this.zip_code = (String) zip_code;
+        this.address_detail1 = (String) address_detail1;
+        this.address_detail2 = (String) address_detail2;
+        this.img = (String) img;
     }
 }
-

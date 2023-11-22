@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.office.agijagi_back.Mapper.IAdminMapper">
+
+    <select id="signInAdminById" parameterType="String" resultType="AdminDto">
+        SELECT
+            *
+        FROM
+            admin
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insertAdmin" parameterType="AdminDto">
+        INSERT INTO
+        admin
+        (id, pw, name, email, phone, reg_date, mod_date)
+        VALUES (
+                #{id}, #{pw}, #{name}, #{email}, #{phone}, now(), now()
+               )
+    </insert>
+
+<!--    <insert id="setToken" parameterType="String">-->
+<!--        INSERT INTO-->
+<!--            token (email, refreshToken, date)-->
+<!--        VALUES (-->
+<!--                   #{email}, #{refreshToken}, NOW()-->
+<!--               )-->
+<!--    </insert>-->
+
+    <select id="selectAdminIDByRefreshToken">
+        SELECT
+            id
+        FROM
+            admin_token
+        WHERE
+            refresh_Token = #{refreshToken}
+    </select>
+
+    <delete id="deleteAdminRefreshToken">
+        DELETE
+        FROM
+            admin_token
+        WHERE
+            refresh_Token = #{refreshToken}
+    </delete>
+
+    <update id="updateAdminToWithdraw">
+        UPDATE
+            admin
+        SET
+            status = 0
+        WHERE
+            id = #{id}
+    </update>
+
+    <select id="authList">
+        SELECT
+            no,
+            id,
+            name,
+            email,
+            phone,
+            grade,
+            reg_date,
+            mod_date
+        FROM
+            admin
+        WHERE
+            grade != 0
+        ORDER BY
+            no DESC
+        LIMIT
+            #{perPage}
+        OFFSET
+            #{offset};
+    </select>
+
+    <select id="totalPageByauthList">
+        SELECT
+            (COUNT(*) / #{perPage}) + 1
+        FROM
+            admin
+        WHERE
+            grade != 0
+    </select>
+
+    <select id="totalCntByauthList">
+        SELECT
+            COUNT(*)
+        FROM
+            admin
+        WHERE
+            grade != 0
+    </select>
+
+    <select id="noneAuthList">
+        SELECT
+            no,
+            id,
+            name,
+            email,
+            phone,
+            grade,
+            reg_date,
+            mod_date
+        FROM
+            admin
+        WHERE
+            grade = 0
+        ORDER BY
+            no DESC
+            LIMIT
+            #{perPage}
+        OFFSET
+            #{offset};
+    </select>
+
+    <select id="totalPageBynoneAuthList">
+        SELECT
+            (COUNT(*) / #{perPage}) + 1
+        FROM
+            admin
+        WHERE
+            grade = 0
+    </select>
+
+    <select id="totalCntBynoneAuthList">
+        SELECT
+            COUNT(*)
+        FROM
+            admin
+        WHERE
+            grade = 0
+    </select>
+
+    <update id="updateGradeByNoAndGrade">
+        UPDATE
+            admin
+        SET
+            grade = #{gradeData}
+        WHERE
+            no = #{no}
+    </update>
+
+    <select id="myAdminInfoById">
+        SELECT
+            id,
+            name,
+            email,
+            phone,
+            reg_date,
+            mod_date
+        FROM
+            admin
+        WHERE
+            id = #{adminAccount}
+    </select>
+
+    <select id="duplicateById">
+        SELECT
+            COUNT(*)
+        FROM
+            admin
+        WHERE id=#{id}
+    </select>
+
+    <update id="modifyAdminInfo">
+        UPDATE
+            admin
+        SET
+            id=#{id},
+            name=#{name},
+            email=#{email},
+            phone=#{phone},
+            mod_date=NOW()
+        WHERE
+            id=#{currentId}
+    </update>
+
+    <update id="modifyAdminInfoAndPw">
+        UPDATE
+            admin
+        SET
+            id=#{id},
+            pw=#{pw},
+            name=#{name},
+            email=#{email},
+            phone=#{phone},
+            mod_date=NOW()
+        WHERE
+            id=#{currentId}
+    </update>
+
+    <update id="updateUserStatusByNo">
+        UPDATE
+            user
+        SET
+            status = #{statusData}
+        WHERE
+            no = #{no}
+    </update>
+
+</mapper>

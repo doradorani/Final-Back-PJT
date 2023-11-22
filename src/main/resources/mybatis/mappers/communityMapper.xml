@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.office.agijagi_back.Mapper.ICommunityMapper">
+
+    <insert id="insertNewPost" parameterType="PostDto">
+        INSERT INTO post (imgs_path, post_text, user_mail, reg_date, mod_date)
+        VALUES (
+                   #{imgs_path},
+                   #{post_text},
+                   #{user_mail},
+                   NOW(),
+                   NOW()
+               )
+    </insert>
+
+    <select id="selectAllPosts" parameterType="String" resultType="PostDto">
+        SELECT post.*, user.nickname, user.img, post_like.btn_no
+        FROM post
+        INNER JOIN user
+        ON post.user_mail = user.email
+        LEFT JOIN post_like
+        ON post.no = post_like.post_no
+        AND post_like.user_mail = #{user_mail}
+        where post.status = 1
+        ORDER BY no DESC
+        LIMIT 10
+    </select>
+
+    <select id="selectMorePosts" parameterType="Integer" resultType="PostDto">
+        SELECT post.*, user.nickname, user.img
+        FROM post
+                 INNER JOIN user
+                            ON post.user_mail = user.email
+        where post.status = 1 and post.no &lt; #{lastPostId}
+        ORDER BY no DESC
+            LIMIT 5
+    </select>
+
+    <select id="selectDetailPost" parameterType="Integer" resultType="PostDto">
+        SELECT post.*, user.nickname, user.img
+        FROM post
+                 INNER JOIN user
+                            ON post.user_mail = user.email
+        where post.status = 1 and post.no = #{postId}
+        ORDER BY no DESC
+            LIMIT 5
+    </select>
+
+    <select id="selectMyPosts" parameterType="String" resultType="PostDto">
+        SELECT *
+        FROM post
+        WHERE status = 1
+        AND user_mail = #{email}
+        ORDER BY no DESC;
+    </select>
+
+    <update id="updatePostForDelete" parameterType="Integer" >
+        UPDATE post
+        SET status = status - 1,
+            mod_date = NOW()
+        WHERE no = #{postIndex}
+    </update>
+
+    <select id="selectAllReplysByPostNo" parameterType="Integer" resultType="ReplyDto">
+        SELECT reply.*, user.nickname, user.img
+        FROM reply
+        INNER JOIN user
+        ON reply.user_mail = user.email
+        where reply.status = 1 and reply.post_no = #{postIndex}
+        ORDER BY reply.reply_no ASC, reply.no ASC;
+    </select>
+
+    <insert id="insertNewReply" parameterType="replyDto">
+        INSERT INTO reply (user_mail, post_no, reply_no, comment, reg_date, mod_date)
+        VALUES (
+                   #{user_mail},
+                   #{post_no},
+                   #{reply_no},
+                   #{comment},
+                   NOW(),
+                   NOW()
+               )
+    </insert>
+
+    <select id="selectCurrnetReplyNo" parameterType="Integer" resultType="Integer">
+        SELECT MAX(no) AS reply_no
+        FROM reply
+    </select>
+
+    <insert id="insertNewReReply" parameterType="replyDto">
+        INSERT INTO reply (user_mail, post_no,indentation, reply_no, comment, reg_date, mod_date)
+        VALUES (
+                   #{user_mail},
+                   #{post_no},
+                   1,
+                   #{reply_no},
+                   #{comment},
+                   NOW(),
+                   NOW()
+               )
+    </insert>
+
+    <update id="updateReplyCnt" parameterType="Integer" >
+        UPDATE post
+        SET reply_cnt = reply_cnt + 1,
+            mod_date = NOW()
+        WHERE no = #{postId}
+    </update>
+
+
+    <update id="updateReplyCntForDelete" parameterType="Integer" >
+        UPDATE post
+        SET reply_cnt = reply_cnt - 1,
+            mod_date = NOW()
+        WHERE no = #{postId}
+    </update>
+
+    <update id="updateReplyForDelete" parameterType="Integer" >
+        UPDATE reply
+        SET status = status - 1,
+            mod_date = NOW()
+        WHERE no = #{replyIndex}
+    </update>
+
+    <update id="updateReplyForModify" parameterType="ReplyDto" >
+        UPDATE reply
+        SET comment = #{comment},
+            mod_date = NOW()
+        WHERE no = #{no}
+    </update>
+
+    <insert id="insertPostReport" parameterType="postReportDto">
+        INSERT INTO post_report (post_no, reason, report_user, reg_date, mod_date)
+        VALUES (#{post_no}, #{reason}, #{report_user}, NOW(), NOW())
+    </insert>
+
+    <insert id="insertReplyReport" parameterType="replyReportDto">
+        INSERT INTO reply_report (reply_no, reason, report_user, reg_date, mod_date)
+        VALUES (#{reply_no}, #{reason}, #{report_user}, NOW(), NOW())
+    </insert>
+
+    <select id="selectBtnNoExistsForPostNo" parameterType="EmotionBtnDto" resultType="Integer">
+        SELECT count(*)
+        FROM post_like
+        where post_no = #{post_no}
+          AND user_mail = #{user_mail}
+    </select>
+
+    <select id="selectBtnNoByPostNo" >
+        SELECT btn_no
+        FROM post_like
+        where post_no = #{post_no}
+        AND user_mail = #{user_mail}
+        LIMIT 1
+    </select>
+
+    <insert id="insertLikeByPostNo" parameterType="emotionBtnDto">
+        INSERT INTO post_like (user_mail, post_no, btn_no)
+        VALUES (
+                   #{user_mail},
+                   #{post_no},
+                   #{btn_no}
+               )
+    </insert>
+
+    <update id="updatePostForLike" parameterType="emotionBtnDto">
+        UPDATE post
+        SET like_cnt = like_cnt + 1
+        WHERE no = #{post_no}
+    </update>
+
+    <update id="updatePostForGreat" parameterType="emotionBtnDto">
+        UPDATE post
+        SET great_cnt = great_cnt + 1
+        WHERE no = #{post_no}
+    </update>
+
+    <update id="updatePostForSad" parameterType="emotionBtnDto">
+        UPDATE post
+        SET sad_cnt = sad_cnt + 1
+        WHERE no = #{post_no}
+    </update>
+
+    <delete id="deleteLikeByPostNo" parameterType="emotionBtnDto">
+        DELETE FROM post_like
+        WHERE user_mail = #{user_mail}
+        AND post_no = #{post_no}
+    </delete>
+
+    <update id="updatePostForLikeDelete" parameterType="emotionBtnDto">
+        UPDATE post
+        SET like_cnt = like_cnt -1
+        WHERE no = #{post_no}
+    </update>
+
+    <update id="updatePostForGreatDelete" parameterType="emotionBtnDto">
+        UPDATE post
+        SET great_cnt = great_cnt -1
+        WHERE no = #{post_no}
+    </update>
+
+    <update id="updatePostForSadDelete" parameterType="emotionBtnDto">
+        UPDATE post
+        SET sad_cnt = sad_cnt -1
+        WHERE no = #{post_no}
+    </update>
+
+    <update id="updateLikeByPostNo" parameterType="emotionBtnDto">
+        UPDATE post_like
+        SET btn_no = #{btn_no}
+        WHERE user_mail = #{user_mail}
+          AND post_no = #{post_no}
+    </update>
+
+    <update id="updatePostForChangeLike" parameterType="Integer">
+        UPDATE post
+        SET like_cnt = like_cnt -1
+        WHERE no = #{post_no}
+    </update>
+
+    <select id="selectMyLikedPosts" parameterType="String" resultType="PostDto">
+        SELECT post.*
+        FROM post
+        JOIN post_like ON post.no = post_like.post_no
+        WHERE post_like.user_mail = #{userMail}
+    </select>
+
+</mapper>

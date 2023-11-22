@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.office.agijagi_back.Mapper.ICobuyingMapper">
+
+    <insert id="coBuyRegister">
+        INSERT INTO
+            cobuying_product(id,
+                             name,
+                             price,
+                             start_date,
+                             end_date,
+                             img,
+                             option1,
+                             option2,
+                             option3,
+                             option4,
+                             option5,
+                             content,
+                             min_num,
+                             reg_date,
+                             mod_date
+                             )
+        VALUES (#{id},
+                #{name},
+                #{price},
+                #{start_date},
+                #{end_date},
+                #{img},
+                #{option1},
+                #{option2},
+                #{option3},
+                #{option4},
+                #{option5},
+                #{content},
+                #{min_num},
+                NOW(),
+                NOW()
+                )
+    </insert>
+
+    <update id="coBuyModify">
+        UPDATE
+            cobuying_product
+        SET
+            name = #{name},
+            price = #{price},
+            start_date = #{start_date},
+            end_date = #{end_date},
+            img = #{img},
+            option1 = #{option1},
+            option2 = #{option2},
+            option3 = #{option3},
+            option4 = #{option4},
+            option5 = #{option5},
+            content = #{content},
+            min_num = #{min_num},
+            mod_date = NOW()
+        WHERE
+            no = #{no}
+    </update>
+
+    <select id="productList">
+        SELECT
+            cp.*,
+            (
+                SELECT COUNT(*)
+                FROM cobuying_list cl
+                WHERE cl.product_no = cp.no
+            ) AS accumulate
+        FROM
+            cobuying_product cp
+        ORDER BY
+        <choose>
+            <when test="optionList == 'hit'">cp.hit DESC</when>
+            <when test="optionList == 'name'">cp.name ASC</when>
+            <when test="optionList == 'reg_date'">cp.reg_date DESC</when>
+            <otherwise>cp.no DESC</otherwise>
+        </choose>
+        LIMIT
+            #{perPage}
+        OFFSET
+            #{offset};
+    </select>
+
+    <select id="coBuyListCnt">
+        SELECT
+            COUNT(*)
+        FROM
+            cobuying_product
+    </select>
+
+    <select id="productTotalPage">
+        SELECT
+            CASE WHEN COUNT(*) % #{perPage} = 0
+                     THEN COUNT(*) / #{perPage}
+                 ELSE COUNT(*) / #{perPage} + 1
+                END AS totalPage
+        FROM
+            cobuying_product;
+    </select>
+
+    <select id="productProceed">
+        SELECT
+            cp.*,
+            (
+                SELECT COUNT(*)
+                FROM cobuying_list cl
+                WHERE cl.product_no = cp.no
+            ) AS accumulate
+        FROM
+            cobuying_product cp
+        WHERE
+            <choose>
+                <when test="status == 'ing'">cp.start_date &lt;= NOW() AND cp.end_date &gt;= NOW()</when>
+                <when test="status == 'going'">cp.start_date &gt; NOW()</when>
+                <when test="status == 'end'">cp.end_date &lt; NOW()</when>
+                <otherwise>true</otherwise>
+            </choose>
+        ORDER BY
+            <choose>
+                <when test="optionList == 'hit'">cp.hit DESC</when>
+                <when test="optionList == 'name'">cp.name ASC</when>
+                <when test="optionList == 'reg_date'">cp.reg_date DESC</when>
+                <otherwise>cp.no DESC</otherwise>
+            </choose>
+        LIMIT
+            #{perPage}
+        OFFSET
+            #{offset}
+    </select>
+
+    <select id="coBuyProceedCnt">
+        SELECT
+            COUNT(*)
+        FROM
+            cobuying_product cp
+        WHERE
+            <choose>
+                <when test="status == 'ing'">cp.start_date &lt; NOW() AND cp.end_date &gt; NOW()</when>
+                <when test="status == 'going'">cp.start_date &gt; NOW()</when>
+                <when test="status == 'end'">cp.end_date &lt; NOW()</when>
+                <otherwise>true</otherwise>
+            </choose>
+    </select>
+
+    <select id="proceedTotalPage">
+        SELECT
+            CASE WHEN COUNT(*) % #{perPage} = 0
+                    THEN COUNT(*) / #{perPage}
+            ELSE COUNT(*) / #{perPage} + 1
+            END AS totalPage
+        FROM
+            cobuying_product cp
+        WHERE
+        <choose>
+            <when test="status == 'ing'">cp.start_date &lt; NOW() AND cp.end_date &gt; NOW()</when>
+            <when test="status == 'going'">cp.start_date &gt; NOW()</when>
+            <when test="status == 'end'">cp.end_date &lt; NOW()</when>
+        </choose>;
+    </select>
+
+    <select id="detailProductNo">
+        SELECT
+            *
+        FROM
+            cobuying_product
+        WHERE
+            no = #{detailProductNo}
+    </select>
+
+    <select id="accumulateProduct">
+        SELECT
+            COUNT(*)
+        FROM
+            cobuying_list
+        WHERE
+            product_no = #{detailProductNo}
+    </select>
+
+    <select id="myCobuyOption">
+        SELECT
+            product_option
+        FROM
+            cobuying_list
+        WHERE
+            u_email = #{email} AND
+            product_no = #{detailProductNo}
+    </select>
+
+    <insert id="fundingProduct">
+        INSERT INTO
+            cobuying_list(
+                          u_email,
+                          product_no,
+                          product_option,
+                          reg_date,
+                          mod_date
+        )
+        VALUES (
+                #{email},
+                #{detailProductNo},
+                #{selectedOption},
+                NOW(),
+                NOW()
+               )
+    </insert>
+
+    <delete id="cancelFundingProduct">
+        DELETE FROM
+            cobuying_list
+        WHERE
+            u_email = #{email} AND
+            product_no = #{detailProductNo}
+    </delete>
+
+    <select id="alreadyFunding">
+        SELECT
+            COUNT(*)
+        FROM
+            cobuying_list
+        WHERE
+            u_email = #{email} AND
+            product_no = #{detailProductNo}
+    </select>
+
+    <select id="myFundings">
+        SELECT
+            product_no
+        FROM
+            cobuying_list
+        WHERE
+            u_email = #{email}
+    </select>
+
+    <select id="myHits">
+        SELECT
+            product_no
+        FROM
+            cobuying_like
+        WHERE
+            user_no = #{email}
+    </select>
+
+    <select id="alreadyHit">
+        SELECT
+            COUNT(*)
+        FROM
+            cobuying_like
+        WHERE
+            user_no = #{email} AND
+            product_no = #{detailProductNo}
+    </select>
+
+    <insert id="cobuyInsertHit">
+        INSERT INTO
+            cobuying_like(
+                          user_no,
+                          product_no
+        )
+        VALUES (
+                #{email},
+                #{detailProductNo}
+               )
+    </insert>
+
+    <delete id="cobuyDeleteHit">
+        DELETE
+        FROM
+            cobuying_like
+        WHERE
+            user_no = #{email} AND
+            product_no = #{detailProductNo}
+    </delete>
+
+    <update id="decreaseHit">
+        UPDATE
+            cobuying_product
+        SET
+            hit = hit-1
+        WHERE
+            no = #{detailProductNo}
+    </update>
+
+    <update id="increaseHit">
+        UPDATE
+            cobuying_product
+        SET
+            hit = hit+1
+        WHERE
+            no = #{detailProductNo}
+    </update>
+
+    <select id="getCobuyHitByNo">
+        SELECT
+            hit
+        FROM
+            cobuying_product
+        WHERE
+            no = #{detailProductNo}
+    </select>
+
+    <select id="myFundingProduct">
+        SELECT
+            cp.*,
+            (SELECT COUNT(*)
+             FROM cobuying_list cl
+             WHERE cl.product_no = cp.no) AS accumulate
+        FROM
+            cobuying_product cp
+                INNER JOIN
+            cobuying_list cl
+            ON
+                cp.no = cl.product_no
+        WHERE
+            cl.u_email = #{email}
+        ORDER BY
+            cl.no DESC
+            LIMIT
+            #{perPage}
+        OFFSET
+            #{offset};
+
+    </select>
+
+    <select id="fundingListCnt">
+        SELECT
+            COUNT(*)
+        FROM
+            cobuying_list
+        WHERE
+            u_email = #{email}
+    </select>
+
+    <select id="fundingTotalPage">
+        SELECT
+            (COUNT(*) / #{perPage}) + 1
+        FROM
+            cobuying_list
+        WHERE
+            u_email = #{email}
+    </select>
+
+    <select id="myHitProduct">
+        SELECT
+            cp.*,
+            (SELECT COUNT(*)
+             FROM cobuying_list cll
+             WHERE cll.product_no = cp.no) AS accumulate
+        FROM
+            cobuying_product cp
+                INNER JOIN
+            cobuying_like cl
+            ON
+                cp.no = cl.product_no
+        WHERE
+            cl.user_no = #{email}
+        ORDER BY
+            cl.no DESC
+            LIMIT
+            #{perPage}
+        OFFSET
+            #{offset};
+
+    </select>
+
+    <select id="hitListCnt">
+        SELECT
+            COUNT(*)
+        FROM
+            cobuying_like
+        WHERE
+            user_no = #{email}
+    </select>
+
+    <select id="hitTotalPage">
+        SELECT
+            (COUNT(*) / #{perPage}) + 1
+        FROM
+            cobuying_like
+        WHERE
+            user_no = #{email}
+    </select>
+
+    <select id="randomBanner">
+        SELECT
+            no
+        FROM
+            cobuying_product
+        WHERE
+            NOW() >= start_date AND
+            end_date >= NOW()
+        ORDER BY
+            RAND()
+        LIMIT
+            #{num}
+    </select>
+
+</mapper>
