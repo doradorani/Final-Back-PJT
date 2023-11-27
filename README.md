@@ -131,11 +131,11 @@ API 명세서(Swagger): https://drive.google.com/file/d/1UzdPXteyF15Cmijuztx27Bx
 
 ## JWT
 
--   구조
+-   **구조**
       - 헤더(HS256) + 페이로드(Json - Key/Value) + 서명(BASE64) => 대칭키 (※ RSA를 활용하여 비대칭키로 보안 강화 가능)
--   사용
+-   **사용**
       - 사용자 토큰 인증(401)과 권한(403)을 확인
--   구조
+-   **추가 적용 사항**
       - 카카오 소셜 로그인을 통한 OAuth2.0 기반의 보안 기능 강화 로그인 방식
       - AccessToken - 5분, RefreshToken - 1시간, Axios Interceptor timeout - 10초
       - Redux와 Redux-persist를 활용한 클라이언트 토큰 관리 방식 사용
